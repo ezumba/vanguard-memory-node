@@ -1,0 +1,50 @@
+{
+  "name": "vanguard-memory-node",
+  "version": "1.0.0",
+  "description": "Local deterministic memory for AI agents via MCP. Deterministic xLMP lexical retrieval, stdio transport, Claude Desktop compatible.",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "vanguard-memory-node": "dist/index.js"
+  },
+  "files": [
+    "dist/",
+    "src/",
+    "INSTALL.md",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "start": "tsc && node dist/index.js",
+    "dev": "node dist/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "memory",
+    "ai",
+    "claude",
+    "local",
+    "deterministic",
+    "xlmp"
+  ],
+  "author": "ExergyNet <exergynet@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ezumba/vanguard-memory-node.git"
+  },
+  "homepage": "https://github.com/ezumba/vanguard-memory-node#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "dotenv": "^17.4.2",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "typescript": "^7.0.2"
+  }
+}
