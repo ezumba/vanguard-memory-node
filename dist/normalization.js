@@ -4,7 +4,7 @@
  * Both vmn_search and vmn_recall MUST import from this module.
  */
 export const NORMALIZATION_VERSION = '1.2.0';
-export const STEMMER_VERSION = '1.2.0';
+export const STEMMER_VERSION = '1.3.3';
 export const ALIAS_DICT_VERSION = '1.2.1';
 // ── Stop words ────────────────────────────────────────────────────────────────
 export const STOP_WORDS = new Set([
@@ -86,6 +86,8 @@ export function stemToken(word) {
         return w.slice(0, -3);
     if (w.length > 5 && w.endsWith('ers'))
         return w.slice(0, -3);
+    if (w.length > 6 && w.endsWith('tions'))
+        return w.slice(0, -5); // medications→medica (matches medication→medica)
     if (w.length > 5 && w.endsWith('ions'))
         return w.slice(0, -4);
     if (w.length > 5 && w.endsWith('tion'))
