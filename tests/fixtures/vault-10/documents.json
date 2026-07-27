@@ -1,0 +1,72 @@
+[
+  {
+    "index": 0,
+    "root": "7bd4c3bdef0a75cc165c7cebb62325bf7dc20941e25c14f7caa5c1babf652924",
+    "text": "Patient 4 presents with headache. PMH includes hypothyroidism. Currently taking atorvastatin. [ref:0-0]\nPatient 4 presents with headache. PMH includes hypothyroidism. Currently taking atorvastatin. [ref:0-1]\nPatient 4 presents with headache. PMH includes hypothyroidism. Currently taking atorvastatin. [ref:0-2]\nPatient 4 presents with headache. PMH includes hypothyroidism. Currently taking atorvastatin. [ref:0-3]\nPatient 4 presents with headache. PMH includes hypothyroidism. Currently taking atorvastatin. [ref:0-4]",
+    "title": "Doc 0 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 1,
+    "root": "f4358086470853c17c681e074fd72df9e52a3151876e239e33167f96abd99201",
+    "text": "Arbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:17-0]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:17-1]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:17-2]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:17-3]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:17-4]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:17-5]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:17-6]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:17-7]",
+    "title": "Doc 1 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 2,
+    "root": "8d9abe96d04daf5d767d591a171a7d930a2a56662e439b6f71281f0702c9ec8d",
+    "text": "CHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:34-0]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:34-1]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:34-2]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:34-3]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:34-4]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:34-5]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:34-6]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:34-7]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:34-8]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:34-9]",
+    "title": "Doc 2 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 3,
+    "root": "e731ed4064cb2a8c72fa0a771487465d3d0b32d330d714ca728a68fe4bc35952",
+    "text": "Meeting notes 2026-09-01: David to complete the security review by end of quarter. Jack flagged technical debt. [ref:51-0]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Jack flagged technical debt. [ref:51-1]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Jack flagged technical debt. [ref:51-2]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Jack flagged technical debt. [ref:51-3]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Jack flagged technical debt. [ref:51-4]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Jack flagged technical debt. [ref:51-5]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Jack flagged technical debt. [ref:51-6]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Jack flagged technical debt. [ref:51-7]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Jack flagged technical debt. [ref:51-8]",
+    "title": "Doc 3 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 4,
+    "root": "73d9b187e16763e2f5a117564ded17ff4e3e2f1bb41440201bed7b85e14cc733",
+    "text": "The patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-0]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-1]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-2]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-3]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-4]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-5]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-6]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-7]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-8]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-9]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-10]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-11]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-12]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-13]",
+    "title": "Doc 4 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 5,
+    "root": "7bf7e6caf76e4eede993554d30c0e7e65bded1948e4c039f33a7158871b0c1a0",
+    "text": "Whereas the contractor shall deliver software deliverable no later than 2026-03-01, failure constitutes breach. [ref:85-0]\nWhereas the contractor shall deliver software deliverable no later than 2026-03-01, failure constitutes breach. [ref:85-1]\nWhereas the contractor shall deliver software deliverable no later than 2026-03-01, failure constitutes breach. [ref:85-2]\nWhereas the contractor shall deliver software deliverable no later than 2026-03-01, failure constitutes breach. [ref:85-3]\nWhereas the contractor shall deliver software deliverable no later than 2026-03-01, failure constitutes breach. [ref:85-4]",
+    "title": "Doc 5 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 6,
+    "root": "a3455629fe3dae92a8e803ae0124c6a448174d4c0c0ef683eb07847c368b9a5d",
+    "text": "v4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:102-0]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:102-1]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:102-2]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:102-3]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:102-4]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:102-5]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:102-6]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:102-7]",
+    "title": "Doc 6 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 7,
+    "root": "3adf8f53e177dbf2705e3226ed3042ec9ae8fe8554fa678eeb0ae12a57ee56e4",
+    "text": "Meeting notes 2026-09-01: Bob to complete the security review by by EOD. Jack flagged technical debt. [ref:119-0]\nMeeting notes 2026-09-01: Bob to complete the security review by by EOD. Jack flagged technical debt. [ref:119-1]\nMeeting notes 2026-09-01: Bob to complete the security review by by EOD. Jack flagged technical debt. [ref:119-2]\nMeeting notes 2026-09-01: Bob to complete the security review by by EOD. Jack flagged technical debt. [ref:119-3]\nMeeting notes 2026-09-01: Bob to complete the security review by by EOD. Jack flagged technical debt. [ref:119-4]\nMeeting notes 2026-09-01: Bob to complete the security review by by EOD. Jack flagged technical debt. [ref:119-5]\nMeeting notes 2026-09-01: Bob to complete the security review by by EOD. Jack flagged technical debt. [ref:119-6]\nMeeting notes 2026-09-01: Bob to complete the security review by by EOD. Jack flagged technical debt. [ref:119-7]",
+    "title": "Doc 7 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 8,
+    "root": "7805dc8c2c145359244338a2579a0d207f48c8d4662032e20167e56684f24753",
+    "text": "Vital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-0]\nVital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-1]\nVital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-2]\nVital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-3]\nVital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-4]\nVital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-5]\nVital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-6]\nVital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-7]\nVital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-8]\nVital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-9]\nVital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-10]\nVital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-11]",
+    "title": "Doc 8 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 9,
+    "root": "6b38645ee31476c11ea0cc064a2a71dce62ec455255d08317c5c608c3f78adfb",
+    "text": "Section 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-0]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-1]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-2]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-3]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-4]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-5]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-6]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-7]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-8]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-9]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-10]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-11]",
+    "title": "Doc 9 [legal]",
+    "domain": "legal"
+  }
+]
