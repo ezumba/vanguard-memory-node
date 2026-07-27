@@ -46,8 +46,6 @@ export function bucketPath(bucket) {
 export function atomicWrite(filePath, data) {
     const tmp = `${filePath}.${process.pid}.tmp`;
     fs.writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf8');
-    // Validate JSON before publishing
-    JSON.parse(fs.readFileSync(tmp, 'utf8'));
     // Platform-safe rename
     if (process.platform === 'win32') {
         if (fs.existsSync(filePath))
@@ -140,6 +138,24 @@ export function loadCatalog() {
         catch (e) { /* fall through */ }
     }
     return v2Cat;
+}
+export function loadCatalogEntry(root) {
+    const p = path.join(CATALOG_DIR, `${root}.json`);
+    try {
+        if (fs.existsSync(p))
+            return JSON.parse(fs.readFileSync(p, 'utf8'));
+    }
+    catch (e) { /* fall through */ }
+    return null;
+}
+export function loadCatalogEntries(roots) {
+    const result = {};
+    for (const root of roots) {
+        const entry = loadCatalogEntry(root);
+        if (entry)
+            result[root] = entry;
+    }
+    return result;
 }
 export function saveCatalogEntry(entry) {
     ensureIndexDirs();
