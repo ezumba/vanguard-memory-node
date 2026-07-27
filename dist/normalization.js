@@ -5,7 +5,7 @@
  */
 export const NORMALIZATION_VERSION = '1.2.0';
 export const STEMMER_VERSION = '1.1.0';
-export const ALIAS_DICT_VERSION = '1.2.0';
+export const ALIAS_DICT_VERSION = '1.2.1';
 // ── Stop words ────────────────────────────────────────────────────────────────
 export const STOP_WORDS = new Set([
     'a', 'an', 'the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with',
@@ -36,11 +36,21 @@ export const PHRASE_ALIASES = [
     // Legal
     ['breach of contract', 'breach'],
     ['party of the first part', 'firstparty'],
+    // Clinical — additional
+    ['shortness of breath', 'dyspnea'],
+    ['chest pain', 'cardiacpain'],
+    ['cardiac pain', 'cardiacpain'],
+    ['blood glucose', 'glucose'],
+    // Legal
+    ['force majeure', 'forcemajeure'],
+    ['intellectual property', 'ip'],
     // Technical
     ['rate limit', 'ratelimit'],
     ['rate limiting', 'ratelimit'],
     ['memory leak', 'memoryleak'],
     ['out of memory', 'oom'],
+    ['null pointer', 'nullref'],
+    ['stack overflow', 'stackoverflow'],
     // Medical providers
     ['attending physician', 'doctor'],
     ['primary care', 'doctor'],
@@ -56,7 +66,12 @@ export const TOKEN_ALIASES = {
     // medical
     'physician': ['doctor'],
     'doctor': ['physician'],
+    'dr': ['doctor', 'physician'],
     'hypertens': ['bp'],
+    'bp': ['hypertens'],
+    'glucose': ['bloodsugar', 'bgl'],
+    'heartattack': ['mi', 'myocardi'],
+    'dyspnea': ['sob', 'breathless'],
     // technical
     'ratelimit': ['throttl', 'burst'],
     'throttl': ['ratelimit'],
@@ -75,15 +90,13 @@ export function stemToken(word) {
         return w.slice(0, -4);
     if (w.length > 5 && w.endsWith('tion'))
         return w.slice(0, -4);
-    if (w.length > 6 && w.endsWith('sion'))
+    if (w.length > 8 && w.endsWith('sion'))
         return w.slice(0, -3);
     if (w.length > 4 && w.endsWith('er'))
         return w.slice(0, -2);
     if (w.length > 4 && w.endsWith('ed'))
         return w.slice(0, -2);
     if (w.length > 4 && w.endsWith('es'))
-        return w.slice(0, -2);
-    if (w.length > 4 && w.endsWith('ly'))
         return w.slice(0, -2);
     if (w.length > 3 && w.endsWith('s'))
         return w.slice(0, -1);

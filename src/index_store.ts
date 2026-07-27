@@ -117,8 +117,6 @@ export function bucketPath(bucket: string): string {
 export function atomicWrite(filePath: string, data: unknown): void {
   const tmp = `${filePath}.${process.pid}.tmp`;
   fs.writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf8');
-  // Validate JSON before publishing
-  JSON.parse(fs.readFileSync(tmp, 'utf8'));
   // Platform-safe rename
   if (process.platform === 'win32') {
     if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
@@ -209,6 +207,23 @@ export function loadCatalog(): Record<string, CatalogEntry> {
     } catch (e) { /* fall through */ }
   }
   return v2Cat;
+}
+
+export function loadCatalogEntry(root: string): CatalogEntry | null {
+  const p = path.join(CATALOG_DIR, `${root}.json`);
+  try {
+    if (fs.existsSync(p)) return JSON.parse(fs.readFileSync(p, 'utf8'));
+  } catch (e) { /* fall through */ }
+  return null;
+}
+
+export function loadCatalogEntries(roots: string[]): Record<string, CatalogEntry> {
+  const result: Record<string, CatalogEntry> = {};
+  for (const root of roots) {
+    const entry = loadCatalogEntry(root);
+    if (entry) result[root] = entry;
+  }
+  return result;
 }
 
 export function saveCatalogEntry(entry: CatalogEntry): void {

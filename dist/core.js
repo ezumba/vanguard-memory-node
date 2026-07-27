@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as crypto from 'crypto';
-import { NORMALIZATION_VERSION, STEMMER_VERSION, ALIAS_DICT_VERSION, normalizeDocument, normalizeQuery, computeTermFrequencies, } from './normalization.js';
-import { INDEX_VERSION, OBJECTS_DIR, SEGMENTS_DIR, POSTINGS_DIR, CORPUS_STATS_PATH, ensureIndexDirs, termBucket, atomicWrite, loadManifest, saveManifest, indexState as getIndexState, loadBuckets, loadCorpusStats, loadSegments, loadCatalog, saveCatalogEntry, deleteCatalogEntry, } from './index_store.js';
+import { NORMALIZATION_VERSION, STEMMER_VERSION, ALIAS_DICT_VERSION, normalizeQuery, computeTermFrequencies, } from './normalization.js';
+import { INDEX_VERSION, OBJECTS_DIR, SEGMENTS_DIR, POSTINGS_DIR, CORPUS_STATS_PATH, CATALOG_DIR, ensureIndexDirs, termBucket, atomicWrite, loadManifest, saveManifest, indexState as getIndexState, loadBuckets, loadCorpusStats, loadSegments, loadCatalog, loadCatalogEntry, loadCatalogEntries, saveCatalogEntry, deleteCatalogEntry, } from './index_store.js';
 import { recoverTransactions } from './index_transaction.js';
 // Startup: recover any incomplete transactions from prior crashes
 recoverTransactions();
@@ -91,8 +91,8 @@ function bm25Score(tf, docLen, avgLen, N, df) {
         (tf + BM25_K1 * (1 - BM25_B + BM25_B * docLen / Math.max(avgLen, 1)));
     return idf * tfn;
 }
-// Small-vault threshold for synchronous auto-rebuild on REBUILD_REQUIRED
-const SMALL_VAULT_THRESHOLD = 100;
+// MCP is single-threaded — always rebuild synchronously (no async background possible)
+const SMALL_VAULT_THRESHOLD = 1000000;
 // ── E5: Incremental ingest ────────────────────────────────────────────────────
 export function ingest_text(text, options) {
     ensureIndexDirs();
@@ -165,8 +165,7 @@ export function ingest_text(text, options) {
     atomicWrite(path.join(SEGMENTS_DIR, `${root}.json`), segRecs);
     // 10. Update catalog
     const now = new Date().toISOString();
-    const existingCatalog = loadCatalog();
-    const existing = existingCatalog[root];
+    const existing = loadCatalogEntry(root);
     saveCatalogEntry({
         root,
         title: options?.title ?? text.slice(0, 60).replace(/\n/g, ' ').trim(),
@@ -282,8 +281,8 @@ export function search_vault(query, limit = 10) {
             rootBest.set(seg.root, { score: seg.score, segIdx: seg.segIdx, terms: seg.terms });
         }
     }
-    // Load catalog only for matched roots
-    const allCatalog = loadCatalog();
+    // Load catalog only for matched roots (avoids O(N) scan)
+    const allCatalog = loadCatalogEntries([...rootBest.keys()]);
     const results = [];
     for (const [root, best] of rootBest) {
         const entry = allCatalog[root];
@@ -367,8 +366,21 @@ export function retrieve_evidence(hash, query) {
     let bestScore = -1;
     let bestChunk = '';
     for (const chunk of chunks) {
-        const chunkTermSet = new Set(normalizeDocument(chunk));
-        const score = queryTerms.filter(t => chunkTermSet.has(t)).length;
+        const chunkFreqs = computeTermFrequencies(chunk);
+        let score = 0;
+        // Primary: exact normalized term match (weighted by frequency)
+        for (const qt of queryTerms) {
+            if (chunkFreqs[qt])
+                score += chunkFreqs[qt] * 2;
+        }
+        // Fallback: prefix match (only when primary score is zero)
+        if (score === 0) {
+            const chunkLower = chunk.toLowerCase();
+            for (const qt of queryTerms) {
+                if (qt.length >= 4 && chunkLower.includes(qt))
+                    score += 0.5;
+            }
+        }
         if (score > bestScore) {
             bestScore = score;
             bestChunk = chunk;
@@ -414,8 +426,8 @@ export function delete_entry(hash) {
     if (fs.existsSync(segPath))
         fs.unlinkSync(segPath);
     // Remove from catalog
-    const catalog = loadCatalog();
-    if (catalog[hash]) {
+    const catPath = path.join(CATALOG_DIR, `${hash}.json`);
+    if (fs.existsSync(catPath)) {
         deleteCatalogEntry(hash);
         deleted = true;
     }

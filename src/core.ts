@@ -7,11 +7,12 @@ import {
 } from './normalization.js';
 import {
   INDEX_VERSION,
-  OBJECTS_DIR, SEGMENTS_DIR, POSTINGS_DIR, CORPUS_STATS_PATH,
+  OBJECTS_DIR, SEGMENTS_DIR, POSTINGS_DIR, CORPUS_STATS_PATH, CATALOG_DIR,
   ensureIndexDirs, termBucket, atomicWrite,
   loadManifest, saveManifest, indexState as getIndexState,
   loadBuckets, loadCorpusStats,
-  loadSegments, loadCatalog, saveCatalogEntry, deleteCatalogEntry,
+  loadSegments, loadCatalog, loadCatalogEntry, loadCatalogEntries,
+  saveCatalogEntry, deleteCatalogEntry,
 } from './index_store.js';
 import type {
   IndexManifest, BucketFile, SegmentRecord, CatalogEntry, CorpusStats, PostingEntry,
@@ -95,8 +96,8 @@ function bm25Score(tf: number, docLen: number, avgLen: number, N: number, df: nu
   return idf * tfn;
 }
 
-// Small-vault threshold for synchronous auto-rebuild on REBUILD_REQUIRED
-const SMALL_VAULT_THRESHOLD = 100;
+// MCP is single-threaded — always rebuild synchronously (no async background possible)
+const SMALL_VAULT_THRESHOLD = 1_000_000;
 
 // ── Public API types ──────────────────────────────────────────────────────────
 export interface SearchResult {
@@ -211,9 +212,8 @@ export function ingest_text(
   atomicWrite(path.join(SEGMENTS_DIR, `${root}.json`), segRecs);
 
   // 10. Update catalog
-  const now             = new Date().toISOString();
-  const existingCatalog = loadCatalog();
-  const existing        = existingCatalog[root];
+  const now      = new Date().toISOString();
+  const existing = loadCatalogEntry(root);
   saveCatalogEntry({
     root,
     title:         options?.title        ?? text.slice(0, 60).replace(/\n/g, ' ').trim(),
@@ -343,8 +343,8 @@ export function search_vault(query: string, limit = 10): SearchResponse {
     }
   }
 
-  // Load catalog only for matched roots
-  const allCatalog = loadCatalog();
+  // Load catalog only for matched roots (avoids O(N) scan)
+  const allCatalog = loadCatalogEntries([...rootBest.keys()]);
   const results: SearchResult[] = [];
 
   for (const [root, best] of rootBest) {
@@ -433,8 +433,22 @@ export function retrieve_evidence(hash: string, query: string): string {
   let bestChunk = '';
 
   for (const chunk of chunks) {
-    const chunkTermSet = new Set(normalizeDocument(chunk));
-    const score = queryTerms.filter(t => chunkTermSet.has(t)).length;
+    const chunkFreqs = computeTermFrequencies(chunk);
+    let score = 0;
+
+    // Primary: exact normalized term match (weighted by frequency)
+    for (const qt of queryTerms) {
+      if (chunkFreqs[qt]) score += chunkFreqs[qt] * 2;
+    }
+
+    // Fallback: prefix match (only when primary score is zero)
+    if (score === 0) {
+      const chunkLower = chunk.toLowerCase();
+      for (const qt of queryTerms) {
+        if (qt.length >= 4 && chunkLower.includes(qt)) score += 0.5;
+      }
+    }
+
     if (score > bestScore) { bestScore = score; bestChunk = chunk; }
   }
 
@@ -481,8 +495,8 @@ export function delete_entry(hash: string): boolean {
   if (fs.existsSync(segPath)) fs.unlinkSync(segPath);
 
   // Remove from catalog
-  const catalog = loadCatalog();
-  if (catalog[hash]) { deleteCatalogEntry(hash); deleted = true; }
+  const catPath = path.join(CATALOG_DIR, `${hash}.json`);
+  if (fs.existsSync(catPath)) { deleteCatalogEntry(hash); deleted = true; }
 
   // Remove postings from affected buckets only
   if (bucketsToClean.size > 0) {
