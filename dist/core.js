@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as crypto from 'crypto';
-import { NORMALIZATION_VERSION, STEMMER_VERSION, ALIAS_DICT_VERSION, normalizeQuery, computeTermFrequencies, } from './normalization.js';
+import { NORMALIZATION_VERSION, STEMMER_VERSION, ALIAS_DICT_VERSION, normalizeQuery, computeTermFrequencies, tokenize, stemToken, } from './normalization.js';
 import { INDEX_VERSION, OBJECTS_DIR, SEGMENTS_DIR, POSTINGS_DIR, CORPUS_STATS_PATH, CATALOG_DIR, ensureIndexDirs, termBucket, atomicWrite, loadManifest, saveManifest, indexState as getIndexState, loadBuckets, loadCorpusStats, loadSegments, loadCatalog, loadCatalogEntry, loadCatalogEntries, saveCatalogEntry, deleteCatalogEntry, } from './index_store.js';
 import { recoverTransactions } from './index_transaction.js';
 // Startup: recover any incomplete transactions from prior crashes
@@ -355,9 +355,6 @@ export function search_vault(query, limit = 10) {
         index: { version: INDEX_VERSION, state: 'READY', index_auto_rebuilt: autoRebuilt },
     };
 }
-function escapeRegExp(s) {
-    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
 // ── E7: Root-bound recall (unified normalization) ─────────────────────────────
 export function retrieve_evidence(hash, query) {
     ensureIndexDirs();
@@ -381,14 +378,13 @@ export function retrieve_evidence(hash, query) {
             if (chunkFreqs[qt])
                 score += chunkFreqs[qt] * 2;
         }
-        // Fallback: word-boundary match for rare normalization misses (only when primary=0)
-        // Uses \b so "generic" never matches inside "generator"
+        // Fallback: stemmed-token match (only when primary=0)
+        // Stems each chunk word and compares stems — medications→medicat matches
+        // medication→medicat, but generic→gener never matches generator→generator
         if (score === 0) {
-            for (const qt of queryTerms) {
-                if (qt.length >= 4 && new RegExp(`\\b${escapeRegExp(qt)}\\b`, 'i').test(chunk)) {
-                    score += 0.5;
-                }
-            }
+            const chunkStems = new Set(tokenize(chunk).map(w => stemToken(w)));
+            if (queryTerms.some(qt => chunkStems.has(qt)))
+                score += 0.5;
         }
         if (score > bestScore) {
             bestScore = score;
