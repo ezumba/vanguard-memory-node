@@ -355,6 +355,9 @@ export function search_vault(query, limit = 10) {
         index: { version: INDEX_VERSION, state: 'READY', index_auto_rebuilt: autoRebuilt },
     };
 }
+function escapeRegExp(s) {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 // ── E7: Root-bound recall (unified normalization) ─────────────────────────────
 export function retrieve_evidence(hash, query) {
     ensureIndexDirs();
@@ -378,12 +381,13 @@ export function retrieve_evidence(hash, query) {
             if (chunkFreqs[qt])
                 score += chunkFreqs[qt] * 2;
         }
-        // Fallback: substring match for rare normalization misses (only when primary=0)
+        // Fallback: word-boundary match for rare normalization misses (only when primary=0)
+        // Uses \b so "generic" never matches inside "generator"
         if (score === 0) {
-            const chunkLower = chunk.toLowerCase();
             for (const qt of queryTerms) {
-                if (qt.length >= 4 && chunkLower.includes(qt))
+                if (qt.length >= 4 && new RegExp(`\\b${escapeRegExp(qt)}\\b`, 'i').test(chunk)) {
                     score += 0.5;
+                }
             }
         }
         if (score > bestScore) {

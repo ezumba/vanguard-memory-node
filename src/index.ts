@@ -16,7 +16,7 @@ import {
 
 const server = new McpServer({
   name: 'vanguard-memory-node',
-  version: '1.3.0',
+  version: '1.3.1',
 });
 
 server.tool(
@@ -50,10 +50,13 @@ server.tool(
   },
   async ({ hash, query }) => {
     const evidence = retrieve_evidence(hash, query);
+    const text = evidence === 'no_relevant_evidence_found'
+      ? `No relevant evidence found in local memory for query: "${query}".`
+      : evidence;
     return {
       content: [{
         type: 'text',
-        text: `${evidence}\n\n[VMN] source=local_vmn | verification=LOCAL_HASH_ONLY | network_verification_available=false`
+        text: `${text}\n\n[VMN] source=local_vmn | verification=LOCAL_HASH_ONLY | network_verification_available=false`
       }]
     };
   }
