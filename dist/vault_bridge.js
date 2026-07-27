@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { OBJECTS_DIR } from './index_store.js';
-const DEFAULT_VAULT_URL = 'https://explorer-api.exergynet.org';
+const DEFAULT_VAULT_URL = 'https://dt.portal.exergynet.org';
 export async function syncToVault(payload, intent) {
     const apiKey = process.env.EXERGYNET_API_KEY;
     if (!apiKey) {
@@ -19,6 +19,12 @@ export async function syncToVault(payload, intent) {
             body: JSON.stringify({ payload, intent }),
         });
         if (!res.ok) {
+            if (res.status === 404) {
+                return { status: 'error', message: 'Vault endpoint not found (HTTP 404). Verify EXERGYNET_VAULT_URL.' };
+            }
+            if (res.status === 401 || res.status === 403) {
+                return { status: 'error', message: 'Vault authentication failed (HTTP 401/403). Verify EXERGYNET_API_KEY.' };
+            }
             return { status: 'error', message: `HTTP ${res.status}: ${await res.text()}` };
         }
         return { status: 'ok', message: 'synced', response: await res.json() };
