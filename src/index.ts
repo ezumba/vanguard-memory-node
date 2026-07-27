@@ -13,10 +13,11 @@ import {
   get_index_status,
   rebuild_index
 } from './core.js';
+import { syncToVault, readVaultObject } from './vault_bridge.js';
 
 const server = new McpServer({
   name: 'vanguard-memory-node',
-  version: '1.3.3',
+  version: '1.4.0',
 });
 
 server.tool(
@@ -32,10 +33,15 @@ server.tool(
   },
   async ({ text, title, namespace, tags, content_type, source }) => {
     const hash = ingest_text(text, { title, namespace, tags, content_type, source });
+    let vaultSynced = false;
+    if (process.env.AUTO_SYNC_VAULT === 'true') {
+      const r = await syncToVault(text, 'auto-sync');
+      vaultSynced = r.status === 'ok';
+    }
     return {
       content: [{
         type: 'text',
-        text: `INGESTED. Local shard hash: ${hash}\nStored at: ~/.vanguard/local_vault/${hash}.txt\n[VMN] source=local_vmn | verification=LOCAL_HASH_ONLY`
+        text: `INGESTED. Local shard hash: ${hash}\nStored at: ~/.vanguard/local_vault/${hash}.txt\nvault_synced: ${vaultSynced}\n[VMN] source=local_vmn | verification=LOCAL_HASH_ONLY`
       }]
     };
   }
@@ -213,6 +219,49 @@ server.tool(
       content: [{
         type: 'text',
         text: JSON.stringify(result, null, 2) + '\n\n[VMN] source=local_vmn | verification=LOCAL_HASH_ONLY'
+      }]
+    };
+  }
+);
+
+server.tool(
+  'vmn_sync_vault',
+  'Sync a local memory object to the ExergyNet LNES-17 vault. Requires EXERGYNET_API_KEY env var.',
+  {
+    xlmp_root: z.string().describe('The SHA-256 root hash of the local memory object to sync'),
+    intent:    z.string().optional().describe('Sync intent label (default: "manual-sync")')
+  },
+  async ({ xlmp_root, intent }) => {
+    const payload = readVaultObject(xlmp_root);
+    if (payload === null) {
+      return {
+        content: [{
+          type: 'text',
+          text: `ERROR: No local object found for root: ${xlmp_root}\n[VMN] source=local_vmn | verification=LOCAL_HASH_ONLY`
+        }]
+      };
+    }
+    const result = await syncToVault(payload, intent ?? 'manual-sync');
+    if (result.status === 'unconfigured') {
+      return {
+        content: [{
+          type: 'text',
+          text: `UNCONFIGURED: ${result.message}\nSet EXERGYNET_API_KEY to enable vault sync.\n[VMN] source=local_vmn`
+        }]
+      };
+    }
+    if (result.status === 'error') {
+      return {
+        content: [{
+          type: 'text',
+          text: `SYNC_ERROR: ${result.message}\n[VMN] source=local_vmn`
+        }]
+      };
+    }
+    return {
+      content: [{
+        type: 'text',
+        text: `SYNCED.\n${JSON.stringify(result.response, null, 2)}\n[VMN] source=exergynet_vault | verification=LNES17_HASH`
       }]
     };
   }
