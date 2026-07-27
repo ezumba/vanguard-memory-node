@@ -1,96 +1,195 @@
-# Vanguard Memory Node (VMN) v1.1.0
+# Vanguard Memory Node (VMN) v1.4.0
 
 Local deterministic memory for AI agents via the Model Context Protocol (MCP).
 
-No cloud. No vector database. No semantic drift. Your data stays on your NVMe.
+No cloud. No vector database. No semantic drift. Your data stays on your machine.
 
-## How it works
+---
 
-VMN uses xLMP (Logical Memory Protocol) — a deterministic, content-addressed memory substrate. It shatters text into fixed shards and retrieves evidence using lexical keyword density scoring, not probabilistic cosine similarity.
+## What it does
 
-Chunks are split hierarchically: paragraph → sentence → word → hard 1800-char ceiling. Retrieval uses suffix-aware stemming so `smoking` matches `smoker` and vice versa.
+VMN gives any MCP-compatible AI agent a persistent, queryable memory vault stored entirely on local disk. Text is ingested once, content-addressed with SHA-256, segmented, and indexed with a sharded BM25 inverted index. Retrieval is deterministic: the same query always returns the same ranked result from the same data.
+
+Optionally, vaults can be synced to the [ExergyNet LNES-17 ledger](https://exergynet.org) for cross-device and cross-agent recall with cryptographic provenance.
+
+---
 
 ## Install
 
-```
+```bash
 npm install -g vanguard-memory-node
 ```
 
-## Claude Desktop Integration
+Or run without installing:
 
-Add to your `claude_desktop_config.json`:
+```bash
+npx vanguard-memory-node
+```
 
-### Mac
-`~/Library/Application Support/Claude/claude_desktop_config.json`
+---
 
-### Windows
-`%APPDATA%\Claude\claude_desktop_config.json`
+## Claude Desktop integration
+
+**Mac** — `~/Library/Application Support/Claude/claude_desktop_config.json`  
+**Windows** — `%APPDATA%\Claude\claude_desktop_config.json`
 
 ```json
 {
   "mcpServers": {
     "vanguard-memory": {
-      "command": "node",
-      "args": ["/path/to/vanguard_memory_node/dist/index.js"]
+      "command": "npx",
+      "args": ["-y", "vanguard-memory-node"]
     }
   }
 }
 ```
 
-For WSL on Windows:
+WSL on Windows:
+
 ```json
 {
   "mcpServers": {
     "vanguard-memory": {
       "command": "wsl",
-      "args": ["-d", "Ubuntu", "node", "/home/edt/vanguard_memory_node/dist/index.js"]
+      "args": ["-d", "Ubuntu", "npx", "-y", "vanguard-memory-node"]
     }
   }
 }
 ```
 
-## Tools (7 total)
+---
 
-### vmn_ingest
-Stores text locally as a SHA-256 content-addressed shard. Updates catalog metadata.
-- Input: `text` (string, required), `title` (optional), `namespace` (optional, default: "default"), `tags` (optional string[]), `content_type` (optional), `source` (optional)
-- Returns: SHA-256 hash + storage path
+## Tools (10 total)
 
-### vmn_recall
-Retrieves evidence from a shard using deterministic xLMP lexical search.
-- Input: `hash` (string), `query` (string)
-- Returns: bounded 900-char evidence window centered on highest-density keyword match
+### `vmn_ingest`
+Stores text as a SHA-256 content-addressed shard. Segments it, indexes it, and updates the local catalog.
 
-### vmn_list
-Lists all memory objects in the vault, with optional namespace filter.
-- Input: `namespace` (optional string)
-- Returns: table of root hash, title, segment count, date
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `text` | string | yes | Content to store |
+| `title` | string | no | Human-readable label |
+| `namespace` | string | no | Logical partition (default: `default`) |
+| `tags` | string[] | no | Search tags |
+| `content_type` | string | no | MIME type hint (default: `text/plain`) |
+| `source` | string | no | Source label |
 
-### vmn_search
-Full-vault keyword search across titles, excerpts, and tags. Returns candidate roots ranked by score.
-- Input: `query` (string), `limit` (optional number, default 10)
-- Returns: ranked list of matching objects with excerpt and score
+Returns: SHA-256 root hash + vault path + `vault_synced` flag.
 
-### vmn_inspect
-Returns full catalog metadata for a specific memory object by hash.
-- Input: `hash` (string)
-- Returns: JSON catalog entry (root, title, namespace, tags, content_type, source, segment_count, byte_size, excerpt, ingested_at, updated_at)
+### `vmn_recall`
+Retrieves a 900-character evidence window from a specific shard using lexical BM25 scoring.
 
-### vmn_delete
-Permanently deletes a memory object from vault and catalog.
-- Input: `hash` (string)
-- Returns: confirmation or not-found message
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `hash` | string | yes | Root hash from `vmn_ingest` |
+| `query` | string | yes | Search query |
 
-### vmn_stats
-Returns aggregate statistics about the local vault.
-- Returns: total_entries, total_bytes, namespaces, oldest_at, newest_at
+Returns: best-matching evidence window, or a human-readable no-match message.
 
-## Local vault
+### `vmn_search`
+Full-vault keyword search across all ingested objects. Returns ranked results with snippets.
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `query` | string | yes | Search query |
+| `limit` | number | no | Max results (default: 10) |
+
+### `vmn_list`
+Lists all memory objects in the vault.
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `namespace` | string | no | Filter by namespace |
+
+### `vmn_inspect`
+Returns full catalog metadata for a specific object.
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `hash` | string | yes | Root hash |
+
+### `vmn_delete`
+Permanently removes an object and all its index entries.
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `hash` | string | yes | Root hash |
+
+### `vmn_stats`
+Returns aggregate vault statistics: entry count, total bytes, namespaces, oldest/newest timestamps.
+
+### `vmn_index_status`
+Returns current BM25 index state (`READY`, `REBUILD_REQUIRED`, `REBUILDING`, `DEGRADED`).
+
+### `vmn_rebuild_index`
+Rebuilds the full BM25 index from authoritative object files. Safe at any time — objects are never modified.
+
+### `vmn_sync_vault`
+Syncs a local memory object to the ExergyNet LNES-17 vault. Requires `EXERGYNET_API_KEY`.
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `xlmp_root` | string | yes | Root hash of the object to sync |
+| `intent` | string | no | Sync intent label (default: `manual-sync`) |
+
+Returns: Canonical Manifest JSON from the LNES-17 server.
+
+---
+
+## Environment variables
+
+| Variable | Default | Description |
+|---|---|---|
+| `AUTO_SYNC_VAULT` | `false` | Set to `true` to auto-sync every `vmn_ingest` to ExergyNet |
+| `EXERGYNET_API_KEY` | — | API key for ExergyNet vault access |
+| `EXERGYNET_VAULT_URL` | `https://explorer-api.exergynet.org` | Override vault endpoint |
+
+---
+
+## Vault layout
 
 ```
-~/.vanguard/local_vault/<hash>.txt    # shard content
-~/.vanguard/local_vault/catalog.json  # catalog index
+~/.vanguard/
+├── local_vault/
+│   └── <sha256>.txt              # authoritative object files (never modified after write)
+├── catalog/
+│   └── <sha256>.json             # per-object metadata (O(1) reads)
+├── segments/
+│   └── <sha256>.json             # segment records with term frequencies
+└── index/
+    └── v2/
+        ├── index_manifest.json   # version + state header
+        ├── corpus_stats.json     # BM25 corpus statistics
+        └── postings/
+            └── <2-hex>.json      # 256 sharded posting buckets
 ```
 
-## Built by ExergyNet
-https://exergynet.org
+---
+
+## How retrieval works
+
+1. **Normalization** — Unicode NFC → phrase alias substitution → tokenize → suffix stem → stop-word filter → token alias expansion
+2. **Stemmer** — 13-rule suffix stripper: `tions→` (5), `ions→` (4), `tion→` (4), `ings→` (4), `ing→` (3), `ers→` (3), `ies→` (3), `ic→` (2), `er→` (2), `ed→` (2), `es→` (2), `s→` (1), `y→` (1). Rules applied longest-first; `medications` and `medication` both reduce to the same root.
+3. **Alias expansion** — clinical, technical, and legal synonym clusters (`smok↔tobacco↔cigarett`, `physician↔doctor`, `hypertens↔bp`, etc.)
+4. **BM25 scoring** — sharded 256-bucket inverted index; top-150 postings per term to cap high-DF stall
+5. **Fallback** — stemmed-token set comparison when BM25 score is zero; prevents false positives on partial-word matches
+
+---
+
+## Comparison
+
+| | VMN | ChromaDB / Pinecone |
+|---|---|---|
+| Result determinism | Same query → same result, always | Varies with model version |
+| Data location | Local disk only | Cloud upload required |
+| Per-query cost | $0 | API charges |
+| Setup time | 60 seconds | Account + key + SDK |
+| Semantic drift | None | Breaks on model updates |
+| Offline capable | Yes | No |
+
+---
+
+## License
+
+MIT — free forever, no telemetry, no usage limits.
+
+Built by [ExergyNet](https://exergynet.org).

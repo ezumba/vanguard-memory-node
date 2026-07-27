@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vanguard Memory Node — ExergyNet</title>
+  <meta name="description" content="Deterministic, content-addressed local memory for AI agents. No cloud. No embeddings. No semantic drift." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0a0c10;
+      --surface:  #111520;
+      --border:   #1e2535;
+      --accent:   #3b82f6;
+      --accent2:  #10b981;
+      --muted:    #64748b;
+      --text:     #e2e8f0;
+      --text-dim: #94a3b8;
+      --code-bg:  #0d1117;
+      --radius:   8px;
+      --mono:     'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    /* ── Nav ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav .logo {
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: .05em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    nav .logo span { color: var(--accent); }
+    nav ul { list-style: none; display: flex; gap: 2rem; }
+    nav a { color: var(--text-dim); text-decoration: none; font-size: .9rem; }
+    nav a:hover { color: var(--text); }
+
+    /* ── Layout ── */
+    .container { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 5rem 1.5rem 4rem;
+      text-align: center;
+      background: radial-gradient(ellipse 80% 50% at 50% 0%, #1a2744 0%, transparent 70%);
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(59,130,246,.15);
+      border: 1px solid rgba(59,130,246,.35);
+      color: var(--accent);
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      padding: .25rem .75rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+    }
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+      letter-spacing: -.02em;
+    }
+    h1 span { color: var(--accent); }
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-dim);
+      max-width: 640px;
+      margin: 0 auto 2.5rem;
+    }
+    .cta-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .65rem 1.5rem;
+      border-radius: var(--radius);
+      font-size: .95rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity .15s;
+    }
+    .btn:hover { opacity: .85; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+
+    /* ── Install bar ── */
+    .install-bar {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: .75rem 1.25rem;
+      font-family: var(--mono);
+      font-size: .9rem;
+      color: var(--accent2);
+      display: inline-flex;
+      align-items: center;
+      gap: .75rem;
+      margin-top: 1rem;
+    }
+    .install-bar .prompt { color: var(--muted); user-select: none; }
+
+    /* ── Sections ── */
+    section { padding: 4rem 0; border-top: 1px solid var(--border); }
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      letter-spacing: -.01em;
+    }
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: .5rem;
+      color: var(--text);
+    }
+
+    /* ── Problem grid ── */
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .problem-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+    .problem-card .icon {
+      font-size: 1.5rem;
+      margin-bottom: .75rem;
+    }
+    .problem-card h3 { color: var(--text-dim); font-size: .9rem; text-transform: uppercase; letter-spacing: .08em; margin-bottom: .5rem; }
+    .problem-card p { font-size: .9rem; color: var(--text-dim); }
+    .problem-card strong { color: var(--text); }
+
+    /* ── How it works ── */
+    .steps { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2rem; }
+    .step { display: flex; gap: 1.25rem; align-items: flex-start; }
+    .step-num {
+      flex-shrink: 0;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: rgba(59,130,246,.2);
+      border: 1px solid rgba(59,130,246,.4);
+      color: var(--accent);
+      font-size: .8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .step-body p { font-size: .95rem; color: var(--text-dim); margin-top: .25rem; }
+
+    /* ── Pipeline ── */
+    .pipeline {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem 2rem;
+      margin-top: 1.5rem;
+      font-family: var(--mono);
+      font-size: .85rem;
+    }
+    .pipeline .stage { display: flex; align-items: center; gap: 1rem; padding: .4rem 0; }
+    .pipeline .arrow { color: var(--muted); }
+    .pipeline .label { color: var(--accent2); min-width: 220px; }
+    .pipeline .detail { color: var(--text-dim); }
+
+    /* ── Tools grid ── */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .tool-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+    }
+    .tool-card .tool-name {
+      font-family: var(--mono);
+      font-size: .85rem;
+      color: var(--accent);
+      margin-bottom: .5rem;
+      font-weight: 600;
+    }
+    .tool-card p { font-size: .88rem; color: var(--text-dim); }
+    .tool-card .tag {
+      display: inline-block;
+      background: rgba(16,185,129,.1);
+      border: 1px solid rgba(16,185,129,.25);
+      color: var(--accent2);
+      font-size: .7rem;
+      padding: .1rem .45rem;
+      border-radius: 4px;
+      margin-top: .5rem;
+    }
+
+    /* ── Code blocks ── */
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: .85rem;
+      line-height: 1.6;
+      margin-top: 1rem;
+    }
+    code { font-family: var(--mono); font-size: .85em; }
+    p code, li code {
+      background: rgba(255,255,255,.07);
+      padding: .1em .35em;
+      border-radius: 3px;
+    }
+
+    /* ── Comparison table ── */
+    .table-wrap { overflow-x: auto; margin-top: 1.5rem; }
+    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    th {
+      text-align: left;
+      padding: .75rem 1rem;
+      background: var(--surface);
+      color: var(--text-dim);
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    td {
+      padding: .7rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+    td:first-child { font-weight: 500; color: var(--text); }
+    .yes { color: var(--accent2); font-weight: 600; }
+    .no  { color: #ef4444; }
+
+    /* ── Env vars ── */
+    .env-table td:first-child { font-family: var(--mono); font-size: .85rem; color: var(--accent); }
+    .env-table td:nth-child(2) { font-family: var(--mono); font-size: .82rem; color: var(--text-dim); }
+
+    /* ── Bridge section ── */
+    .bridge-card {
+      background: linear-gradient(135deg, rgba(59,130,246,.08), rgba(16,185,129,.05));
+      border: 1px solid rgba(59,130,246,.25);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-top: 1.5rem;
+    }
+    .bridge-card h3 { color: var(--accent); margin-bottom: .75rem; }
+    .bridge-card ul { padding-left: 1.25rem; color: var(--text-dim); font-size: .95rem; }
+    .bridge-card ul li { margin-bottom: .35rem; }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: .85rem;
+    }
+    footer a { color: var(--text-dim); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+
+    @media (max-width: 600px) {
+      .pipeline .detail { display: none; }
+      nav ul { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav>
+  <a class="logo" href="https://exergynet.org">Exergy<span>Net</span></a>
+  <ul>
+    <li><a href="https://exergynet.org">Home</a></li>
+    <li><a href="https://github.com/ezumba/vanguard-memory-node">GitHub</a></li>
+    <li><a href="https://www.npmjs.com/package/vanguard-memory-node">npm</a></li>
+  </ul>
+</nav>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="container">
+    <div class="badge">v1.4.0 — MIT License</div>
+    <h1>Vanguard <span>Memory Node</span></h1>
+    <p>
+      Deterministic, content-addressed local memory for AI agents.
+      No cloud. No embeddings. No semantic drift. Your data stays on your machine.
+    </p>
+    <div class="cta-group">
+      <a class="btn btn-primary" href="https://www.npmjs.com/package/vanguard-memory-node">Install from npm</a>
+      <a class="btn btn-ghost" href="https://github.com/ezumba/vanguard-memory-node">View on GitHub</a>
+    </div>
+    <div>
+      <div class="install-bar">
+        <span class="prompt">$</span>
+        <span>npm install -g vanguard-memory-node</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Problems ── -->
+<section>
+  <div class="container">
+    <h2>Why local memory?</h2>
+    <p style="color:var(--text-dim)">Vector databases and embedding-based memory systems have three fundamental problems. VMN solves all three.</p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="icon">⚡</div>
+        <h3>Embedding drift</h3>
+        <p>Retrieval results <strong>change whenever the embedding model updates</strong>. The same query returns different results next month than it does today.</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon">☁️</div>
+        <h3>Vendor lock-in</h3>
+        <p>Chroma, Pinecone, Weaviate — all require a running service, an account, and <strong>per-query API charges</strong> that compound at scale.</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon">🔒</div>
+        <h3>Privacy exposure</h3>
+        <p>Every document you embed <strong>leaves your machine</strong>. Clinical notes, legal briefs, proprietary code — all uploaded to third-party inference endpoints.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── How it works ── -->
+<section>
+  <div class="container">
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Ingest</h3>
+          <p>Feed any text to <code>vmn_ingest</code>. It is SHA-256 hashed, segmented into 1800-character chunks (paragraph → sentence → word → hard ceiling), and indexed in a sharded BM25 inverted index with 256 posting buckets.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Normalize</h3>
+          <p>Every token passes through a deterministic 5-stage pipeline. Phrase aliases substitute multi-word clinical and technical terms before tokenization. A 13-rule suffix stemmer and synonym cluster expansion ensure <em>smoking</em>, <em>smoker</em>, and <em>tobacco use</em> all match the same indexed root.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Score</h3>
+          <p>Queries run BM25 (k₁=1.5, b=0.75) against only the posting buckets that contain the query terms — no full index scan. A stemmed-token fallback fires when BM25 scores zero, catching edge cases without producing false positives.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>Recall</h3>
+          <p>A 900-character evidence window is returned, centered on the highest-density keyword match in the best-scoring chunk. No hallucination — the text is read verbatim from the original object file.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pipeline">
+      <div class="stage"><span class="label">Unicode NFC</span><span class="arrow">→</span><span class="detail">normalize accents and composed characters</span></div>
+      <div class="stage"><span class="label">Phrase aliases</span><span class="arrow">→</span><span class="detail">blood pressure → bp, rate limiting → ratelimit</span></div>
+      <div class="stage"><span class="label">Tokenize</span><span class="arrow">→</span><span class="detail">split on whitespace / punctuation, min length 2</span></div>
+      <div class="stage"><span class="label">Stem (13 rules)</span><span class="arrow">→</span><span class="detail">medications → medica, smoking → smok</span></div>
+      <div class="stage"><span class="label">Stop-word filter</span><span class="arrow">→</span><span class="detail">remove articles, prepositions, pronouns</span></div>
+      <div class="stage"><span class="label">Token alias expand</span><span class="arrow">→</span><span class="detail">smok ↔ tobacco ↔ cigarett ↔ nicotine</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Tools ── -->
+<section>
+  <div class="container">
+    <h2>MCP tools (10)</h2>
+    <p style="color:var(--text-dim);margin-bottom:.5rem">All tools are exposed over stdio MCP transport, compatible with Claude Desktop, Cursor, and any MCP-capable host.</p>
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="tool-name">vmn_ingest</div>
+        <p>Store text locally as a SHA-256 content-addressed shard. Returns root hash and vault path.</p>
+        <span class="tag">core</span>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">vmn_recall</div>
+        <p>Retrieve a 900-char evidence window from a specific shard using BM25 + stemmed-token scoring.</p>
+        <span class="tag">core</span>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">vmn_search</div>
+        <p>Full-vault keyword search across all ingested objects. Returns ranked results with snippets and scores.</p>
+        <span class="tag">core</span>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">vmn_list</div>
+        <p>List all memory objects with optional namespace filter. Returns title, segment count, and timestamp.</p>
+        <span class="tag">catalog</span>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">vmn_inspect</div>
+        <p>Return full catalog metadata for a specific shard: title, namespace, tags, size, excerpt, timestamps.</p>
+        <span class="tag">catalog</span>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">vmn_delete</div>
+        <p>Permanently remove an object and all its index entries from the local vault.</p>
+        <span class="tag">catalog</span>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">vmn_stats</div>
+        <p>Aggregate vault statistics: entry count, total bytes, namespaces, oldest and newest timestamps.</p>
+        <span class="tag">diagnostics</span>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">vmn_index_status</div>
+        <p>Current BM25 index state: READY, REBUILD_REQUIRED, REBUILDING, or DEGRADED.</p>
+        <span class="tag">diagnostics</span>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">vmn_rebuild_index</div>
+        <p>Rebuild the full index from authoritative object files. Safe at any time — objects are never modified.</p>
+        <span class="tag">maintenance</span>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">vmn_sync_vault</div>
+        <p>Sync a local object to the ExergyNet LNES-17 ledger. Returns Canonical Manifest JSON. Requires <code>EXERGYNET_API_KEY</code>.</p>
+        <span class="tag">bridge</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Install ── -->
+<section>
+  <div class="container">
+    <h2>Installation</h2>
+
+    <h3 style="margin-top:1.5rem;margin-bottom:.5rem;">Global install (recommended)</h3>
+<pre>npm install -g vanguard-memory-node</pre>
+
+    <h3 style="margin-top:1.5rem;margin-bottom:.5rem;">Claude Desktop — Mac</h3>
+    <p style="color:var(--text-dim);font-size:.9rem;margin-bottom:.5rem;">Edit <code>~/Library/Application Support/Claude/claude_desktop_config.json</code></p>
+<pre>{
+  "mcpServers": {
+    "vanguard-memory": {
+      "command": "npx",
+      "args": ["-y", "vanguard-memory-node"]
+    }
+  }
+}</pre>
+
+    <h3 style="margin-top:1.5rem;margin-bottom:.5rem;">Claude Desktop — Windows</h3>
+    <p style="color:var(--text-dim);font-size:.9rem;margin-bottom:.5rem;">Edit <code>%APPDATA%\Claude\claude_desktop_config.json</code></p>
+<pre>{
+  "mcpServers": {
+    "vanguard-memory": {
+      "command": "npx",
+      "args": ["-y", "vanguard-memory-node"]
+    }
+  }
+}</pre>
+
+    <h3 style="margin-top:1.5rem;margin-bottom:.5rem;">WSL on Windows</h3>
+<pre>{
+  "mcpServers": {
+    "vanguard-memory": {
+      "command": "wsl",
+      "args": ["-d", "Ubuntu", "npx", "-y", "vanguard-memory-node"]
+    }
+  }
+}</pre>
+  </div>
+</section>
+
+<!-- ── Vault Bridge ── -->
+<section>
+  <div class="container">
+    <h2>ExergyNet Vault Bridge</h2>
+    <p style="color:var(--text-dim);">New in v1.4.0. Connect your local vault to the LNES-17 thermodynamic ledger for cross-device recall and cryptographic provenance.</p>
+
+    <div class="bridge-card">
+      <h3>vmn_sync_vault</h3>
+      <ul>
+        <li>Reads the raw authoritative object file from <code>~/.vanguard/local_vault/&lt;hash&gt;.txt</code></li>
+        <li>POSTs to <code>EXERGYNET_VAULT_URL/api/xlmp/ingest</code> with <code>Authorization: Bearer &lt;key&gt;</code></li>
+        <li>Returns the server's Canonical Manifest JSON to the agent</li>
+        <li>Safe no-op when <code>EXERGYNET_API_KEY</code> is absent — never crashes the local node</li>
+      </ul>
+    </div>
+
+    <h3 style="margin-top:1.5rem;margin-bottom:.75rem;">Environment variables</h3>
+    <div class="table-wrap">
+      <table class="env-table">
+        <thead>
+          <tr><th>Variable</th><th>Default</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>EXERGYNET_API_KEY</td><td>—</td><td>API key for ExergyNet vault access</td></tr>
+          <tr><td>AUTO_SYNC_VAULT</td><td>false</td><td>Set to <code>true</code> to auto-sync every vmn_ingest</td></tr>
+          <tr><td>EXERGYNET_VAULT_URL</td><td>https://explorer-api.exergynet.org</td><td>Override vault endpoint</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ── Comparison ── -->
+<section>
+  <div class="container">
+    <h2>Comparison</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>VMN</th>
+            <th>ChromaDB</th>
+            <th>Pinecone</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Result determinism</td>
+            <td class="yes">Same query → same result, always</td>
+            <td class="no">Varies with model</td>
+            <td class="no">Varies with model</td>
+          </tr>
+          <tr>
+            <td>Data location</td>
+            <td class="yes">Local disk only</td>
+            <td>Local or cloud</td>
+            <td class="no">Cloud only</td>
+          </tr>
+          <tr>
+            <td>Per-query cost</td>
+            <td class="yes">$0</td>
+            <td>Free (local)</td>
+            <td class="no">API charges</td>
+          </tr>
+          <tr>
+            <td>Embedding model dependency</td>
+            <td class="yes">None</td>
+            <td class="no">Required</td>
+            <td class="no">Required</td>
+          </tr>
+          <tr>
+            <td>Offline capable</td>
+            <td class="yes">Yes</td>
+            <td>Yes (local)</td>
+            <td class="no">No</td>
+          </tr>
+          <tr>
+            <td>Setup time</td>
+            <td class="yes">60 seconds</td>
+            <td>~5 minutes</td>
+            <td class="no">Account + key + SDK</td>
+          </tr>
+          <tr>
+            <td>Semantic drift on update</td>
+            <td class="yes">None</td>
+            <td class="no">Yes</td>
+            <td class="no">Yes</td>
+          </tr>
+          <tr>
+            <td>Cross-device sync</td>
+            <td class="yes">Via LNES-17 bridge</td>
+            <td>Manual</td>
+            <td class="yes">Yes</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ── Vault layout ── -->
+<section>
+  <div class="container">
+    <h2>Vault layout</h2>
+    <p style="color:var(--text-dim);margin-bottom:.5rem;">All data lives under <code>~/.vanguard/</code>. The index is derived state — delete it anytime and <code>vmn_rebuild_index</code> regenerates it from the authoritative <code>.txt</code> objects.</p>
+<pre>~/.vanguard/
+├── local_vault/
+│   └── &lt;sha256&gt;.txt          # authoritative objects (never modified after write)
+├── catalog/
+│   └── &lt;sha256&gt;.json         # per-object metadata (O(1) reads)
+├── segments/
+│   └── &lt;sha256&gt;.json         # segment records + term frequencies
+└── index/
+    └── v2/
+        ├── index_manifest.json   # version + state
+        ├── corpus_stats.json     # BM25 corpus statistics
+        └── postings/
+            └── &lt;2-hex&gt;.json  # 256 sharded posting buckets</pre>
+  </div>
+</section>
+
+<!-- ── License ── -->
+<section>
+  <div class="container">
+    <h2>License &amp; roadmap</h2>
+    <p style="color:var(--text-dim);max-width:640px;">VMN Community tier is free forever under the <strong style="color:var(--text)">MIT License</strong> with no telemetry and no usage limits. The regression gate (19/19 cases) is enforced on every release — the publish script will not upload a package with a failing test.</p>
+
+    <div class="problem-grid" style="margin-top:2rem;">
+      <div class="problem-card">
+        <div class="icon">✅</div>
+        <h3>Now — v1.4.0</h3>
+        <p>BM25 sharded index · stemmed-token retrieval · ExergyNet vault bridge · 10 MCP tools · 19-case regression gate</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon">🔜</div>
+        <h3>Team tier</h3>
+        <p><strong>Shared memory vaults</strong> — multiple agents, one namespace. Conflict-free merge via content addressing.</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon">🔐</div>
+        <h3>Sovereign tier</h3>
+        <p><strong>Zero-knowledge proofs</strong> via RISC Zero · Groth16 on-chain settlement · verifiable recall without revealing content.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="container">
+    <p>
+      Built by <a href="https://exergynet.org">ExergyNet</a> ·
+      <a href="https://github.com/ezumba/vanguard-memory-node">GitHub</a> ·
+      <a href="https://www.npmjs.com/package/vanguard-memory-node">npm</a> ·
+      MIT License
+    </p>
+    <p style="margin-top:.5rem;font-size:.8rem;">Vanguard Memory Node v1.4.0 — xLMP deterministic lexical memory protocol</p>
+  </div>
+</footer>
+
+</body>
+</html>
