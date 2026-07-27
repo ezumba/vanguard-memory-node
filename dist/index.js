@@ -2,7 +2,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
-import { ingest_text, retrieve_evidence, list_vault, search_vault, inspect_entry, delete_entry, vault_stats } from './core.js';
+import { ingest_text, retrieve_evidence, list_vault, search_vault, inspect_entry, delete_entry, vault_stats, get_index_status, rebuild_index } from './core.js';
 const server = new McpServer({
     name: 'vanguard-memory-node',
     version: '1.1.0',
@@ -68,7 +68,7 @@ server.tool('vmn_search', 'Search across all memory objects in the vault by keyw
                 }]
         };
     }
-    const lines = results.map(r => `root: ${r.entry.root}\ntitle: ${r.entry.title}\nexcerpt: ${r.excerpt}\nscore: ${r.score.toFixed(4)}\n`).join('\n---\n');
+    const lines = results.map(r => `root: ${r.root}\ntitle: ${r.title}\nsnippet: ${r.snippet}\nscore: ${r.score.toFixed(3)} | segment: ${r.matched_segment} | terms: ${r.matched_terms.join(', ')}\n`).join('\n---\n');
     return {
         content: [{
                 type: 'text',
@@ -114,6 +114,24 @@ server.tool('vmn_stats', 'Return statistics about the local Vanguard Memory Vaul
         content: [{
                 type: 'text',
                 text: JSON.stringify(stats, null, 2) + '\n\n[VMN] source=local_vmn | verification=LOCAL_HASH_ONLY'
+            }]
+    };
+});
+server.tool('vmn_index_status', 'Return the current status of the BM25 inverted index. Indicates if a rebuild is needed.', {}, async () => {
+    const status = get_index_status();
+    return {
+        content: [{
+                type: 'text',
+                text: JSON.stringify(status, null, 2) + '\n\n[VMN] source=local_vmn | verification=LOCAL_HASH_ONLY'
+            }]
+    };
+});
+server.tool('vmn_rebuild_index', 'Rebuild the BM25 inverted index from existing vault objects. Safe to run at any time — objects are never modified.', {}, async () => {
+    const result = rebuild_index();
+    return {
+        content: [{
+                type: 'text',
+                text: JSON.stringify(result, null, 2) + '\n\n[VMN] source=local_vmn | verification=LOCAL_HASH_ONLY'
             }]
     };
 });

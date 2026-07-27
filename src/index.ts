@@ -9,7 +9,9 @@ import {
   search_vault,
   inspect_entry,
   delete_entry,
-  vault_stats
+  vault_stats,
+  get_index_status,
+  rebuild_index
 } from './core.js';
 
 const server = new McpServer({
@@ -103,7 +105,7 @@ server.tool(
       };
     }
     const lines = results.map(r =>
-      `root: ${r.entry.root}\ntitle: ${r.entry.title}\nexcerpt: ${r.excerpt}\nscore: ${r.score.toFixed(4)}\n`
+      `root: ${r.root}\ntitle: ${r.title}\nsnippet: ${r.snippet}\nscore: ${r.score.toFixed(3)} | segment: ${r.matched_segment} | terms: ${r.matched_terms.join(', ')}\n`
     ).join('\n---\n');
     return {
       content: [{
@@ -168,6 +170,37 @@ server.tool(
       content: [{
         type: 'text',
         text: JSON.stringify(stats, null, 2) + '\n\n[VMN] source=local_vmn | verification=LOCAL_HASH_ONLY'
+      }]
+    };
+  }
+);
+
+
+server.tool(
+  'vmn_index_status',
+  'Return the current status of the BM25 inverted index. Indicates if a rebuild is needed.',
+  {},
+  async () => {
+    const status = get_index_status();
+    return {
+      content: [{
+        type: 'text',
+        text: JSON.stringify(status, null, 2) + '\n\n[VMN] source=local_vmn | verification=LOCAL_HASH_ONLY'
+      }]
+    };
+  }
+);
+
+server.tool(
+  'vmn_rebuild_index',
+  'Rebuild the BM25 inverted index from existing vault objects. Safe to run at any time — objects are never modified.',
+  {},
+  async () => {
+    const result = rebuild_index();
+    return {
+      content: [{
+        type: 'text',
+        text: JSON.stringify(result, null, 2) + '\n\n[VMN] source=local_vmn | verification=LOCAL_HASH_ONLY'
       }]
     };
   }
