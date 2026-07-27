@@ -149,6 +149,50 @@ ok(`15 high-DF search latency ${latencyMs.toFixed(1)}ms (<50ms gate)`, latencyMs
   delete process.env.EXERGYNET_VAULT_URL;
 }
 
+// ── Cases 22-25: Network routing (substrate isolation) ────────────────────────
+{
+  const origFetch2 = globalThis.fetch;
+  let capturedUrl  = null;
+  let capturedBody = null;
+  globalThis.fetch = async (url, opts) => {
+    capturedUrl  = url;
+    capturedBody = JSON.parse(opts?.body ?? '{}');
+    return { ok: true, json: async () => ({ status: 'ok' }), text: async () => 'ok' };
+  };
+  process.env.EXERGYNET_API_KEY = 'test-key';
+
+  // Case 22: mainnet routes to portal.exergynet.org (not dt.portal)
+  process.env.EXERGYNET_NETWORK = 'mainnet';
+  delete process.env.EXERGYNET_VAULT_URL;
+  await syncToVault('x', 'test');
+  ok('22 EXERGYNET_NETWORK=mainnet → portal.exergynet.org',
+    capturedUrl?.includes('portal.exergynet.org') && !capturedUrl?.includes('dt.portal'));
+
+  // Case 23: testnet routes to dt.portal.exergynet.org
+  process.env.EXERGYNET_NETWORK = 'testnet';
+  await syncToVault('x', 'test');
+  ok('23 EXERGYNET_NETWORK=testnet → dt.portal.exergynet.org',
+    capturedUrl?.includes('dt.portal.exergynet.org'));
+
+  // Case 24: EXERGYNET_VAULT_URL overrides EXERGYNET_NETWORK
+  process.env.EXERGYNET_NETWORK = 'mainnet';
+  process.env.EXERGYNET_VAULT_URL = 'https://custom.example.com';
+  await syncToVault('x', 'test');
+  ok('24 EXERGYNET_VAULT_URL overrides EXERGYNET_NETWORK',
+    capturedUrl?.includes('custom.example.com'));
+
+  // Case 25: network field injected into POST body
+  delete process.env.EXERGYNET_VAULT_URL;
+  process.env.EXERGYNET_NETWORK = 'testnet';
+  await syncToVault('x', 'test');
+  ok('25 body.network injected from EXERGYNET_NETWORK', capturedBody?.network === 'testnet');
+
+  delete process.env.EXERGYNET_API_KEY;
+  delete process.env.EXERGYNET_NETWORK;
+  delete process.env.EXERGYNET_VAULT_URL;
+  globalThis.fetch = origFetch2;
+}
+
 // ── Cleanup ───────────────────────────────────────────────────────────────────
 hashes.forEach(h => delete_entry(h));
 

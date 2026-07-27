@@ -17,7 +17,7 @@ import { syncToVault, readVaultObject } from './vault_bridge.js';
 
 const server = new McpServer({
   name: 'vanguard-memory-node',
-  version: '1.4.2',
+  version: '1.4.3',
 });
 
 server.tool(
@@ -261,7 +261,7 @@ server.tool(
     return {
       content: [{
         type: 'text',
-        text: `SYNCED.\n${JSON.stringify(result.response, null, 2)}\n[VMN] source=exergynet_vault | verification=LNES17_HASH`
+        text: `SYNCED. [${result.url}]\n${JSON.stringify(result.response, null, 2)}\n[VMN] source=exergynet_vault | verification=LNES17_HASH`
       }]
     };
   }
