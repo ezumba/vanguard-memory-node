@@ -14,7 +14,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as crypto from 'crypto';
 import * as os from 'os';
-import { NORMALIZATION_VERSION } from './normalization.js';
+import { NORMALIZATION_VERSION, STEMMER_VERSION, ALIAS_DICT_VERSION } from './normalization.js';
 export const INDEX_VERSION = 2;
 export const VAULT_BASE = path.join(os.homedir(), '.vanguard');
 export const OBJECTS_DIR = path.join(VAULT_BASE, 'local_vault');
@@ -45,7 +45,10 @@ export function bucketPath(bucket) {
 // ── Atomic write (safe on POSIX; near-atomic on Windows) ──────────────────────
 export function atomicWrite(filePath, data) {
     const tmp = `${filePath}.${process.pid}.tmp`;
-    fs.writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf8');
+    const serialized = JSON.stringify(data, null, 2);
+    // Validate in-memory before touching disk — catches circular refs / bad values
+    JSON.parse(serialized);
+    fs.writeFileSync(tmp, serialized, 'utf8');
     // Platform-safe rename
     if (process.platform === 'win32') {
         if (fs.existsSync(filePath))
@@ -74,6 +77,10 @@ export function indexState() {
     if (m.index_version !== INDEX_VERSION)
         return 'REBUILD_REQUIRED';
     if (m.normalization_version !== NORMALIZATION_VERSION)
+        return 'REBUILD_REQUIRED';
+    if (m.alias_dictionary_version !== ALIAS_DICT_VERSION)
+        return 'REBUILD_REQUIRED';
+    if (m.stemmer_version !== STEMMER_VERSION)
         return 'REBUILD_REQUIRED';
     return m.state || 'REBUILD_REQUIRED';
 }

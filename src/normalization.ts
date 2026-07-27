@@ -4,7 +4,7 @@
  * Both vmn_search and vmn_recall MUST import from this module.
  */
 export const NORMALIZATION_VERSION  = '1.2.0';
-export const STEMMER_VERSION        = '1.1.0';
+export const STEMMER_VERSION        = '1.2.0';
 export const ALIAS_DICT_VERSION     = '1.2.1';
 
 // ── Stop words ────────────────────────────────────────────────────────────────
@@ -90,10 +90,13 @@ export function stemToken(word: string): string {
   if (w.length > 5 && w.endsWith('ions'))  return w.slice(0, -4);
   if (w.length > 5 && w.endsWith('tion'))  return w.slice(0, -4);
   if (w.length > 8 && w.endsWith('sion'))  return w.slice(0, -3);
+  if (w.length > 5 && w.endsWith('ies'))   return w.slice(0, -3);  // allergies→allerg
+  if (w.length > 6 && w.endsWith('ic'))    return w.slice(0, -2);  // allergic→allerg
   if (w.length > 4 && w.endsWith('er'))    return w.slice(0, -2);
   if (w.length > 4 && w.endsWith('ed'))    return w.slice(0, -2);
   if (w.length > 4 && w.endsWith('es'))    return w.slice(0, -2);
   if (w.length > 3 && w.endsWith('s'))     return w.slice(0, -1);
+  if (w.length > 5 && w.endsWith('y'))     return w.slice(0, -1);  // allergy→allerg
   return w;
 }
 

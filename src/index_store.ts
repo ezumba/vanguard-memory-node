@@ -116,7 +116,10 @@ export function bucketPath(bucket: string): string {
 // ── Atomic write (safe on POSIX; near-atomic on Windows) ──────────────────────
 export function atomicWrite(filePath: string, data: unknown): void {
   const tmp = `${filePath}.${process.pid}.tmp`;
-  fs.writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf8');
+  const serialized = JSON.stringify(data, null, 2);
+  // Validate in-memory before touching disk — catches circular refs / bad values
+  JSON.parse(serialized);
+  fs.writeFileSync(tmp, serialized, 'utf8');
   // Platform-safe rename
   if (process.platform === 'win32') {
     if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
@@ -142,8 +145,10 @@ export function saveManifest(manifest: IndexManifest): void {
 export function indexState(): IndexState {
   const m = loadManifest();
   if (!m) return 'REBUILD_REQUIRED';
-  if (m.index_version !== INDEX_VERSION) return 'REBUILD_REQUIRED';
-  if (m.normalization_version !== NORMALIZATION_VERSION) return 'REBUILD_REQUIRED';
+  if (m.index_version              !== INDEX_VERSION)            return 'REBUILD_REQUIRED';
+  if (m.normalization_version      !== NORMALIZATION_VERSION)    return 'REBUILD_REQUIRED';
+  if (m.alias_dictionary_version   !== ALIAS_DICT_VERSION)      return 'REBUILD_REQUIRED';
+  if (m.stemmer_version            !== STEMMER_VERSION)          return 'REBUILD_REQUIRED';
   return m.state || 'REBUILD_REQUIRED';
 }
 

@@ -99,6 +99,9 @@ function bm25Score(tf: number, docLen: number, avgLen: number, N: number, df: nu
 // MCP is single-threaded — always rebuild synchronously (no async background possible)
 const SMALL_VAULT_THRESHOLD = 1_000_000;
 
+// Top-K cap per term: prevents high-DF terms from stalling the search loop
+const MAX_POSTINGS_PER_TERM = 150;
+
 // ── Public API types ──────────────────────────────────────────────────────────
 export interface SearchResult {
   root:            string;
@@ -308,8 +311,12 @@ export function search_vault(query: string, limit = 10): SearchResponse {
   for (const term of queryTerms) {
     const bf   = buckets.get(termBucket(term));
     if (!bf) continue;
-    const hits: PostingEntry[] = bf.terms[term] || [];
-    const docsWithTerm = new Set(hits.map(h => h.root)).size;
+    const allHits: PostingEntry[] = bf.terms[term] || [];
+    // Use true DF for IDF accuracy, but cap scoring to top-K by frequency
+    const docsWithTerm = new Set(allHits.map(h => h.root)).size;
+    const hits = allHits.length > MAX_POSTINGS_PER_TERM
+      ? [...allHits].sort((a, b) => b.frequency - a.frequency).slice(0, MAX_POSTINGS_PER_TERM)
+      : allHits;
 
     for (const hit of hits) {
       const rootStats = stats.per_root[hit.root];
@@ -424,9 +431,7 @@ export function retrieve_evidence(hash: string, query: string): string {
   const chunks     = splitIntoChunks(text);
   const queryTerms = normalizeQuery(query);
 
-  if (queryTerms.length === 0) {
-    return `No relevant evidence found for query: ${query}`;
-  }
+  if (queryTerms.length === 0) return 'no_relevant_evidence_found';
 
   // Score chunks by normalized term overlap — same pipeline as search_vault
   let bestScore = -1;
@@ -441,7 +446,7 @@ export function retrieve_evidence(hash: string, query: string): string {
       if (chunkFreqs[qt]) score += chunkFreqs[qt] * 2;
     }
 
-    // Fallback: prefix match (only when primary score is zero)
+    // Fallback: substring match for rare normalization misses (only when primary=0)
     if (score === 0) {
       const chunkLower = chunk.toLowerCase();
       for (const qt of queryTerms) {
@@ -452,7 +457,8 @@ export function retrieve_evidence(hash: string, query: string): string {
     if (score > bestScore) { bestScore = score; bestChunk = chunk; }
   }
 
-  if (bestScore <= 0) return `No relevant evidence found for query: ${query}`;
+  // Zero-score rejection invariant: never return a chunk when nothing matched
+  if (bestScore <= 0) return 'no_relevant_evidence_found';
 
   return findEvidenceWindow(bestChunk, queryTerms);
 }
