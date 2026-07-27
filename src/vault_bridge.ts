@@ -16,7 +16,7 @@ export async function syncToVault(payload: string, intent: string): Promise<Sync
     return { status: 'unconfigured', message: 'EXERGYNET_API_KEY not set — vault sync disabled' };
   }
   const base = (process.env.EXERGYNET_VAULT_URL ?? DEFAULT_VAULT_URL).replace(/\/$/, '');
-  const url  = `${base}/api/xlmp/ingest`;
+  const url  = `${base}/api/xlmp/vanguard/ingest`;
   try {
     const res = await fetch(url, {
       method:  'POST',
