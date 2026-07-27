@@ -41,12 +41,27 @@ const EVIDENCE_WINDOW = 900; // chars surrounding the best keyword match
 // — plain substring search is inconsistent across trivial English inflections
 // of the same word). This makes the free-text path use the same matching
 // standard the JSON path already had.
+function stem(word) {
+    if (word.length <= 3)
+        return word;
+    const suffixes = ['ations', 'ation', 'ings', 'ing', 'ness', 'ment', 'ated', 'ating', 'ers', 'er', 'ed', 'es', 's'];
+    for (const sfx of suffixes) {
+        if (word.endsWith(sfx) && word.length - sfx.length >= 3) {
+            return word.slice(0, word.length - sfx.length);
+        }
+    }
+    return word;
+}
 function wordsMatch(a, b) {
     if (a === b)
         return true;
+    // Stem both words; if stems match, words are considered equivalent
+    if (stem(a) === stem(b))
+        return true;
+    // Prefix ratio fallback (short words require exact match)
+    if (a.length < 4 || b.length < 4)
+        return false;
     const minLen = Math.min(a.length, b.length);
-    if (minLen < 3)
-        return false; // too short for a fuzzy prefix ratio to mean anything
     let shared = 0;
     while (shared < minLen && a[shared] === b[shared])
         shared++;
@@ -62,21 +77,57 @@ function tokenizeWords(text) {
     return out;
 }
 function splitIntoChunks(text) {
-    const chunks = [];
-    const paragraphs = text.split(/\n{2,}/);
-    let current = '';
-    for (const para of paragraphs) {
-        if ((current + para).length > CHUNK_TARGET_SIZE && current) {
-            chunks.push(current.trim());
-            current = para;
+    if (!text || !text.trim())
+        return [];
+    const MAX = CHUNK_TARGET_SIZE;
+    function packPieces(pieces, max) {
+        const chunks = [];
+        let cur = '';
+        for (const piece of pieces) {
+            if (piece.length > max) {
+                if (cur) {
+                    chunks.push(cur.trim());
+                    cur = '';
+                }
+                for (let i = 0; i < piece.length; i += max)
+                    chunks.push(piece.slice(i, i + max));
+            }
+            else {
+                const joined = cur ? cur + ' ' + piece : piece;
+                if (joined.length > max) {
+                    if (cur)
+                        chunks.push(cur.trim());
+                    cur = piece;
+                }
+                else {
+                    cur = joined;
+                }
+            }
         }
-        else {
-            current += (current ? '\n\n' : '') + para;
-        }
+        if (cur.trim())
+            chunks.push(cur.trim());
+        return chunks;
     }
-    if (current.trim().length > 50)
-        chunks.push(current.trim());
-    return chunks;
+    function shatter(segment) {
+        if (segment.length <= MAX)
+            return [segment];
+        // Level 2: sentence boundaries
+        const sentences = segment.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g)
+            ?.map(s => s.trim()).filter(s => s.length > 0) ?? [];
+        if (sentences.length > 1)
+            return packPieces(sentences, MAX);
+        // Level 3: word boundaries
+        const words = segment.split(/\s+/).filter(w => w.length > 0);
+        if (words.length > 1)
+            return packPieces(words, MAX);
+        // Level 4: hard cut (minified text, no whitespace)
+        const out = [];
+        for (let i = 0; i < segment.length; i += MAX)
+            out.push(segment.slice(i, i + MAX));
+        return out;
+    }
+    const paragraphs = text.split(/\n{2,}/).map(p => p.trim()).filter(p => p.length > 0);
+    return paragraphs.flatMap(para => shatter(para).filter(piece => piece.trim().length > 0));
 }
 function scoreChunk(chunk, queryWords) {
     const chunkWords = tokenizeWords(chunk.toLowerCase());
@@ -126,11 +177,105 @@ const VAULT_DIR = path.join(os.homedir(), '.vanguard', 'local_vault');
 function ensureVault() {
     fs.mkdirSync(VAULT_DIR, { recursive: true });
 }
-export function ingest_text(text) {
+const CATALOG_FILE = path.join(VAULT_DIR, 'catalog.json');
+function loadCatalog() {
+    try {
+        return JSON.parse(fs.readFileSync(CATALOG_FILE, 'utf8'));
+    }
+    catch {
+        return {};
+    }
+}
+function saveCatalog(catalog) {
+    fs.writeFileSync(CATALOG_FILE, JSON.stringify(catalog, null, 2), 'utf8');
+}
+export function list_vault(namespace) {
+    ensureVault();
+    const catalog = loadCatalog();
+    const entries = Object.values(catalog);
+    return namespace
+        ? entries.filter(e => e.namespace === namespace)
+        : entries;
+}
+export function search_vault(query, limit = 10) {
+    ensureVault();
+    const catalog = loadCatalog();
+    const words = extractQueryWords(query);
+    if (words.length === 0)
+        return [];
+    const results = [];
+    for (const entry of Object.values(catalog)) {
+        const haystack = (entry.title + ' ' + entry.excerpt + ' ' + entry.tags.join(' ')).toLowerCase();
+        const haystackWords = haystack.match(/[a-z0-9]+/g) ?? [];
+        let score = 0;
+        for (const w of words) {
+            for (const hw of haystackWords) {
+                if (wordsMatch(w, hw))
+                    score++;
+            }
+        }
+        if (score > 0)
+            results.push({ entry, score, excerpt: entry.excerpt });
+    }
+    return results.sort((a, b) => b.score - a.score).slice(0, limit);
+}
+export function inspect_entry(hash) {
+    ensureVault();
+    const catalog = loadCatalog();
+    return catalog[hash] ?? null;
+}
+export function delete_entry(hash) {
+    ensureVault();
+    const catalog = loadCatalog();
+    if (!catalog[hash])
+        return false;
+    delete catalog[hash];
+    saveCatalog(catalog);
+    const filePath = path.join(VAULT_DIR, `${hash}.txt`);
+    if (fs.existsSync(filePath))
+        fs.unlinkSync(filePath);
+    return true;
+}
+export function vault_stats() {
+    ensureVault();
+    const catalog = loadCatalog();
+    const entries = Object.values(catalog);
+    if (entries.length === 0) {
+        return { total_entries: 0, total_bytes: 0, namespaces: [], oldest_at: null, newest_at: null };
+    }
+    const namespaces = [...new Set(entries.map(e => e.namespace))];
+    const sortedByDate = entries.map(e => e.ingested_at).sort();
+    return {
+        total_entries: entries.length,
+        total_bytes: entries.reduce((sum, e) => sum + e.byte_size, 0),
+        namespaces,
+        oldest_at: sortedByDate[0],
+        newest_at: sortedByDate[sortedByDate.length - 1],
+    };
+}
+export function ingest_text(text, options = {}) {
     ensureVault();
     const hash = crypto.createHash('sha256').update(text).digest('hex');
     const filePath = path.join(VAULT_DIR, `${hash}.txt`);
     fs.writeFileSync(filePath, text, 'utf8');
+    const catalog = loadCatalog();
+    const chunks = splitIntoChunks(text);
+    const now = new Date().toISOString();
+    const existing = catalog[hash];
+    catalog[hash] = {
+        root: hash,
+        title: options.title ?? text.slice(0, 60).replace(/\n/g, ' ').trim(),
+        namespace: options.namespace ?? 'default',
+        tags: options.tags ?? [],
+        content_type: options.content_type ?? 'text/plain',
+        source: options.source ?? '',
+        segment_count: chunks.length,
+        byte_size: Buffer.byteLength(text, 'utf8'),
+        excerpt: text.slice(0, 120).replace(/\n/g, ' ').trim(),
+        ingested_at: existing?.ingested_at ?? now,
+        updated_at: now,
+    };
+    saveCatalog(catalog);
     return hash;
 }
 export function retrieve_evidence(hash, query) {
@@ -142,6 +287,8 @@ export function retrieve_evidence(hash, query) {
     const text = fs.readFileSync(filePath, 'utf8');
     const chunks = splitIntoChunks(text);
     const words = extractQueryWords(query);
+    if (words.length === 0)
+        return `No relevant evidence found for query: ${query}`;
     let best = { score: -1, chunk: '' };
     for (const chunk of chunks) {
         const score = scoreChunk(chunk, words);
