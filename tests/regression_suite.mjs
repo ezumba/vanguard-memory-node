@@ -9,6 +9,7 @@ import { stemToken } from '../dist/normalization.js';
 import {
   ingest_text, retrieve_evidence, search_vault, delete_entry,
 } from '../dist/core.js';
+import { syncToVault } from '../dist/vault_bridge.js';
 
 // ── Stemmer parity pre-flight (throws on failure, blocking further tests) ─────
 assert.strictEqual(stemToken('medications'), stemToken('medication'),
@@ -101,6 +102,40 @@ for (let i = 0; i < 10; i++) search_vault('topic');
 const latencyMs = (performance.now() - t0) / 10;
 seeds.forEach(h => delete_entry(h));
 ok(`15 high-DF search latency ${latencyMs.toFixed(1)}ms (<50ms gate)`, latencyMs < 50);
+
+// ── Cases 16-18: Vault bridge (mock fetch) ────────────────────────────────────
+{
+  let captured = null;
+  const origFetch = globalThis.fetch;
+  globalThis.fetch = async (url, opts) => {
+    captured = { url, opts };
+    return {
+      ok:   true,
+      json: async () => ({ canonical_manifest: 'abc123', status: 'ok' }),
+      text: async () => 'ok',
+    };
+  };
+
+  process.env.EXERGYNET_API_KEY   = 'test-key-abc123';
+  process.env.EXERGYNET_VAULT_URL = 'https://test.example.com';
+
+  const r16 = await syncToVault('hello vault', 'unit-test');
+  ok('16 syncToVault: status ok on mock success', r16.status === 'ok');
+
+  ok('17 syncToVault: Authorization header Bearer-formatted',
+    captured?.opts?.headers?.['Authorization'] === 'Bearer test-key-abc123');
+
+  const body = JSON.parse(captured?.opts?.body ?? '{}');
+  ok('18 syncToVault: body has correct payload and intent',
+    body.payload === 'hello vault' && body.intent === 'unit-test');
+
+  delete process.env.EXERGYNET_API_KEY;
+  const r19 = await syncToVault('hello vault', 'unit-test');
+  ok('19 syncToVault: unconfigured when API key missing', r19.status === 'unconfigured');
+
+  globalThis.fetch = origFetch;
+  delete process.env.EXERGYNET_VAULT_URL;
+}
 
 // ── Cleanup ───────────────────────────────────────────────────────────────────
 hashes.forEach(h => delete_entry(h));
