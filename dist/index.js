@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { ingest_text, retrieve_evidence, list_vault, search_vault, inspect_entry, delete_entry, vault_stats, get_index_status, rebuild_index } from './core.js';
 const server = new McpServer({
     name: 'vanguard-memory-node',
-    version: '1.2.0',
+    version: '1.2.1',
 });
 server.tool('vmn_ingest', 'Ingest text into the local Vanguard Memory Vault. Returns a SHA-256 shard hash.', {
     text: z.string().describe('The text content to ingest and shard locally'),
