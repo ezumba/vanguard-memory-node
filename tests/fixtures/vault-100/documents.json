@@ -1,0 +1,702 @@
+[
+  {
+    "index": 0,
+    "root": "7bd4c3bdef0a75cc165c7cebb62325bf7dc20941e25c14f7caa5c1babf652924",
+    "text": "Patient 4 presents with headache. PMH includes hypothyroidism. Currently taking atorvastatin. [ref:0-0]\nPatient 4 presents with headache. PMH includes hypothyroidism. Currently taking atorvastatin. [ref:0-1]\nPatient 4 presents with headache. PMH includes hypothyroidism. Currently taking atorvastatin. [ref:0-2]\nPatient 4 presents with headache. PMH includes hypothyroidism. Currently taking atorvastatin. [ref:0-3]\nPatient 4 presents with headache. PMH includes hypothyroidism. Currently taking atorvastatin. [ref:0-4]",
+    "title": "Doc 0 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 1,
+    "root": "f4358086470853c17c681e074fd72df9e52a3151876e239e33167f96abd99201",
+    "text": "Arbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:17-0]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:17-1]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:17-2]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:17-3]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:17-4]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:17-5]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:17-6]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:17-7]",
+    "title": "Doc 1 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 2,
+    "root": "8d9abe96d04daf5d767d591a171a7d930a2a56662e439b6f71281f0702c9ec8d",
+    "text": "CHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:34-0]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:34-1]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:34-2]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:34-3]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:34-4]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:34-5]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:34-6]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:34-7]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:34-8]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:34-9]",
+    "title": "Doc 2 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 3,
+    "root": "e731ed4064cb2a8c72fa0a771487465d3d0b32d330d714ca728a68fe4bc35952",
+    "text": "Meeting notes 2026-09-01: David to complete the security review by end of quarter. Jack flagged technical debt. [ref:51-0]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Jack flagged technical debt. [ref:51-1]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Jack flagged technical debt. [ref:51-2]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Jack flagged technical debt. [ref:51-3]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Jack flagged technical debt. [ref:51-4]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Jack flagged technical debt. [ref:51-5]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Jack flagged technical debt. [ref:51-6]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Jack flagged technical debt. [ref:51-7]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Jack flagged technical debt. [ref:51-8]",
+    "title": "Doc 3 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 4,
+    "root": "73d9b187e16763e2f5a117564ded17ff4e3e2f1bb41440201bed7b85e14cc733",
+    "text": "The patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-0]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-1]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-2]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-3]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-4]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-5]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-6]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-7]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-8]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-9]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-10]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-11]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-12]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:68-13]",
+    "title": "Doc 4 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 5,
+    "root": "7bf7e6caf76e4eede993554d30c0e7e65bded1948e4c039f33a7158871b0c1a0",
+    "text": "Whereas the contractor shall deliver software deliverable no later than 2026-03-01, failure constitutes breach. [ref:85-0]\nWhereas the contractor shall deliver software deliverable no later than 2026-03-01, failure constitutes breach. [ref:85-1]\nWhereas the contractor shall deliver software deliverable no later than 2026-03-01, failure constitutes breach. [ref:85-2]\nWhereas the contractor shall deliver software deliverable no later than 2026-03-01, failure constitutes breach. [ref:85-3]\nWhereas the contractor shall deliver software deliverable no later than 2026-03-01, failure constitutes breach. [ref:85-4]",
+    "title": "Doc 5 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 6,
+    "root": "a3455629fe3dae92a8e803ae0124c6a448174d4c0c0ef683eb07847c368b9a5d",
+    "text": "v4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:102-0]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:102-1]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:102-2]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:102-3]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:102-4]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:102-5]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:102-6]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:102-7]",
+    "title": "Doc 6 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 7,
+    "root": "3adf8f53e177dbf2705e3226ed3042ec9ae8fe8554fa678eeb0ae12a57ee56e4",
+    "text": "Meeting notes 2026-09-01: Bob to complete the security review by by EOD. Jack flagged technical debt. [ref:119-0]\nMeeting notes 2026-09-01: Bob to complete the security review by by EOD. Jack flagged technical debt. [ref:119-1]\nMeeting notes 2026-09-01: Bob to complete the security review by by EOD. Jack flagged technical debt. [ref:119-2]\nMeeting notes 2026-09-01: Bob to complete the security review by by EOD. Jack flagged technical debt. [ref:119-3]\nMeeting notes 2026-09-01: Bob to complete the security review by by EOD. Jack flagged technical debt. [ref:119-4]\nMeeting notes 2026-09-01: Bob to complete the security review by by EOD. Jack flagged technical debt. [ref:119-5]\nMeeting notes 2026-09-01: Bob to complete the security review by by EOD. Jack flagged technical debt. [ref:119-6]\nMeeting notes 2026-09-01: Bob to complete the security review by by EOD. Jack flagged technical debt. [ref:119-7]",
+    "title": "Doc 7 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 8,
+    "root": "7805dc8c2c145359244338a2579a0d207f48c8d4662032e20167e56684f24753",
+    "text": "Vital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-0]\nVital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-1]\nVital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-2]\nVital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-3]\nVital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-4]\nVital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-5]\nVital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-6]\nVital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-7]\nVital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-8]\nVital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-9]\nVital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-10]\nVital signs: BP 118/76, HR 88. Assessment: hypertension. Plan: lifestyle modification. [ref:136-11]",
+    "title": "Doc 8 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 9,
+    "root": "6b38645ee31476c11ea0cc064a2a71dce62ec455255d08317c5c608c3f78adfb",
+    "text": "Section 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-0]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-1]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-2]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-3]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-4]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-5]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-6]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-7]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-8]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-9]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-10]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:153-11]",
+    "title": "Doc 9 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 10,
+    "root": "85e35d342bc66fd01a93377e0ef82f70351748c317b6358b3083cd5e97e32eb6",
+    "text": "Bug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:170-0]\nBug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:170-1]\nBug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:170-2]\nBug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:170-3]\nBug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:170-4]\nBug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:170-5]",
+    "title": "Doc 10 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 11,
+    "root": "2376d3ab32a9c382121858348b66b0e554d525e25868605d0298320dec942402",
+    "text": "Meeting notes 2026-09-01: Alice to complete the security review by end of quarter. Jack flagged resource constraint. [ref:187-0]\nMeeting notes 2026-09-01: Alice to complete the security review by end of quarter. Jack flagged resource constraint. [ref:187-1]\nMeeting notes 2026-09-01: Alice to complete the security review by end of quarter. Jack flagged resource constraint. [ref:187-2]\nMeeting notes 2026-09-01: Alice to complete the security review by end of quarter. Jack flagged resource constraint. [ref:187-3]\nMeeting notes 2026-09-01: Alice to complete the security review by end of quarter. Jack flagged resource constraint. [ref:187-4]\nMeeting notes 2026-09-01: Alice to complete the security review by end of quarter. Jack flagged resource constraint. [ref:187-5]",
+    "title": "Doc 11 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 12,
+    "root": "d062acd87303f929223f56071cdfc749321d2586a4c22d35bd894368db465944",
+    "text": "Hypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:204-0]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:204-1]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:204-2]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:204-3]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:204-4]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:204-5]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:204-6]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:204-7]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:204-8]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:204-9]",
+    "title": "Doc 12 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 13,
+    "root": "eb531351b9a7a8a470882636da4fe2fdcb88233a07e028caae3ca45fc0e2f62e",
+    "text": "Arbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:221-0]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:221-1]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:221-2]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:221-3]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:221-4]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:221-5]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:221-6]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:221-7]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:221-8]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:221-9]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:221-10]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:221-11]",
+    "title": "Doc 13 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 14,
+    "root": "4176eee88e763f2342b16e2a23ad43ca8739865176a8f37f4286836e81dd685c",
+    "text": "CHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:238-0]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:238-1]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:238-2]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:238-3]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:238-4]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:238-5]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:238-6]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:238-7]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:238-8]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:238-9]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:238-10]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:238-11]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:238-12]",
+    "title": "Doc 14 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 15,
+    "root": "95756e156cc848df86aca9323035fa73cd97a91a0ffb29553e89f6623a763898",
+    "text": "Meeting notes 2026-09-01: Eve to complete the security review by by EOD. Hank flagged resource constraint. [ref:255-0]\nMeeting notes 2026-09-01: Eve to complete the security review by by EOD. Hank flagged resource constraint. [ref:255-1]\nMeeting notes 2026-09-01: Eve to complete the security review by by EOD. Hank flagged resource constraint. [ref:255-2]\nMeeting notes 2026-09-01: Eve to complete the security review by by EOD. Hank flagged resource constraint. [ref:255-3]\nMeeting notes 2026-09-01: Eve to complete the security review by by EOD. Hank flagged resource constraint. [ref:255-4]",
+    "title": "Doc 15 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 16,
+    "root": "b43672d9744024d41772f64e17abb00bc608f42e9180b1b4a85dd168881b1603",
+    "text": "Lab results show high LDL 190. Physician Williams recommends medication adjustment. [ref:272-0]\nLab results show high LDL 190. Physician Williams recommends medication adjustment. [ref:272-1]\nLab results show high LDL 190. Physician Williams recommends medication adjustment. [ref:272-2]\nLab results show high LDL 190. Physician Williams recommends medication adjustment. [ref:272-3]\nLab results show high LDL 190. Physician Williams recommends medication adjustment. [ref:272-4]\nLab results show high LDL 190. Physician Williams recommends medication adjustment. [ref:272-5]\nLab results show high LDL 190. Physician Williams recommends medication adjustment. [ref:272-6]\nLab results show high LDL 190. Physician Williams recommends medication adjustment. [ref:272-7]",
+    "title": "Doc 16 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 17,
+    "root": "770f2c6b08bff31cbaff751c4b2bab7705a463f2b1a1a93f762aacc151c03b58",
+    "text": "Whereas the contractor shall deliver software deliverable no later than 2026-03-01, failure constitutes breach. [ref:289-0]\nWhereas the contractor shall deliver software deliverable no later than 2026-03-01, failure constitutes breach. [ref:289-1]\nWhereas the contractor shall deliver software deliverable no later than 2026-03-01, failure constitutes breach. [ref:289-2]\nWhereas the contractor shall deliver software deliverable no later than 2026-03-01, failure constitutes breach. [ref:289-3]\nWhereas the contractor shall deliver software deliverable no later than 2026-03-01, failure constitutes breach. [ref:289-4]\nWhereas the contractor shall deliver software deliverable no later than 2026-03-01, failure constitutes breach. [ref:289-5]\nWhereas the contractor shall deliver software deliverable no later than 2026-03-01, failure constitutes breach. [ref:289-6]\nWhereas the contractor shall deliver software deliverable no later than 2026-03-01, failure constitutes breach. [ref:289-7]",
+    "title": "Doc 17 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 18,
+    "root": "1886f34871993c36b2b7f490ca2df440b1e8cec8ec1e1cc33ad03a6c2eb75326",
+    "text": "v4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:306-0]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:306-1]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:306-2]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:306-3]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:306-4]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:306-5]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:306-6]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:306-7]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:306-8]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:306-9]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:306-10]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:306-11]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:306-12]",
+    "title": "Doc 18 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 19,
+    "root": "acdd849dee8365f726a51873a66e8f4af1c92fb598dc7f3a95a87a25da019f67",
+    "text": "Meeting notes 2026-09-01: David to complete the security review by end of quarter. Grace flagged resource constraint. [ref:323-0]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Grace flagged resource constraint. [ref:323-1]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Grace flagged resource constraint. [ref:323-2]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Grace flagged resource constraint. [ref:323-3]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Grace flagged resource constraint. [ref:323-4]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Grace flagged resource constraint. [ref:323-5]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Grace flagged resource constraint. [ref:323-6]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Grace flagged resource constraint. [ref:323-7]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Grace flagged resource constraint. [ref:323-8]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Grace flagged resource constraint. [ref:323-9]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Grace flagged resource constraint. [ref:323-10]",
+    "title": "Doc 19 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 20,
+    "root": "baea524994ba240bbf6de98d673ec4d15ff3d2a3c064b8b32983e9304c87677e",
+    "text": "Patient 4 presents with fatigue. PMH includes COPD. Currently taking lisinopril. [ref:340-0]\nPatient 4 presents with fatigue. PMH includes COPD. Currently taking lisinopril. [ref:340-1]\nPatient 4 presents with fatigue. PMH includes COPD. Currently taking lisinopril. [ref:340-2]\nPatient 4 presents with fatigue. PMH includes COPD. Currently taking lisinopril. [ref:340-3]\nPatient 4 presents with fatigue. PMH includes COPD. Currently taking lisinopril. [ref:340-4]\nPatient 4 presents with fatigue. PMH includes COPD. Currently taking lisinopril. [ref:340-5]",
+    "title": "Doc 20 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 21,
+    "root": "3410f45f81ae6bcdc66bbd1e92ff4f718171b63cd05726f932c95bbf1cc57c3e",
+    "text": "Section 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:357-0]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:357-1]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:357-2]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:357-3]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:357-4]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:357-5]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:357-6]",
+    "title": "Doc 21 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 22,
+    "root": "1ec0d5b6d6fe600f2b52d2939892d14d1a738092da401d7d977d2ed894710420",
+    "text": "Bug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:374-0]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:374-1]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:374-2]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:374-3]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:374-4]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:374-5]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:374-6]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:374-7]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:374-8]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:374-9]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:374-10]",
+    "title": "Doc 22 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 23,
+    "root": "111c153a5ca5c5de4d343622c9b48ca8958538e5f4e8f14430c06f9d6363b51c",
+    "text": "Meeting notes 2026-09-01: Eve to complete the security review by by EOD. Iris flagged technical debt. [ref:391-0]\nMeeting notes 2026-09-01: Eve to complete the security review by by EOD. Iris flagged technical debt. [ref:391-1]\nMeeting notes 2026-09-01: Eve to complete the security review by by EOD. Iris flagged technical debt. [ref:391-2]\nMeeting notes 2026-09-01: Eve to complete the security review by by EOD. Iris flagged technical debt. [ref:391-3]\nMeeting notes 2026-09-01: Eve to complete the security review by by EOD. Iris flagged technical debt. [ref:391-4]\nMeeting notes 2026-09-01: Eve to complete the security review by by EOD. Iris flagged technical debt. [ref:391-5]\nMeeting notes 2026-09-01: Eve to complete the security review by by EOD. Iris flagged technical debt. [ref:391-6]\nMeeting notes 2026-09-01: Eve to complete the security review by by EOD. Iris flagged technical debt. [ref:391-7]\nMeeting notes 2026-09-01: Eve to complete the security review by by EOD. Iris flagged technical debt. [ref:391-8]\nMeeting notes 2026-09-01: Eve to complete the security review by by EOD. Iris flagged technical debt. [ref:391-9]",
+    "title": "Doc 23 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 24,
+    "root": "12bcc0e5c14e85d2222dba5bd8b35b6528817f9b62ecd923d9db7657a266fc07",
+    "text": "The patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:408-0]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:408-1]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:408-2]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:408-3]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:408-4]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:408-5]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:408-6]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:408-7]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:408-8]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:408-9]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:408-10]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:408-11]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:408-12]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:408-13]",
+    "title": "Doc 24 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 25,
+    "root": "ea4437d8d75d71427e5dae8a6dc7c2c5ad573702f3e404ea0d6018a6a1789411",
+    "text": "Arbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:425-0]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:425-1]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:425-2]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:425-3]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:425-4]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:425-5]",
+    "title": "Doc 25 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 26,
+    "root": "257f51beef9718efe99cfb4641f2dbc7feeee0ed4ec8ba33e5d36680bd86dc01",
+    "text": "CHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-09-01. [ref:442-0]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-09-01. [ref:442-1]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-09-01. [ref:442-2]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-09-01. [ref:442-3]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-09-01. [ref:442-4]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-09-01. [ref:442-5]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-09-01. [ref:442-6]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-09-01. [ref:442-7]",
+    "title": "Doc 26 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 27,
+    "root": "9dc35d88ebf48728a731f4d8c63eb5f159851e5d728f8d146164c7c144e64293",
+    "text": "Meeting notes 2026-09-01: Alice to complete the security review by end of quarter. Frank flagged technical debt. [ref:459-0]\nMeeting notes 2026-09-01: Alice to complete the security review by end of quarter. Frank flagged technical debt. [ref:459-1]\nMeeting notes 2026-09-01: Alice to complete the security review by end of quarter. Frank flagged technical debt. [ref:459-2]\nMeeting notes 2026-09-01: Alice to complete the security review by end of quarter. Frank flagged technical debt. [ref:459-3]\nMeeting notes 2026-09-01: Alice to complete the security review by end of quarter. Frank flagged technical debt. [ref:459-4]\nMeeting notes 2026-09-01: Alice to complete the security review by end of quarter. Frank flagged technical debt. [ref:459-5]\nMeeting notes 2026-09-01: Alice to complete the security review by end of quarter. Frank flagged technical debt. [ref:459-6]\nMeeting notes 2026-09-01: Alice to complete the security review by end of quarter. Frank flagged technical debt. [ref:459-7]",
+    "title": "Doc 27 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 28,
+    "root": "200649a7034e2608d7bfd773b8589c25a49ae9209709353a6168d0c9d0b90f21",
+    "text": "Vital signs: BP 118/76, HR 78. Assessment: atrial fibrillation. Plan: lifestyle modification. [ref:476-0]\nVital signs: BP 118/76, HR 78. Assessment: atrial fibrillation. Plan: lifestyle modification. [ref:476-1]\nVital signs: BP 118/76, HR 78. Assessment: atrial fibrillation. Plan: lifestyle modification. [ref:476-2]\nVital signs: BP 118/76, HR 78. Assessment: atrial fibrillation. Plan: lifestyle modification. [ref:476-3]\nVital signs: BP 118/76, HR 78. Assessment: atrial fibrillation. Plan: lifestyle modification. [ref:476-4]\nVital signs: BP 118/76, HR 78. Assessment: atrial fibrillation. Plan: lifestyle modification. [ref:476-5]\nVital signs: BP 118/76, HR 78. Assessment: atrial fibrillation. Plan: lifestyle modification. [ref:476-6]\nVital signs: BP 118/76, HR 78. Assessment: atrial fibrillation. Plan: lifestyle modification. [ref:476-7]\nVital signs: BP 118/76, HR 78. Assessment: atrial fibrillation. Plan: lifestyle modification. [ref:476-8]\nVital signs: BP 118/76, HR 78. Assessment: atrial fibrillation. Plan: lifestyle modification. [ref:476-9]\nVital signs: BP 118/76, HR 78. Assessment: atrial fibrillation. Plan: lifestyle modification. [ref:476-10]",
+    "title": "Doc 28 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 29,
+    "root": "5340e3e57e0b165cdd9f6bdfdba2aa47ce46e0b67462fe06b007547cf6cfc2f9",
+    "text": "Whereas the contractor shall deliver software deliverable no later than 2026-09-01, failure constitutes breach. [ref:493-0]\nWhereas the contractor shall deliver software deliverable no later than 2026-09-01, failure constitutes breach. [ref:493-1]\nWhereas the contractor shall deliver software deliverable no later than 2026-09-01, failure constitutes breach. [ref:493-2]\nWhereas the contractor shall deliver software deliverable no later than 2026-09-01, failure constitutes breach. [ref:493-3]\nWhereas the contractor shall deliver software deliverable no later than 2026-09-01, failure constitutes breach. [ref:493-4]\nWhereas the contractor shall deliver software deliverable no later than 2026-09-01, failure constitutes breach. [ref:493-5]\nWhereas the contractor shall deliver software deliverable no later than 2026-09-01, failure constitutes breach. [ref:493-6]\nWhereas the contractor shall deliver software deliverable no later than 2026-09-01, failure constitutes breach. [ref:493-7]\nWhereas the contractor shall deliver software deliverable no later than 2026-09-01, failure constitutes breach. [ref:493-8]\nWhereas the contractor shall deliver software deliverable no later than 2026-09-01, failure constitutes breach. [ref:493-9]\nWhereas the contractor shall deliver software deliverable no later than 2026-09-01, failure constitutes breach. [ref:493-10]",
+    "title": "Doc 29 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 30,
+    "root": "dc6c3118c91e71ce39cdfb8e2e27d8b256331f9c4920ac4b15e815f110f82752",
+    "text": "v4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:510-0]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:510-1]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:510-2]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:510-3]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:510-4]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:510-5]",
+    "title": "Doc 30 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 31,
+    "root": "8cf7e54065523237e40a07639757a3bfb71386ff72c326ca647256b4870f0a4c",
+    "text": "Meeting notes 2026-09-01: Eve to complete the security review by by EOD. Iris flagged technical debt. [ref:527-0]\nMeeting notes 2026-09-01: Eve to complete the security review by by EOD. Iris flagged technical debt. [ref:527-1]\nMeeting notes 2026-09-01: Eve to complete the security review by by EOD. Iris flagged technical debt. [ref:527-2]\nMeeting notes 2026-09-01: Eve to complete the security review by by EOD. Iris flagged technical debt. [ref:527-3]\nMeeting notes 2026-09-01: Eve to complete the security review by by EOD. Iris flagged technical debt. [ref:527-4]\nMeeting notes 2026-09-01: Eve to complete the security review by by EOD. Iris flagged technical debt. [ref:527-5]\nMeeting notes 2026-09-01: Eve to complete the security review by by EOD. Iris flagged technical debt. [ref:527-6]",
+    "title": "Doc 31 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 32,
+    "root": "426767f948000c3c393f0415d3c691dd79c1a4ef647b80f411388a1e80e5e582",
+    "text": "Hypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:544-0]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:544-1]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:544-2]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:544-3]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:544-4]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:544-5]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:544-6]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:544-7]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:544-8]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:544-9]",
+    "title": "Doc 32 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 33,
+    "root": "4c0d78ed13b5e0a822880c50979ce17f059be54bf530dc83225fc3a6c28f020a",
+    "text": "Section 100: The party of the first part agrees to pay invoices per the agreement dated 2026-03-01. [ref:561-0]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-03-01. [ref:561-1]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-03-01. [ref:561-2]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-03-01. [ref:561-3]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-03-01. [ref:561-4]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-03-01. [ref:561-5]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-03-01. [ref:561-6]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-03-01. [ref:561-7]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-03-01. [ref:561-8]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-03-01. [ref:561-9]",
+    "title": "Doc 33 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 34,
+    "root": "2569003859898e7d75a902c840bf2d1ebcb101f2e69334de820404b251f136c0",
+    "text": "Bug #4: Memory leak in cache manager when hypothyroidism. Fixed in commit c92a0f3. [ref:578-0]\nBug #4: Memory leak in cache manager when hypothyroidism. Fixed in commit c92a0f3. [ref:578-1]\nBug #4: Memory leak in cache manager when hypothyroidism. Fixed in commit c92a0f3. [ref:578-2]\nBug #4: Memory leak in cache manager when hypothyroidism. Fixed in commit c92a0f3. [ref:578-3]\nBug #4: Memory leak in cache manager when hypothyroidism. Fixed in commit c92a0f3. [ref:578-4]\nBug #4: Memory leak in cache manager when hypothyroidism. Fixed in commit c92a0f3. [ref:578-5]\nBug #4: Memory leak in cache manager when hypothyroidism. Fixed in commit c92a0f3. [ref:578-6]\nBug #4: Memory leak in cache manager when hypothyroidism. Fixed in commit c92a0f3. [ref:578-7]\nBug #4: Memory leak in cache manager when hypothyroidism. Fixed in commit c92a0f3. [ref:578-8]\nBug #4: Memory leak in cache manager when hypothyroidism. Fixed in commit c92a0f3. [ref:578-9]\nBug #4: Memory leak in cache manager when hypothyroidism. Fixed in commit c92a0f3. [ref:578-10]\nBug #4: Memory leak in cache manager when hypothyroidism. Fixed in commit c92a0f3. [ref:578-11]\nBug #4: Memory leak in cache manager when hypothyroidism. Fixed in commit c92a0f3. [ref:578-12]\nBug #4: Memory leak in cache manager when hypothyroidism. Fixed in commit c92a0f3. [ref:578-13]",
+    "title": "Doc 34 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 35,
+    "root": "a7c1f10e77c417474e2954fe49da1da326d97518b9ab72d0588d96942477b59b",
+    "text": "Meeting notes 2026-09-01: David to complete the security review by end of quarter. Frank flagged technical debt. [ref:595-0]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Frank flagged technical debt. [ref:595-1]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Frank flagged technical debt. [ref:595-2]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Frank flagged technical debt. [ref:595-3]\nMeeting notes 2026-09-01: David to complete the security review by end of quarter. Frank flagged technical debt. [ref:595-4]",
+    "title": "Doc 35 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 36,
+    "root": "9d8ec73930bd1e2e59d01268e479bd2b1f31b0b6a600e0e80d7f06c45252c0f9",
+    "text": "Lab results show high LDL 190. Physician Garcia recommends follow-up in 3 months. [ref:612-0]\nLab results show high LDL 190. Physician Garcia recommends follow-up in 3 months. [ref:612-1]\nLab results show high LDL 190. Physician Garcia recommends follow-up in 3 months. [ref:612-2]\nLab results show high LDL 190. Physician Garcia recommends follow-up in 3 months. [ref:612-3]\nLab results show high LDL 190. Physician Garcia recommends follow-up in 3 months. [ref:612-4]\nLab results show high LDL 190. Physician Garcia recommends follow-up in 3 months. [ref:612-5]\nLab results show high LDL 190. Physician Garcia recommends follow-up in 3 months. [ref:612-6]\nLab results show high LDL 190. Physician Garcia recommends follow-up in 3 months. [ref:612-7]",
+    "title": "Doc 36 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 37,
+    "root": "d112e42be2a1e130d844e3f30e599566354582f76ecc3f101922bed86e975817",
+    "text": "Arbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:629-0]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:629-1]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:629-2]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:629-3]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:629-4]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:629-5]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:629-6]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:629-7]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:629-8]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:629-9]",
+    "title": "Doc 37 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 38,
+    "root": "e032d27fd87b7e2e1d852a3c7aa5af9048ad1f3ef33d330cb145b54873e7d525",
+    "text": "CHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:646-0]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:646-1]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:646-2]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:646-3]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:646-4]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:646-5]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:646-6]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:646-7]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:646-8]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:646-9]\nCHANGELOG: Deprecated fetchRecord(). Migration: replace with users.get() by 2026-03-01. [ref:646-10]",
+    "title": "Doc 38 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 39,
+    "root": "4d8c2009ffb330f0ed41ac48798aea8fd021f94e51647fcc505c3d05452f0c83",
+    "text": "Meeting notes 2026-09-01: Carol to complete the security review by by EOD. Iris flagged resource constraint. [ref:663-0]\nMeeting notes 2026-09-01: Carol to complete the security review by by EOD. Iris flagged resource constraint. [ref:663-1]\nMeeting notes 2026-09-01: Carol to complete the security review by by EOD. Iris flagged resource constraint. [ref:663-2]\nMeeting notes 2026-09-01: Carol to complete the security review by by EOD. Iris flagged resource constraint. [ref:663-3]\nMeeting notes 2026-09-01: Carol to complete the security review by by EOD. Iris flagged resource constraint. [ref:663-4]\nMeeting notes 2026-09-01: Carol to complete the security review by by EOD. Iris flagged resource constraint. [ref:663-5]\nMeeting notes 2026-09-01: Carol to complete the security review by by EOD. Iris flagged resource constraint. [ref:663-6]\nMeeting notes 2026-09-01: Carol to complete the security review by by EOD. Iris flagged resource constraint. [ref:663-7]\nMeeting notes 2026-09-01: Carol to complete the security review by by EOD. Iris flagged resource constraint. [ref:663-8]\nMeeting notes 2026-09-01: Carol to complete the security review by by EOD. Iris flagged resource constraint. [ref:663-9]\nMeeting notes 2026-09-01: Carol to complete the security review by by EOD. Iris flagged resource constraint. [ref:663-10]",
+    "title": "Doc 39 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 40,
+    "root": "4adf4e68eef45c8f95e7c63950e7c1dc1e67b04484e04d99fe46b26746c220d6",
+    "text": "Patient 4 presents with chest pain. PMH includes diabetes. Currently taking atorvastatin. [ref:680-0]\nPatient 4 presents with chest pain. PMH includes diabetes. Currently taking atorvastatin. [ref:680-1]\nPatient 4 presents with chest pain. PMH includes diabetes. Currently taking atorvastatin. [ref:680-2]\nPatient 4 presents with chest pain. PMH includes diabetes. Currently taking atorvastatin. [ref:680-3]\nPatient 4 presents with chest pain. PMH includes diabetes. Currently taking atorvastatin. [ref:680-4]",
+    "title": "Doc 40 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 41,
+    "root": "b53509fa65b47724527aa28665540576f4e6682e00cb8ba68a339062a8f7bc82",
+    "text": "Whereas the contractor shall deliver hardware component no later than 2026-12-31, failure constitutes breach. [ref:697-0]\nWhereas the contractor shall deliver hardware component no later than 2026-12-31, failure constitutes breach. [ref:697-1]\nWhereas the contractor shall deliver hardware component no later than 2026-12-31, failure constitutes breach. [ref:697-2]\nWhereas the contractor shall deliver hardware component no later than 2026-12-31, failure constitutes breach. [ref:697-3]\nWhereas the contractor shall deliver hardware component no later than 2026-12-31, failure constitutes breach. [ref:697-4]\nWhereas the contractor shall deliver hardware component no later than 2026-12-31, failure constitutes breach. [ref:697-5]",
+    "title": "Doc 41 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 42,
+    "root": "44b310767be7304fb6d6659fb4b893e7215b5ec26f7ab8f80d35c767769ae6c5",
+    "text": "v4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:714-0]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:714-1]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:714-2]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:714-3]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:714-4]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:714-5]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:714-6]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:714-7]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:714-8]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:714-9]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:714-10]",
+    "title": "Doc 42 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 43,
+    "root": "8dab9d37f2a5383ba6732ccb9b419ad8bec8e138521f720f722e2d628b9b082f",
+    "text": "Meeting notes 2026-09-01: Alice to complete the security review by end of quarter. Frank flagged resource constraint. [ref:731-0]\nMeeting notes 2026-09-01: Alice to complete the security review by end of quarter. Frank flagged resource constraint. [ref:731-1]\nMeeting notes 2026-09-01: Alice to complete the security review by end of quarter. Frank flagged resource constraint. [ref:731-2]\nMeeting notes 2026-09-01: Alice to complete the security review by end of quarter. Frank flagged resource constraint. [ref:731-3]\nMeeting notes 2026-09-01: Alice to complete the security review by end of quarter. Frank flagged resource constraint. [ref:731-4]\nMeeting notes 2026-09-01: Alice to complete the security review by end of quarter. Frank flagged resource constraint. [ref:731-5]\nMeeting notes 2026-09-01: Alice to complete the security review by end of quarter. Frank flagged resource constraint. [ref:731-6]\nMeeting notes 2026-09-01: Alice to complete the security review by end of quarter. Frank flagged resource constraint. [ref:731-7]\nMeeting notes 2026-09-01: Alice to complete the security review by end of quarter. Frank flagged resource constraint. [ref:731-8]",
+    "title": "Doc 43 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 44,
+    "root": "4e05a8bdfd674b410597108e15015ce907bdf37eb83487eaf80b19dcb1b70e65",
+    "text": "The patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:748-0]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:748-1]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:748-2]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:748-3]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:748-4]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:748-5]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:748-6]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:748-7]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:748-8]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:748-9]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:748-10]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:748-11]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:748-12]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:748-13]",
+    "title": "Doc 44 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 45,
+    "root": "4bd88a2551916f99013cdca30f0b96ccc52c5e7c1413925d8569a95d3ae70745",
+    "text": "Section 100: The party of the first part agrees to provide support per the agreement dated 2026-09-01. [ref:765-0]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-09-01. [ref:765-1]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-09-01. [ref:765-2]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-09-01. [ref:765-3]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-09-01. [ref:765-4]",
+    "title": "Doc 45 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 46,
+    "root": "e245a2ee7ccc5d11c4c6331fc65c78fe5e57e52448cf675e18b980cc60034948",
+    "text": "Bug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:782-0]\nBug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:782-1]\nBug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:782-2]\nBug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:782-3]\nBug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:782-4]\nBug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:782-5]\nBug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:782-6]\nBug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:782-7]",
+    "title": "Doc 46 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 47,
+    "root": "dc6ccbb2aa2728a3b6599de53da3465def0257c00e2effeae2c2b65d9d6aac4a",
+    "text": "Meeting notes 2026-09-01: Bob to complete the security review by by EOD. Hank flagged resource constraint. [ref:799-0]\nMeeting notes 2026-09-01: Bob to complete the security review by by EOD. Hank flagged resource constraint. [ref:799-1]\nMeeting notes 2026-09-01: Bob to complete the security review by by EOD. Hank flagged resource constraint. [ref:799-2]\nMeeting notes 2026-09-01: Bob to complete the security review by by EOD. Hank flagged resource constraint. [ref:799-3]\nMeeting notes 2026-09-01: Bob to complete the security review by by EOD. Hank flagged resource constraint. [ref:799-4]\nMeeting notes 2026-09-01: Bob to complete the security review by by EOD. Hank flagged resource constraint. [ref:799-5]\nMeeting notes 2026-09-01: Bob to complete the security review by by EOD. Hank flagged resource constraint. [ref:799-6]\nMeeting notes 2026-09-01: Bob to complete the security review by by EOD. Hank flagged resource constraint. [ref:799-7]",
+    "title": "Doc 47 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 48,
+    "root": "02eda490f5a0d23adfd099378bfe568bb261315cb378ba7dd52e9ebfa9498bdf",
+    "text": "Vital signs: BP 118/76, HR 95. Assessment: diabetes. Plan: lifestyle modification. [ref:816-0]\nVital signs: BP 118/76, HR 95. Assessment: diabetes. Plan: lifestyle modification. [ref:816-1]\nVital signs: BP 118/76, HR 95. Assessment: diabetes. Plan: lifestyle modification. [ref:816-2]\nVital signs: BP 118/76, HR 95. Assessment: diabetes. Plan: lifestyle modification. [ref:816-3]\nVital signs: BP 118/76, HR 95. Assessment: diabetes. Plan: lifestyle modification. [ref:816-4]\nVital signs: BP 118/76, HR 95. Assessment: diabetes. Plan: lifestyle modification. [ref:816-5]\nVital signs: BP 118/76, HR 95. Assessment: diabetes. Plan: lifestyle modification. [ref:816-6]\nVital signs: BP 118/76, HR 95. Assessment: diabetes. Plan: lifestyle modification. [ref:816-7]\nVital signs: BP 118/76, HR 95. Assessment: diabetes. Plan: lifestyle modification. [ref:816-8]\nVital signs: BP 118/76, HR 95. Assessment: diabetes. Plan: lifestyle modification. [ref:816-9]\nVital signs: BP 118/76, HR 95. Assessment: diabetes. Plan: lifestyle modification. [ref:816-10]\nVital signs: BP 118/76, HR 95. Assessment: diabetes. Plan: lifestyle modification. [ref:816-11]",
+    "title": "Doc 48 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 49,
+    "root": "86744bd36f521d8ade8173e359b5ea4f6ff469ad647b481974701c8a806078ab",
+    "text": "Arbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:833-0]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:833-1]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:833-2]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:833-3]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:833-4]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:833-5]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:833-6]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:833-7]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:833-8]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:833-9]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:833-10]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:833-11]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:833-12]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:833-13]",
+    "title": "Doc 49 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 50,
+    "root": "b24d866b7ebbadac26dc45a0bd1a00e2ace57df1b2a51734e6740bdc94bc6933",
+    "text": "CHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:850-0]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:850-1]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:850-2]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:850-3]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:850-4]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:850-5]",
+    "title": "Doc 50 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 51,
+    "root": "492319d24839740d11fc1640d9fb7489014a250e37b67070d90e897c6d1feb49",
+    "text": "Meeting notes 2026-09-01: Carol to complete the security review by end of quarter. Grace flagged technical debt. [ref:867-0]\nMeeting notes 2026-09-01: Carol to complete the security review by end of quarter. Grace flagged technical debt. [ref:867-1]\nMeeting notes 2026-09-01: Carol to complete the security review by end of quarter. Grace flagged technical debt. [ref:867-2]\nMeeting notes 2026-09-01: Carol to complete the security review by end of quarter. Grace flagged technical debt. [ref:867-3]\nMeeting notes 2026-09-01: Carol to complete the security review by end of quarter. Grace flagged technical debt. [ref:867-4]\nMeeting notes 2026-09-01: Carol to complete the security review by end of quarter. Grace flagged technical debt. [ref:867-5]",
+    "title": "Doc 51 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 52,
+    "root": "5e95863e4bd1c59ed25b9208a4cb9a5e063506ed3bb77086e126ea374805a0ff",
+    "text": "Hypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:884-0]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:884-1]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:884-2]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:884-3]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:884-4]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:884-5]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:884-6]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:884-7]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:884-8]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:884-9]",
+    "title": "Doc 52 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 53,
+    "root": "db023a7fb5a7ea16d804991855da2d74685646e302219559aea3b32b0aee1492",
+    "text": "Whereas the contractor shall deliver hardware component no later than 2026-01-15, failure constitutes breach. [ref:901-0]\nWhereas the contractor shall deliver hardware component no later than 2026-01-15, failure constitutes breach. [ref:901-1]\nWhereas the contractor shall deliver hardware component no later than 2026-01-15, failure constitutes breach. [ref:901-2]\nWhereas the contractor shall deliver hardware component no later than 2026-01-15, failure constitutes breach. [ref:901-3]\nWhereas the contractor shall deliver hardware component no later than 2026-01-15, failure constitutes breach. [ref:901-4]\nWhereas the contractor shall deliver hardware component no later than 2026-01-15, failure constitutes breach. [ref:901-5]\nWhereas the contractor shall deliver hardware component no later than 2026-01-15, failure constitutes breach. [ref:901-6]\nWhereas the contractor shall deliver hardware component no later than 2026-01-15, failure constitutes breach. [ref:901-7]\nWhereas the contractor shall deliver hardware component no later than 2026-01-15, failure constitutes breach. [ref:901-8]\nWhereas the contractor shall deliver hardware component no later than 2026-01-15, failure constitutes breach. [ref:901-9]",
+    "title": "Doc 53 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 54,
+    "root": "6c84313aad551eea2c730c53a2180c36a80f6dcd05a415837b019ce66f0ae8f6",
+    "text": "v4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:918-0]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:918-1]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:918-2]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:918-3]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:918-4]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:918-5]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:918-6]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:918-7]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:918-8]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:918-9]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:918-10]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:918-11]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:918-12]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:918-13]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:918-14]",
+    "title": "Doc 54 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 55,
+    "root": "f1e212959293fe019f73330bb541e224663f8c124a5812d361b19ae48c2db6b2",
+    "text": "Meeting notes 2026-09-01: Carol to complete the security review by by EOD. Hank flagged technical debt. [ref:935-0]\nMeeting notes 2026-09-01: Carol to complete the security review by by EOD. Hank flagged technical debt. [ref:935-1]\nMeeting notes 2026-09-01: Carol to complete the security review by by EOD. Hank flagged technical debt. [ref:935-2]\nMeeting notes 2026-09-01: Carol to complete the security review by by EOD. Hank flagged technical debt. [ref:935-3]\nMeeting notes 2026-09-01: Carol to complete the security review by by EOD. Hank flagged technical debt. [ref:935-4]",
+    "title": "Doc 55 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 56,
+    "root": "c918684a28f82da57c5f2bef946ee9ff3359dcaf97cd8d8eae7a393d9edbef23",
+    "text": "Lab results show high LDL 190. Physician Smith recommends follow-up in 3 months. [ref:952-0]\nLab results show high LDL 190. Physician Smith recommends follow-up in 3 months. [ref:952-1]\nLab results show high LDL 190. Physician Smith recommends follow-up in 3 months. [ref:952-2]\nLab results show high LDL 190. Physician Smith recommends follow-up in 3 months. [ref:952-3]\nLab results show high LDL 190. Physician Smith recommends follow-up in 3 months. [ref:952-4]\nLab results show high LDL 190. Physician Smith recommends follow-up in 3 months. [ref:952-5]\nLab results show high LDL 190. Physician Smith recommends follow-up in 3 months. [ref:952-6]\nLab results show high LDL 190. Physician Smith recommends follow-up in 3 months. [ref:952-7]",
+    "title": "Doc 56 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 57,
+    "root": "3f67259b9762d588d6a0c785ad1bd651e4b382f72bbc5b367af6ccfc0036b1c8",
+    "text": "Section 100: The party of the first part agrees to pay invoices per the agreement dated 2026-03-01. [ref:969-0]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-03-01. [ref:969-1]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-03-01. [ref:969-2]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-03-01. [ref:969-3]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-03-01. [ref:969-4]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-03-01. [ref:969-5]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-03-01. [ref:969-6]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-03-01. [ref:969-7]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-03-01. [ref:969-8]",
+    "title": "Doc 57 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 58,
+    "root": "d54bd0aa53b7cd487553e55d038b6de6f2e0f9160b1f08a9b9a07d1df4d53fb2",
+    "text": "Bug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:986-0]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:986-1]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:986-2]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:986-3]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:986-4]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:986-5]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:986-6]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:986-7]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:986-8]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:986-9]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:986-10]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:986-11]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:986-12]",
+    "title": "Doc 58 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 59,
+    "root": "1bb922f0695fc268a145db05b06ab007a187eb7edb5123eed5e6324c64ae2e45",
+    "text": "Meeting notes 2026-09-01: Bob to complete the security review by end of quarter. Jack flagged technical debt. [ref:1003-0]\nMeeting notes 2026-09-01: Bob to complete the security review by end of quarter. Jack flagged technical debt. [ref:1003-1]\nMeeting notes 2026-09-01: Bob to complete the security review by end of quarter. Jack flagged technical debt. [ref:1003-2]\nMeeting notes 2026-09-01: Bob to complete the security review by end of quarter. Jack flagged technical debt. [ref:1003-3]\nMeeting notes 2026-09-01: Bob to complete the security review by end of quarter. Jack flagged technical debt. [ref:1003-4]\nMeeting notes 2026-09-01: Bob to complete the security review by end of quarter. Jack flagged technical debt. [ref:1003-5]\nMeeting notes 2026-09-01: Bob to complete the security review by end of quarter. Jack flagged technical debt. [ref:1003-6]\nMeeting notes 2026-09-01: Bob to complete the security review by end of quarter. Jack flagged technical debt. [ref:1003-7]\nMeeting notes 2026-09-01: Bob to complete the security review by end of quarter. Jack flagged technical debt. [ref:1003-8]\nMeeting notes 2026-09-01: Bob to complete the security review by end of quarter. Jack flagged technical debt. [ref:1003-9]\nMeeting notes 2026-09-01: Bob to complete the security review by end of quarter. Jack flagged technical debt. [ref:1003-10]",
+    "title": "Doc 59 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 60,
+    "root": "3ecf182a59c3802044e640332d836a21c71098b714bb587547b87e4d4976e77b",
+    "text": "Patient 4 presents with fatigue. PMH includes atrial fibrillation. Currently taking lisinopril. [ref:1020-0]\nPatient 4 presents with fatigue. PMH includes atrial fibrillation. Currently taking lisinopril. [ref:1020-1]\nPatient 4 presents with fatigue. PMH includes atrial fibrillation. Currently taking lisinopril. [ref:1020-2]\nPatient 4 presents with fatigue. PMH includes atrial fibrillation. Currently taking lisinopril. [ref:1020-3]\nPatient 4 presents with fatigue. PMH includes atrial fibrillation. Currently taking lisinopril. [ref:1020-4]",
+    "title": "Doc 60 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 61,
+    "root": "f94947ae0c64e8a5936bd49e81fe7e81b9f9a4797a450a206ae24bc8d1fb1c63",
+    "text": "Arbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1037-0]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1037-1]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1037-2]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1037-3]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1037-4]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1037-5]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1037-6]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1037-7]",
+    "title": "Doc 61 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 62,
+    "root": "ce8fd53b5be8735555828337e288fe3db364acb0cf4cd053dd3b4ba274baabe3",
+    "text": "CHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-09-01. [ref:1054-0]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-09-01. [ref:1054-1]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-09-01. [ref:1054-2]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-09-01. [ref:1054-3]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-09-01. [ref:1054-4]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-09-01. [ref:1054-5]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-09-01. [ref:1054-6]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-09-01. [ref:1054-7]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-09-01. [ref:1054-8]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-09-01. [ref:1054-9]",
+    "title": "Doc 62 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 63,
+    "root": "7eb05838a35e25edad38b9eef85b405b11b1660a9957dd33cc91e20eb0615dc8",
+    "text": "Meeting notes 2026-09-01: Alice to complete the security review by by EOD. Jack flagged resource constraint. [ref:1071-0]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Jack flagged resource constraint. [ref:1071-1]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Jack flagged resource constraint. [ref:1071-2]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Jack flagged resource constraint. [ref:1071-3]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Jack flagged resource constraint. [ref:1071-4]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Jack flagged resource constraint. [ref:1071-5]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Jack flagged resource constraint. [ref:1071-6]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Jack flagged resource constraint. [ref:1071-7]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Jack flagged resource constraint. [ref:1071-8]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Jack flagged resource constraint. [ref:1071-9]",
+    "title": "Doc 63 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 64,
+    "root": "e46a6bc99b8f518b576279d30da972d1b426626168dbbd5f21c119f78181c166",
+    "text": "The patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1088-0]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1088-1]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1088-2]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1088-3]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1088-4]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1088-5]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1088-6]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1088-7]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1088-8]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1088-9]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1088-10]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1088-11]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1088-12]",
+    "title": "Doc 64 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 65,
+    "root": "63db083023e2c21983746782eb068459e219a7843dac9bb757d7696b077754a9",
+    "text": "Whereas the contractor shall deliver hardware component no later than 2026-12-31, failure constitutes breach. [ref:1105-0]\nWhereas the contractor shall deliver hardware component no later than 2026-12-31, failure constitutes breach. [ref:1105-1]\nWhereas the contractor shall deliver hardware component no later than 2026-12-31, failure constitutes breach. [ref:1105-2]\nWhereas the contractor shall deliver hardware component no later than 2026-12-31, failure constitutes breach. [ref:1105-3]\nWhereas the contractor shall deliver hardware component no later than 2026-12-31, failure constitutes breach. [ref:1105-4]",
+    "title": "Doc 65 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 66,
+    "root": "5e8caf2b08f1dd8d0465da39577910d8d6e4baef01019a2d376dd49a97b2f680",
+    "text": "v4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1122-0]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1122-1]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1122-2]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1122-3]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1122-4]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1122-5]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1122-6]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1122-7]",
+    "title": "Doc 66 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 67,
+    "root": "ea3151beb6868a46c91a2909ada2059af0a1c094878a8c97aaef33f7b9c5eb50",
+    "text": "Meeting notes 2026-09-01: Carol to complete the security review by end of quarter. Hank flagged resource constraint. [ref:1139-0]\nMeeting notes 2026-09-01: Carol to complete the security review by end of quarter. Hank flagged resource constraint. [ref:1139-1]\nMeeting notes 2026-09-01: Carol to complete the security review by end of quarter. Hank flagged resource constraint. [ref:1139-2]\nMeeting notes 2026-09-01: Carol to complete the security review by end of quarter. Hank flagged resource constraint. [ref:1139-3]\nMeeting notes 2026-09-01: Carol to complete the security review by end of quarter. Hank flagged resource constraint. [ref:1139-4]\nMeeting notes 2026-09-01: Carol to complete the security review by end of quarter. Hank flagged resource constraint. [ref:1139-5]\nMeeting notes 2026-09-01: Carol to complete the security review by end of quarter. Hank flagged resource constraint. [ref:1139-6]",
+    "title": "Doc 67 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 68,
+    "root": "ca44189de63a2e3bae67c908279a89fb2d5890e920e03eaaacafa3c7cde98465",
+    "text": "Vital signs: BP 118/76, HR 64. Assessment: COPD. Plan: lifestyle modification. [ref:1156-0]\nVital signs: BP 118/76, HR 64. Assessment: COPD. Plan: lifestyle modification. [ref:1156-1]\nVital signs: BP 118/76, HR 64. Assessment: COPD. Plan: lifestyle modification. [ref:1156-2]\nVital signs: BP 118/76, HR 64. Assessment: COPD. Plan: lifestyle modification. [ref:1156-3]\nVital signs: BP 118/76, HR 64. Assessment: COPD. Plan: lifestyle modification. [ref:1156-4]\nVital signs: BP 118/76, HR 64. Assessment: COPD. Plan: lifestyle modification. [ref:1156-5]\nVital signs: BP 118/76, HR 64. Assessment: COPD. Plan: lifestyle modification. [ref:1156-6]\nVital signs: BP 118/76, HR 64. Assessment: COPD. Plan: lifestyle modification. [ref:1156-7]\nVital signs: BP 118/76, HR 64. Assessment: COPD. Plan: lifestyle modification. [ref:1156-8]\nVital signs: BP 118/76, HR 64. Assessment: COPD. Plan: lifestyle modification. [ref:1156-9]\nVital signs: BP 118/76, HR 64. Assessment: COPD. Plan: lifestyle modification. [ref:1156-10]\nVital signs: BP 118/76, HR 64. Assessment: COPD. Plan: lifestyle modification. [ref:1156-11]",
+    "title": "Doc 68 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 69,
+    "root": "2c058b04273e678adb1b9b60ba6a492e7b5aa7ed282f26c86e22e516f2c3d348",
+    "text": "Section 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:1173-0]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:1173-1]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:1173-2]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:1173-3]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:1173-4]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:1173-5]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:1173-6]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:1173-7]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:1173-8]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:1173-9]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:1173-10]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:1173-11]",
+    "title": "Doc 69 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 70,
+    "root": "85c5a8e1fcd60f31c48cd07fcb5baa48f9d2d12a3f3e60492d112aace9923274",
+    "text": "Bug #4: Memory leak in cache manager when hypothyroidism. Fixed in commit c92a0f3. [ref:1190-0]\nBug #4: Memory leak in cache manager when hypothyroidism. Fixed in commit c92a0f3. [ref:1190-1]\nBug #4: Memory leak in cache manager when hypothyroidism. Fixed in commit c92a0f3. [ref:1190-2]\nBug #4: Memory leak in cache manager when hypothyroidism. Fixed in commit c92a0f3. [ref:1190-3]\nBug #4: Memory leak in cache manager when hypothyroidism. Fixed in commit c92a0f3. [ref:1190-4]\nBug #4: Memory leak in cache manager when hypothyroidism. Fixed in commit c92a0f3. [ref:1190-5]",
+    "title": "Doc 70 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 71,
+    "root": "4c3e4d08e62066df6474556931e81bf11eca701d855b37fe70065874a312730a",
+    "text": "Meeting notes 2026-09-01: David to complete the security review by by EOD. Grace flagged resource constraint. [ref:1207-0]\nMeeting notes 2026-09-01: David to complete the security review by by EOD. Grace flagged resource constraint. [ref:1207-1]\nMeeting notes 2026-09-01: David to complete the security review by by EOD. Grace flagged resource constraint. [ref:1207-2]\nMeeting notes 2026-09-01: David to complete the security review by by EOD. Grace flagged resource constraint. [ref:1207-3]\nMeeting notes 2026-09-01: David to complete the security review by by EOD. Grace flagged resource constraint. [ref:1207-4]\nMeeting notes 2026-09-01: David to complete the security review by by EOD. Grace flagged resource constraint. [ref:1207-5]",
+    "title": "Doc 71 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 72,
+    "root": "30f9a59a5535132112a380858b24a0ca9d7fa5aa547c13534e53c6047353da4e",
+    "text": "Hypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:1224-0]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:1224-1]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:1224-2]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:1224-3]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:1224-4]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:1224-5]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:1224-6]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:1224-7]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:1224-8]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:1224-9]",
+    "title": "Doc 72 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 73,
+    "root": "56394641e8c2be5fa6267b20e7e09cd245a33eb037728d42f59450e9f6ed2e99",
+    "text": "Arbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1241-0]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1241-1]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1241-2]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1241-3]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1241-4]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1241-5]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1241-6]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1241-7]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1241-8]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1241-9]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1241-10]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1241-11]",
+    "title": "Doc 73 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 74,
+    "root": "bb982a1d9291e7c2e9323c2fced1b8ae7502acec523112bb6d5173741a568664",
+    "text": "CHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:1258-0]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:1258-1]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:1258-2]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:1258-3]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:1258-4]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:1258-5]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:1258-6]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:1258-7]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:1258-8]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:1258-9]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:1258-10]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:1258-11]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:1258-12]",
+    "title": "Doc 74 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 75,
+    "root": "11f8a89d74426ccf7b40b83c61b2f5c836904c7346c2c1405f1ac61e99a2d9c7",
+    "text": "Meeting notes 2026-09-01: Eve to complete the security review by end of quarter. Hank flagged technical debt. [ref:1275-0]\nMeeting notes 2026-09-01: Eve to complete the security review by end of quarter. Hank flagged technical debt. [ref:1275-1]\nMeeting notes 2026-09-01: Eve to complete the security review by end of quarter. Hank flagged technical debt. [ref:1275-2]\nMeeting notes 2026-09-01: Eve to complete the security review by end of quarter. Hank flagged technical debt. [ref:1275-3]\nMeeting notes 2026-09-01: Eve to complete the security review by end of quarter. Hank flagged technical debt. [ref:1275-4]",
+    "title": "Doc 75 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 76,
+    "root": "72415e9fd96384542c729cd2a57675288442fbc622aadfc02e13cab80f43307f",
+    "text": "Lab results show high LDL 190. Physician Smith recommends medication adjustment. [ref:1292-0]\nLab results show high LDL 190. Physician Smith recommends medication adjustment. [ref:1292-1]\nLab results show high LDL 190. Physician Smith recommends medication adjustment. [ref:1292-2]\nLab results show high LDL 190. Physician Smith recommends medication adjustment. [ref:1292-3]\nLab results show high LDL 190. Physician Smith recommends medication adjustment. [ref:1292-4]\nLab results show high LDL 190. Physician Smith recommends medication adjustment. [ref:1292-5]\nLab results show high LDL 190. Physician Smith recommends medication adjustment. [ref:1292-6]\nLab results show high LDL 190. Physician Smith recommends medication adjustment. [ref:1292-7]",
+    "title": "Doc 76 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 77,
+    "root": "a962e71a071fa8a7a74c1bd3a28dea5cd20b5ad44cf2ece97cab6c83d0a4213c",
+    "text": "Whereas the contractor shall deliver hardware component no later than 2026-09-01, failure constitutes breach. [ref:1309-0]\nWhereas the contractor shall deliver hardware component no later than 2026-09-01, failure constitutes breach. [ref:1309-1]\nWhereas the contractor shall deliver hardware component no later than 2026-09-01, failure constitutes breach. [ref:1309-2]\nWhereas the contractor shall deliver hardware component no later than 2026-09-01, failure constitutes breach. [ref:1309-3]\nWhereas the contractor shall deliver hardware component no later than 2026-09-01, failure constitutes breach. [ref:1309-4]\nWhereas the contractor shall deliver hardware component no later than 2026-09-01, failure constitutes breach. [ref:1309-5]\nWhereas the contractor shall deliver hardware component no later than 2026-09-01, failure constitutes breach. [ref:1309-6]\nWhereas the contractor shall deliver hardware component no later than 2026-09-01, failure constitutes breach. [ref:1309-7]",
+    "title": "Doc 77 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 78,
+    "root": "18e8cb0d76c31a19cc90b9a075d8254f7924127103b96fcdbca54d4e2b865b02",
+    "text": "v4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1326-0]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1326-1]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1326-2]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1326-3]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1326-4]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1326-5]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1326-6]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1326-7]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1326-8]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1326-9]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1326-10]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1326-11]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1326-12]",
+    "title": "Doc 78 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 79,
+    "root": "b909cf3a2e25668fe6fcbf6b037c182079a14ac771ffe5107dad401e169f7fc6",
+    "text": "Meeting notes 2026-09-01: Alice to complete the security review by by EOD. Frank flagged technical debt. [ref:1343-0]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Frank flagged technical debt. [ref:1343-1]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Frank flagged technical debt. [ref:1343-2]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Frank flagged technical debt. [ref:1343-3]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Frank flagged technical debt. [ref:1343-4]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Frank flagged technical debt. [ref:1343-5]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Frank flagged technical debt. [ref:1343-6]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Frank flagged technical debt. [ref:1343-7]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Frank flagged technical debt. [ref:1343-8]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Frank flagged technical debt. [ref:1343-9]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Frank flagged technical debt. [ref:1343-10]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Frank flagged technical debt. [ref:1343-11]",
+    "title": "Doc 79 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 80,
+    "root": "cca11ee6942f5a617f6071a93a91f66a5001b12389ab0abe362c8bd23e6af4da",
+    "text": "Patient 4 presents with headache. PMH includes hypertension. Currently taking amlodipine. [ref:1360-0]\nPatient 4 presents with headache. PMH includes hypertension. Currently taking amlodipine. [ref:1360-1]\nPatient 4 presents with headache. PMH includes hypertension. Currently taking amlodipine. [ref:1360-2]\nPatient 4 presents with headache. PMH includes hypertension. Currently taking amlodipine. [ref:1360-3]\nPatient 4 presents with headache. PMH includes hypertension. Currently taking amlodipine. [ref:1360-4]",
+    "title": "Doc 80 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 81,
+    "root": "2ce268c5b924bf50c1cbb031af61d82e9ca2f087b9ec9898e72b056002175962",
+    "text": "Section 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:1377-0]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:1377-1]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:1377-2]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:1377-3]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:1377-4]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:1377-5]\nSection 100: The party of the first part agrees to pay invoices per the agreement dated 2026-09-01. [ref:1377-6]",
+    "title": "Doc 81 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 82,
+    "root": "c971acfd39ade7641efe50b887f1da81a045bf853e3c3a557671200772e91039",
+    "text": "Bug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:1394-0]\nBug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:1394-1]\nBug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:1394-2]\nBug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:1394-3]\nBug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:1394-4]\nBug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:1394-5]\nBug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:1394-6]\nBug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:1394-7]\nBug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:1394-8]\nBug #4: Memory leak in cache manager when hypertension. Fixed in commit c92a0f3. [ref:1394-9]",
+    "title": "Doc 82 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 83,
+    "root": "7ac72dda16450aa3d78d4082fcf8cc85e722980d3e3992a6e69acf86372b3797",
+    "text": "Meeting notes 2026-09-01: Eve to complete the security review by end of quarter. Iris flagged technical debt. [ref:1411-0]\nMeeting notes 2026-09-01: Eve to complete the security review by end of quarter. Iris flagged technical debt. [ref:1411-1]\nMeeting notes 2026-09-01: Eve to complete the security review by end of quarter. Iris flagged technical debt. [ref:1411-2]\nMeeting notes 2026-09-01: Eve to complete the security review by end of quarter. Iris flagged technical debt. [ref:1411-3]\nMeeting notes 2026-09-01: Eve to complete the security review by end of quarter. Iris flagged technical debt. [ref:1411-4]\nMeeting notes 2026-09-01: Eve to complete the security review by end of quarter. Iris flagged technical debt. [ref:1411-5]\nMeeting notes 2026-09-01: Eve to complete the security review by end of quarter. Iris flagged technical debt. [ref:1411-6]\nMeeting notes 2026-09-01: Eve to complete the security review by end of quarter. Iris flagged technical debt. [ref:1411-7]\nMeeting notes 2026-09-01: Eve to complete the security review by end of quarter. Iris flagged technical debt. [ref:1411-8]",
+    "title": "Doc 83 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 84,
+    "root": "54c54781185e04d9184d7794ecaea371b4f835f78d1cb776df44970da8aa8392",
+    "text": "The patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1428-0]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1428-1]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1428-2]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1428-3]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1428-4]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1428-5]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1428-6]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1428-7]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1428-8]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1428-9]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1428-10]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1428-11]\nThe patient has a smoking history and tobacco use disorder. High blood pressure noted. [ref:1428-12]",
+    "title": "Doc 84 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 85,
+    "root": "e28b8df1e6878cab9f341e58ffe81abbf2819f30419165ead307f9003b804ba0",
+    "text": "Arbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1445-0]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1445-1]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1445-2]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1445-3]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1445-4]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1445-5]",
+    "title": "Doc 85 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 86,
+    "root": "4530b87079678d466a4d871eaa30d2c90485cdc983cecee87999464617da115c",
+    "text": "CHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:1462-0]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:1462-1]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:1462-2]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:1462-3]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:1462-4]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:1462-5]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:1462-6]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-03-01. [ref:1462-7]",
+    "title": "Doc 86 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 87,
+    "root": "464e3f8719a3001e4f49e2fc53dede4640e2e40b285386dfe84bf6a113384423",
+    "text": "Meeting notes 2026-09-01: David to complete the security review by by EOD. Frank flagged resource constraint. [ref:1479-0]\nMeeting notes 2026-09-01: David to complete the security review by by EOD. Frank flagged resource constraint. [ref:1479-1]\nMeeting notes 2026-09-01: David to complete the security review by by EOD. Frank flagged resource constraint. [ref:1479-2]\nMeeting notes 2026-09-01: David to complete the security review by by EOD. Frank flagged resource constraint. [ref:1479-3]\nMeeting notes 2026-09-01: David to complete the security review by by EOD. Frank flagged resource constraint. [ref:1479-4]\nMeeting notes 2026-09-01: David to complete the security review by by EOD. Frank flagged resource constraint. [ref:1479-5]\nMeeting notes 2026-09-01: David to complete the security review by by EOD. Frank flagged resource constraint. [ref:1479-6]\nMeeting notes 2026-09-01: David to complete the security review by by EOD. Frank flagged resource constraint. [ref:1479-7]",
+    "title": "Doc 87 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 88,
+    "root": "1cf05d7b41b0b2945a2a8a5dbf2aecd4ce21ff6c125826bd8e0c34d15db93100",
+    "text": "Vital signs: BP 118/76, HR 78. Assessment: hypothyroidism. Plan: lifestyle modification. [ref:1496-0]\nVital signs: BP 118/76, HR 78. Assessment: hypothyroidism. Plan: lifestyle modification. [ref:1496-1]\nVital signs: BP 118/76, HR 78. Assessment: hypothyroidism. Plan: lifestyle modification. [ref:1496-2]\nVital signs: BP 118/76, HR 78. Assessment: hypothyroidism. Plan: lifestyle modification. [ref:1496-3]\nVital signs: BP 118/76, HR 78. Assessment: hypothyroidism. Plan: lifestyle modification. [ref:1496-4]\nVital signs: BP 118/76, HR 78. Assessment: hypothyroidism. Plan: lifestyle modification. [ref:1496-5]\nVital signs: BP 118/76, HR 78. Assessment: hypothyroidism. Plan: lifestyle modification. [ref:1496-6]\nVital signs: BP 118/76, HR 78. Assessment: hypothyroidism. Plan: lifestyle modification. [ref:1496-7]\nVital signs: BP 118/76, HR 78. Assessment: hypothyroidism. Plan: lifestyle modification. [ref:1496-8]\nVital signs: BP 118/76, HR 78. Assessment: hypothyroidism. Plan: lifestyle modification. [ref:1496-9]\nVital signs: BP 118/76, HR 78. Assessment: hypothyroidism. Plan: lifestyle modification. [ref:1496-10]",
+    "title": "Doc 88 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 89,
+    "root": "48b0718341fa3405687ab5cd6239fc9d83a7ecb0edfbce76b8e055185381d58a",
+    "text": "Whereas the contractor shall deliver hardware component no later than 2026-03-01, failure constitutes breach. [ref:1513-0]\nWhereas the contractor shall deliver hardware component no later than 2026-03-01, failure constitutes breach. [ref:1513-1]\nWhereas the contractor shall deliver hardware component no later than 2026-03-01, failure constitutes breach. [ref:1513-2]\nWhereas the contractor shall deliver hardware component no later than 2026-03-01, failure constitutes breach. [ref:1513-3]\nWhereas the contractor shall deliver hardware component no later than 2026-03-01, failure constitutes breach. [ref:1513-4]\nWhereas the contractor shall deliver hardware component no later than 2026-03-01, failure constitutes breach. [ref:1513-5]\nWhereas the contractor shall deliver hardware component no later than 2026-03-01, failure constitutes breach. [ref:1513-6]\nWhereas the contractor shall deliver hardware component no later than 2026-03-01, failure constitutes breach. [ref:1513-7]\nWhereas the contractor shall deliver hardware component no later than 2026-03-01, failure constitutes breach. [ref:1513-8]\nWhereas the contractor shall deliver hardware component no later than 2026-03-01, failure constitutes breach. [ref:1513-9]\nWhereas the contractor shall deliver hardware component no later than 2026-03-01, failure constitutes breach. [ref:1513-10]",
+    "title": "Doc 89 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 90,
+    "root": "15169c2870be7f00e83093ca534695b7ab3e73b85cbc23a8e617cf11110637b0",
+    "text": "v4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1530-0]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1530-1]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1530-2]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1530-3]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1530-4]\nv4.0.0: Fixed THROTTLE_BURST_OVERRIDE flag behavior in rate limiter module. [ref:1530-5]",
+    "title": "Doc 90 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 91,
+    "root": "cf9acc13c9d00ac77a8b99a36e8965cda3cc0e3fb0376edddd2a09f4d015a41b",
+    "text": "Meeting notes 2026-09-01: Eve to complete the security review by end of quarter. Iris flagged resource constraint. [ref:1547-0]\nMeeting notes 2026-09-01: Eve to complete the security review by end of quarter. Iris flagged resource constraint. [ref:1547-1]\nMeeting notes 2026-09-01: Eve to complete the security review by end of quarter. Iris flagged resource constraint. [ref:1547-2]\nMeeting notes 2026-09-01: Eve to complete the security review by end of quarter. Iris flagged resource constraint. [ref:1547-3]\nMeeting notes 2026-09-01: Eve to complete the security review by end of quarter. Iris flagged resource constraint. [ref:1547-4]\nMeeting notes 2026-09-01: Eve to complete the security review by end of quarter. Iris flagged resource constraint. [ref:1547-5]",
+    "title": "Doc 91 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 92,
+    "root": "de7c76e423c10c13e9015af1e46ab83c776fb07b16c15420d56a6dcfa0430f6e",
+    "text": "Hypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:1564-0]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:1564-1]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:1564-2]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:1564-3]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:1564-4]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:1564-5]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:1564-6]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:1564-7]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:1564-8]\nHypertension managed with ACE inhibitor. Primary care physician follow-up scheduled. [ref:1564-9]",
+    "title": "Doc 92 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 93,
+    "root": "7045611c5b295307b9c8a7448b270c4624101a291563e79277ff04bed4ab4359",
+    "text": "Section 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:1581-0]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:1581-1]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:1581-2]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:1581-3]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:1581-4]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:1581-5]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:1581-6]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:1581-7]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:1581-8]\nSection 100: The party of the first part agrees to provide support per the agreement dated 2026-03-01. [ref:1581-9]",
+    "title": "Doc 93 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 94,
+    "root": "fe1eeeacaf616662c4398bb736de6002d9661c150f63727bee4df31b31068dd3",
+    "text": "Bug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:1598-0]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:1598-1]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:1598-2]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:1598-3]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:1598-4]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:1598-5]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:1598-6]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:1598-7]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:1598-8]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:1598-9]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:1598-10]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:1598-11]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:1598-12]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:1598-13]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:1598-14]\nBug #4: Memory leak in cache manager when COPD. Fixed in commit c92a0f3. [ref:1598-15]",
+    "title": "Doc 94 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 95,
+    "root": "a0b1a00e3b14d5519b146741bfe1448b1ce8d19f5b6bb66e5bf95e79b55f3e29",
+    "text": "Meeting notes 2026-09-01: Alice to complete the security review by by EOD. Frank flagged resource constraint. [ref:1615-0]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Frank flagged resource constraint. [ref:1615-1]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Frank flagged resource constraint. [ref:1615-2]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Frank flagged resource constraint. [ref:1615-3]\nMeeting notes 2026-09-01: Alice to complete the security review by by EOD. Frank flagged resource constraint. [ref:1615-4]",
+    "title": "Doc 95 [meeting]",
+    "domain": "meeting"
+  },
+  {
+    "index": 96,
+    "root": "fd514bf673843e8465141314f214951954edef144294a98770bf7959a253dd80",
+    "text": "Lab results show high LDL 190. Physician Garcia recommends medication adjustment. [ref:1632-0]\nLab results show high LDL 190. Physician Garcia recommends medication adjustment. [ref:1632-1]\nLab results show high LDL 190. Physician Garcia recommends medication adjustment. [ref:1632-2]\nLab results show high LDL 190. Physician Garcia recommends medication adjustment. [ref:1632-3]\nLab results show high LDL 190. Physician Garcia recommends medication adjustment. [ref:1632-4]\nLab results show high LDL 190. Physician Garcia recommends medication adjustment. [ref:1632-5]\nLab results show high LDL 190. Physician Garcia recommends medication adjustment. [ref:1632-6]\nLab results show high LDL 190. Physician Garcia recommends medication adjustment. [ref:1632-7]",
+    "title": "Doc 96 [clinical]",
+    "domain": "clinical"
+  },
+  {
+    "index": 97,
+    "root": "fe9ac22906801cb6196e58dc452238021379a3c3b94c9f26a321122035f162f1",
+    "text": "Arbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1649-0]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1649-1]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1649-2]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1649-3]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1649-4]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1649-5]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1649-6]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1649-7]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1649-8]\nArbitration clause: disputes arising under this agreement shall be resolved by JAMS. [ref:1649-9]",
+    "title": "Doc 97 [legal]",
+    "domain": "legal"
+  },
+  {
+    "index": 98,
+    "root": "f1e163489f5f7d8ec31f074e4efc3cced57d4cc09c2cee63437c775339e78221",
+    "text": "CHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-09-01. [ref:1666-0]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-09-01. [ref:1666-1]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-09-01. [ref:1666-2]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-09-01. [ref:1666-3]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-09-01. [ref:1666-4]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-09-01. [ref:1666-5]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-09-01. [ref:1666-6]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-09-01. [ref:1666-7]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-09-01. [ref:1666-8]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-09-01. [ref:1666-9]\nCHANGELOG: Deprecated deleteItem(). Migration: replace with users.get() by 2026-09-01. [ref:1666-10]",
+    "title": "Doc 98 [software]",
+    "domain": "software"
+  },
+  {
+    "index": 99,
+    "root": "e510f30de82f8f532c01841ad8bab06dbc1407a3066f070622b9f90eee87b8a2",
+    "text": "Meeting notes 2026-09-01: Bob to complete the security review by end of quarter. Iris flagged resource constraint. [ref:1683-0]\nMeeting notes 2026-09-01: Bob to complete the security review by end of quarter. Iris flagged resource constraint. [ref:1683-1]\nMeeting notes 2026-09-01: Bob to complete the security review by end of quarter. Iris flagged resource constraint. [ref:1683-2]\nMeeting notes 2026-09-01: Bob to complete the security review by end of quarter. Iris flagged resource constraint. [ref:1683-3]\nMeeting notes 2026-09-01: Bob to complete the security review by end of quarter. Iris flagged resource constraint. [ref:1683-4]\nMeeting notes 2026-09-01: Bob to complete the security review by end of quarter. Iris flagged resource constraint. [ref:1683-5]\nMeeting notes 2026-09-01: Bob to complete the security review by end of quarter. Iris flagged resource constraint. [ref:1683-6]\nMeeting notes 2026-09-01: Bob to complete the security review by end of quarter. Iris flagged resource constraint. [ref:1683-7]\nMeeting notes 2026-09-01: Bob to complete the security review by end of quarter. Iris flagged resource constraint. [ref:1683-8]\nMeeting notes 2026-09-01: Bob to complete the security review by end of quarter. Iris flagged resource constraint. [ref:1683-9]\nMeeting notes 2026-09-01: Bob to complete the security review by end of quarter. Iris flagged resource constraint. [ref:1683-10]",
+    "title": "Doc 99 [meeting]",
+    "domain": "meeting"
+  }
+]

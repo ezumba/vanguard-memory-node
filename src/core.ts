@@ -1,84 +1,29 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs     from 'fs';
+import * as path   from 'path';
 import * as crypto from 'crypto';
-import * as os from 'os';
+import {
+  NORMALIZATION_VERSION, STEMMER_VERSION, ALIAS_DICT_VERSION,
+  normalizeDocument, normalizeQuery, computeTermFrequencies,
+} from './normalization.js';
+import {
+  INDEX_VERSION,
+  OBJECTS_DIR, SEGMENTS_DIR, POSTINGS_DIR, CORPUS_STATS_PATH,
+  ensureIndexDirs, termBucket, atomicWrite,
+  loadManifest, saveManifest, indexState as getIndexState,
+  loadBuckets, loadCorpusStats,
+  loadSegments, loadCatalog, saveCatalogEntry, deleteCatalogEntry,
+} from './index_store.js';
+import type {
+  IndexManifest, BucketFile, SegmentRecord, CatalogEntry, CorpusStats, PostingEntry,
+} from './index_store.js';
+import { recoverTransactions } from './index_transaction.js';
 
-// ── Stop words ─────────────────────────────────────────────────────────────────
-// "patient" / "patients" included because they appear in every field path and
-// would otherwise give a free score point to every field, causing patient.name
-// to win as a false fallback for any unknown query.
-const STOP_WORDS = new Set([
-  'what', 'who', 'where', 'when', 'why', 'how', 'which',
-  'is', 'are', 'was', 'were', 'has', 'have', 'had',
-  'does', 'did', 'can', 'could', 'will', 'would', 'should',
-  'the', 'this', 'that', 'these', 'those', 'its', 'their',
-  'and', 'or', 'but', 'not', 'for', 'from', 'with', 'into',
-  'get', 'give', 'show', 'find', 'tell', 'return', 'list',
-  'me', 'you', 'your', 'about', 'any', 'all', 'please',
-  'say', 'says', 'said', 'does', 'document', 'text', 'file',
-  'patient', 'patients', 'subject', 'person', 'user',
-]);
+// Startup: recover any incomplete transactions from prior crashes
+recoverTransactions();
 
-// Strip trailing format-specifiers before semantic matching.
-// Prevents "allergies as JSON" from being resolved as the field "allergies json".
-const FORMAT_SPECIFIER_RE = /\s+(as\s+json|in\s+json(\s+format)?|as\s+an?\s+\w+|in\s+\w+\s+format|formatted?\s+as\s+\w+|as\s+plain\s+text|as\s+csv|as\s+xml)\s*$/i;
-
-function stripFormatSpecifiers(text: string): string {
-  return text.replace(FORMAT_SPECIFIER_RE, '').trim();
-}
-
-function extractQueryWords(text: string): string[] {
-  return stripFormatSpecifiers(text)
-    .toLowerCase()
-    .split(/\W+/)
-    .filter(w => w.length > 2 && !STOP_WORDS.has(w));
-}
-
-// Document Intelligence Layer — Staged Compression Path
-const CHUNK_TARGET_SIZE = 1800; // chars per chunk for initial segmentation
-const EVIDENCE_WINDOW    = 900;  // chars surrounding the best keyword match
-
-// Fuzzy word match — same ≥75% shared-leading-chars rule already used by
-// scoreField() for the structured-JSON path. Plain substring matching missed
-// "smoking"/"smoker"/"smokes" when the query word was "smoke" (verified: a
-// 2026-07-11 benchmark found 8/30 free-text "does the patient smoke" queries
-// returned not_found even though the source note stated smoking status,
-// because "smoking".includes("smoke") === false while "smoker"/"smokes" do
-// — plain substring search is inconsistent across trivial English inflections
-// of the same word). This makes the free-text path use the same matching
-// standard the JSON path already had.
-function stem(word: string): string {
-  if (word.length <= 3) return word;
-  const suffixes = ['ations', 'ation', 'ings', 'ing', 'ness', 'ment', 'ated', 'ating', 'ers', 'er', 'ed', 'es', 's'];
-  for (const sfx of suffixes) {
-    if (word.endsWith(sfx) && word.length - sfx.length >= 3) {
-      return word.slice(0, word.length - sfx.length);
-    }
-  }
-  return word;
-}
-
-function wordsMatch(a: string, b: string): boolean {
-  if (a === b) return true;
-  // Stem both words; if stems match, words are considered equivalent
-  if (stem(a) === stem(b)) return true;
-  // Prefix ratio fallback (short words require exact match)
-  if (a.length < 4 || b.length < 4) return false;
-  const minLen = Math.min(a.length, b.length);
-  let shared = 0;
-  while (shared < minLen && a[shared] === b[shared]) shared++;
-  return shared / minLen >= 0.75;
-}
-
-function tokenizeWords(text: string): { word: string; pos: number }[] {
-  const out: { word: string; pos: number }[] = [];
-  const re = /[a-z0-9]+/g;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(text)) !== null) {
-    out.push({ word: m[0], pos: m.index });
-  }
-  return out;
-}
+// ── Text segmentation (preserved from v1.1.1) ─────────────────────────────────
+const CHUNK_TARGET_SIZE = 1800;
+const EVIDENCE_WINDOW   = 900;
 
 function splitIntoChunks(text: string): string[] {
   if (!text || !text.trim()) return [];
@@ -107,14 +52,11 @@ function splitIntoChunks(text: string): string[] {
 
   function shatter(segment: string): string[] {
     if (segment.length <= MAX) return [segment];
-    // Level 2: sentence boundaries
     const sentences = segment.match(/[^.!?]+[.!?]+(?:\s+|$)|[^.!?]+$/g)
       ?.map(s => s.trim()).filter(s => s.length > 0) ?? [];
     if (sentences.length > 1) return packPieces(sentences, MAX);
-    // Level 3: word boundaries
     const words = segment.split(/\s+/).filter(w => w.length > 0);
     if (words.length > 1) return packPieces(words, MAX);
-    // Level 4: hard cut (minified text, no whitespace)
     const out: string[] = [];
     for (let i = 0; i < segment.length; i += MAX) out.push(segment.slice(i, i + MAX));
     return out;
@@ -124,262 +66,40 @@ function splitIntoChunks(text: string): string[] {
   return paragraphs.flatMap(para => shatter(para).filter(piece => piece.trim().length > 0));
 }
 
-function scoreChunk(chunk: string, queryWords: string[]): number {
-  const chunkWords = tokenizeWords(chunk.toLowerCase());
-  let score = 0;
-  for (const w of queryWords) {
-    for (const cw of chunkWords) {
-      if (wordsMatch(w, cw.word)) score++;
-    }
-  }
-  return score;
-}
-
-// Extract the 900-char window centered on the highest-density keyword match.
-// Returns null if no keyword is found in the chunk.
-function extractEvidenceWindow(chunk: string, queryWords: string[]): string | null {
+// ── Evidence window (for vmn_recall) ─────────────────────────────────────────
+function findEvidenceWindow(chunk: string, queryTerms: string[]): string {
   const lower = chunk.toLowerCase();
-  const chunkWords = tokenizeWords(lower);
   let bestPos = -1;
-
-  for (const w of queryWords) {
-    const hit = chunkWords.find(cw => wordsMatch(w, cw.word));
-    const pos = hit ? hit.pos : -1;
-    if (pos !== -1 && bestPos === -1) bestPos = pos;
-    // Prefer the position with the most surrounding hits (density center)
-    if (pos !== -1) {
-      const half = Math.floor(EVIDENCE_WINDOW / 2);
-      const wStart = Math.max(0, pos - half);
-      const wEnd   = Math.min(lower.length, pos + half);
-      const windowWords = chunkWords.filter(cw => cw.pos >= wStart && cw.pos < wEnd);
-      const density = queryWords.reduce((sum, qw) => {
-        return sum + windowWords.filter(cw => wordsMatch(qw, cw.word)).length;
-      }, 0);
-      // Always prefer the first hit as anchor; density used for tie-breaking
-      if (bestPos === -1 || density > 1) bestPos = pos;
-    }
+  for (const term of queryTerms) {
+    const prefix = term.slice(0, Math.min(term.length, 6));
+    if (prefix.length < 2) continue;
+    const pos = lower.indexOf(prefix);
+    if (pos !== -1) { bestPos = pos; break; }
   }
-
-  if (bestPos === -1) return null;
-
-  const half = Math.floor(EVIDENCE_WINDOW / 2);
+  if (bestPos === -1) return chunk.slice(0, EVIDENCE_WINDOW).trim();
+  const half  = Math.floor(EVIDENCE_WINDOW / 2);
   const start = Math.max(0, bestPos - half);
-  const end   = Math.min(chunk.length, bestPos + half);
+  const end   = Math.min(chunk.length, start + EVIDENCE_WINDOW);
   return chunk.slice(start, end).trim();
 }
 
-// ── Local filesystem storage layer ────────────────────────────────────────────
-
-const VAULT_DIR = path.join(os.homedir(), '.vanguard', 'local_vault');
-
-// v1.1.1 Index directories — derived state, disposable and rebuildable
-const INDEX_DIR     = path.join(VAULT_DIR, '..', 'index');
-const SEGMENTS_DIR  = path.join(VAULT_DIR, '..', 'segments');
-
-// Index file paths
-const POSTINGS_PATH        = path.join(INDEX_DIR, 'postings.json');
-const DOC_STATS_PATH       = path.join(INDEX_DIR, 'document_stats.json');
-const INDEX_MANIFEST_PATH  = path.join(INDEX_DIR, 'index_manifest.json');
-
-const INDEX_VERSION         = '1.1.1';
-const NORMALIZATION_VERSION = '1.0';
-const STEMMER_VERSION       = '1.0';
-
-function ensureVault(): void {
-  fs.mkdirSync(VAULT_DIR, { recursive: true });
-}
-
-function ensureIndexDirs(): void {
-  fs.mkdirSync(INDEX_DIR,    { recursive: true });
-  fs.mkdirSync(SEGMENTS_DIR, { recursive: true });
-  ensureVault();
-}
-
-
-// ── Catalog types ────────────────────────────────────────────────────────────
-
-interface CatalogEntry {
-  root: string;
-  title: string;
-  namespace: string;
-  tags: string[];
-  content_type: string;
-  source: string;
-  segment_count: number;
-  byte_size: number;
-  excerpt: string;
-  ingested_at: string;
-  updated_at: string;
-}
-
-interface IngestOptions {
-  title?: string;
-  namespace?: string;
-  tags?: string[];
-  content_type?: string;
-  source?: string;
-}
-
-// ── v1.1.1 Index Types ─────────────────────────────────────────────────────
-
-interface SegmentRecord {
-  root:             string;
-  segment_index:    number;
-  start_offset:     number;
-  end_offset:       number;
-  token_count:      number;
-  normalized_terms: Record<string, number>;
-  split_reason:     'paragraph' | 'sentence' | 'word' | 'hard_boundary';
-  record_id:        string | null;
-  text_snippet:     string;
-}
-
-interface PostingEntry {
-  root:          string;
-  segment_index: number;
-  frequency:     number;
-}
-
-type PostingsIndex = Record<string, PostingEntry[]>;
-
-interface DocumentStats {
-  root:          string;
-  total_tokens:  number;
-  segment_count: number;
-}
-
-interface IndexManifest {
-  index_version:         string;
-  normalization_version: string;
-  stemmer_version:       string;
-  indexed_root_count:    number;
-  built_at:              string;
-  needs_rebuild:         boolean;
-}
-
-const CATALOG_FILE = path.join(VAULT_DIR, 'catalog.json');
-
-function loadCatalog(): Record<string, CatalogEntry> {
-  try {
-    return JSON.parse(fs.readFileSync(CATALOG_FILE, 'utf8'));
-  } catch {
-    return {};
-  }
-}
-
-function saveCatalog(catalog: Record<string, CatalogEntry>): void {
-  fs.writeFileSync(CATALOG_FILE, JSON.stringify(catalog, null, 2), 'utf8');
-}
-
-export function list_vault(namespace?: string): CatalogEntry[] {
-  ensureVault();
-  const catalog = loadCatalog();
-  const entries = Object.values(catalog);
-  return namespace
-    ? entries.filter(e => e.namespace === namespace)
-    : entries;
-}
-
-// ── Index I/O (atomic write + loaders) ───────────────────────────────────
-
-function atomicWrite(filePath: string, data: unknown): void {
-  const tmp = filePath + '.tmp';
-  fs.writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf8');
-  fs.renameSync(tmp, filePath);
-}
-
-function loadPostings(): PostingsIndex {
-  ensureIndexDirs();
-  try {
-    if (fs.existsSync(POSTINGS_PATH)) {
-      return JSON.parse(fs.readFileSync(POSTINGS_PATH, 'utf8'));
-    }
-  } catch { /* fall through */ }
-  return {};
-}
-
-function loadDocStats(): Record<string, DocumentStats> {
-  ensureIndexDirs();
-  try {
-    if (fs.existsSync(DOC_STATS_PATH)) {
-      return JSON.parse(fs.readFileSync(DOC_STATS_PATH, 'utf8'));
-    }
-  } catch { /* fall through */ }
-  return {};
-}
-
-function loadIndexManifest(): IndexManifest | null {
-  try {
-    if (fs.existsSync(INDEX_MANIFEST_PATH)) {
-      return JSON.parse(fs.readFileSync(INDEX_MANIFEST_PATH, 'utf8'));
-    }
-  } catch { /* fall through */ }
-  return null;
-}
-
-function indexNeedsRebuild(): boolean {
-  const manifest = loadIndexManifest();
-  if (!manifest) return true;
-  if (manifest.index_version !== INDEX_VERSION) return true;
-  if (manifest.needs_rebuild) return true;
-  return false;
-}
-
-// ── Synonym dictionary (versioned, explicit, deterministic) ────────────────
-const SYNONYM_MAP: Record<string, string[]> = {
-  'smoke':   ['smokes', 'smoked', 'smoking', 'smoker', 'smokers', 'tobacco'],
-  'tobacco': ['smoking', 'smoker', 'cigarette', 'nicotine'],
-  'generic': [],
-};
-
-function expandWithSynonyms(stemmed: string): string[] {
-  const expanded = new Set<string>([stemmed]);
-  for (const [canonical, aliases] of Object.entries(SYNONYM_MAP)) {
-    const canonicalStem = stem(canonical);
-    const aliasStemmed = aliases.map(stem);
-    if (stemmed === canonicalStem || aliasStemmed.includes(stemmed)) {
-      expanded.add(canonicalStem);
-      aliasStemmed.forEach(s => expanded.add(s));
-    }
-  }
-  return [...expanded];
-}
-
-function normalizeTerms(text: string): string[] {
-  return text
-    .toLowerCase()
-    .normalize('NFC')
-    .replace(/[^\w\s'-]/g, ' ')
-    .split(/\s+/)
-    .map(w => w.replace(/^['-]+|['-]+$/g, ''))
-    .filter(w => w.length >= 2)
-    .map(stem)
-    .filter(w => w.length >= 2 && !STOP_WORDS.has(w));
-}
-
-// ── BM25 Lite ──────────────────────────────────────────────────────────────
+// ── BM25 ─────────────────────────────────────────────────────────────────────
 const BM25_K1 = 1.5;
 const BM25_B  = 0.75;
 
-function bm25Score(
-  termFreqInSeg: number,
-  docTokenCount:  number,
-  avgDocLength:   number,
-  totalDocs:      number,
-  docsWithTerm:   number
-): number {
-  if (docsWithTerm === 0) return 0;
-  const idf = Math.log(1 + (totalDocs - docsWithTerm + 0.5) / (docsWithTerm + 0.5));
-  const tf  = termFreqInSeg *
-    (BM25_K1 + 1) /
-    (termFreqInSeg + BM25_K1 * (1 - BM25_B + BM25_B * docTokenCount / Math.max(avgDocLength, 1)));
-  return idf * tf;
+function bm25Score(tf: number, docLen: number, avgLen: number, N: number, df: number): number {
+  if (df === 0) return 0;
+  const idf = Math.log(1 + (N - df + 0.5) / (df + 0.5));
+  const tfn = tf * (BM25_K1 + 1) /
+    (tf + BM25_K1 * (1 - BM25_B + BM25_B * docLen / Math.max(avgLen, 1)));
+  return idf * tfn;
 }
 
-export function search_vault(
-  query: string,
-  limit = 10
-): Array<{
+// Small-vault threshold for synchronous auto-rebuild on REBUILD_REQUIRED
+const SMALL_VAULT_THRESHOLD = 100;
+
+// ── Public API types ──────────────────────────────────────────────────────────
+export interface SearchResult {
   root:            string;
   title:           string;
   score:           number;
@@ -390,101 +110,279 @@ export function search_vault(
   end_offset:      number;
   source:          string;
   verification:    string;
-}> {
+}
+
+export interface SearchResponse {
+  results: SearchResult[];
+  index: {
+    version:            number;
+    state:              string;
+    index_auto_rebuilt: boolean;
+  };
+}
+
+// ── E5: Incremental ingest ────────────────────────────────────────────────────
+export function ingest_text(
+  text: string,
+  options?: {
+    title?:        string;
+    namespace?:    string;
+    tags?:         string[];
+    content_type?: string;
+    source?:       string;
+  }
+): string {
+  ensureIndexDirs();
+  const root = crypto.createHash('sha256').update(text).digest('hex');
+
+  // 1. Write authoritative object (idempotent)
+  const objPath = path.join(OBJECTS_DIR, `${root}.txt`);
+  fs.writeFileSync(objPath, text, 'utf8');
+
+  // 2. Segment
+  const chunks = splitIntoChunks(text);
+
+  // 3. Build segment records and map term -> bucket
+  const segRecs: SegmentRecord[]        = [];
+  const newTermBuckets = new Map<string, string>();
+  let offset = 0;
+
+  for (let i = 0; i < chunks.length; i++) {
+    const chunk = chunks[i];
+    const freq  = computeTermFrequencies(chunk);
+    segRecs.push({
+      root,
+      segment_index:    i,
+      start_offset:     offset,
+      end_offset:       offset + chunk.length,
+      token_count:      Object.keys(freq).length,
+      term_frequencies: freq,
+      split_reason:     'paragraph',
+      record_id:        null,
+      snippet:          chunk.slice(0, 200),
+    });
+    for (const term of Object.keys(freq)) {
+      newTermBuckets.set(term, termBucket(term));
+    }
+    offset += chunk.length;
+  }
+
+  const newBucketSet = new Set(newTermBuckets.values());
+
+  // 4. Find old buckets to clean (re-ingest idempotency)
+  const oldSegs = loadSegments(root);
+  const oldBucketSet = new Set<string>();
+  for (const seg of oldSegs) {
+    const terms = seg.term_frequencies ?? (seg as any).normalized_terms ?? {};
+    for (const term of Object.keys(terms)) {
+      oldBucketSet.add(termBucket(term));
+    }
+  }
+
+  // 5. Load all affected buckets
+  const allBuckets = [...new Set([...newBucketSet, ...oldBucketSet])];
+  const buckets    = loadBuckets(allBuckets);
+
+  // 6. Remove old postings for this root
+  for (const [, bf] of buckets) {
+    for (const term of Object.keys(bf.terms)) {
+      bf.terms[term] = bf.terms[term].filter((p: PostingEntry) => p.root !== root);
+      if (bf.terms[term].length === 0) delete bf.terms[term];
+    }
+    bf.generation++;
+  }
+
+  // 7. Add new postings
+  for (const seg of segRecs) {
+    for (const [term, freq] of Object.entries(seg.term_frequencies)) {
+      const bucket = newTermBuckets.get(term)!;
+      const bf     = buckets.get(bucket)!;
+      if (!bf.terms[term]) bf.terms[term] = [];
+      bf.terms[term].push({ root, segment_index: seg.segment_index, frequency: freq });
+    }
+  }
+
+  // 8. Write modified bucket files (only affected buckets touched)
+  for (const [bucket, bf] of buckets) {
+    atomicWrite(path.join(POSTINGS_DIR, `${bucket}.json`), bf);
+  }
+
+  // 9. Write segment file
+  atomicWrite(path.join(SEGMENTS_DIR, `${root}.json`), segRecs);
+
+  // 10. Update catalog
+  const now             = new Date().toISOString();
+  const existingCatalog = loadCatalog();
+  const existing        = existingCatalog[root];
+  saveCatalogEntry({
+    root,
+    title:         options?.title        ?? text.slice(0, 60).replace(/\n/g, ' ').trim(),
+    namespace:     options?.namespace    ?? 'default',
+    tags:          options?.tags         ?? [],
+    content_type:  options?.content_type ?? 'text/plain',
+    size_bytes:    Buffer.byteLength(text, 'utf8'),
+    segment_count: chunks.length,
+    ingested_at:   existing?.ingested_at ?? now,
+    updated_at:    now,
+    excerpt:       text.slice(0, 120).replace(/\n/g, ' ').trim(),
+  });
+
+  // 11. Update corpus stats
+  const stats      = loadCorpusStats();
+  const totalTokens = segRecs.reduce((s, r) => s + r.token_count, 0);
+  stats.per_root[root] = { total_tokens: totalTokens, segment_count: chunks.length };
+  stats.total_roots    = Object.keys(stats.per_root).length;
+  stats.total_tokens   = Object.values(stats.per_root).reduce((s, r) => s + r.total_tokens, 0);
+  stats.avg_doc_length = stats.total_tokens / Math.max(stats.total_roots, 1);
+  atomicWrite(CORPUS_STATS_PATH, stats);
+
+  // 12. Update manifest
+  const manifest: IndexManifest = loadManifest() ?? {
+    index_version:            INDEX_VERSION,
+    normalization_version:    NORMALIZATION_VERSION,
+    stemmer_version:          STEMMER_VERSION,
+    alias_dictionary_version: ALIAS_DICT_VERSION,
+    root_count:               0,
+    segment_count:            0,
+    generation:               0,
+    state:                    'READY',
+    last_rebuilt_at:          null,
+    last_transaction_id:      null,
+  };
+  manifest.root_count    = stats.total_roots;
+  manifest.segment_count = Object.values(stats.per_root).reduce((s, r) => s + r.segment_count, 0);
+  manifest.state         = 'READY';
+  saveManifest(manifest);
+
+  return root;
+}
+
+// ── E6: Sharded BM25 search ───────────────────────────────────────────────────
+export function search_vault(query: string, limit = 10): SearchResponse {
   ensureIndexDirs();
 
-  if (indexNeedsRebuild()) return [];
+  const state = getIndexState();
+  let autoRebuilt = false;
 
-  const queryTerms  = normalizeTerms(query);
-  const expandedSet = new Set<string>();
-  for (const t of queryTerms) {
-    expandedSet.add(t);
-    expandWithSynonyms(t).forEach(s => expandedSet.add(s));
+  // E8: Migration / rebuild detection
+  if (state !== 'READY') {
+    const catalog   = loadCatalog();
+    const rootCount = Object.keys(catalog).length;
+
+    if (rootCount === 0) {
+      return { results: [], index: { version: INDEX_VERSION, state: 'READY', index_auto_rebuilt: false } };
+    }
+
+    if (rootCount <= SMALL_VAULT_THRESHOLD) {
+      // Small vault: synchronous auto-rebuild then continue to search
+      rebuild_index();
+      autoRebuilt = true;
+    } else {
+      // Large vault: never return silent [] — explicit REBUILDING
+      return {
+        results: [],
+        index: { version: INDEX_VERSION, state: 'REBUILDING', index_auto_rebuilt: false },
+      };
+    }
   }
-  if (expandedSet.size === 0) return [];
 
-  const postings = loadPostings();
-  const docStats  = loadDocStats();
-  const catalog   = loadCatalog();
+  const queryTerms = normalizeQuery(query);
+  if (queryTerms.length === 0) {
+    return { results: [], index: { version: INDEX_VERSION, state: 'READY', index_auto_rebuilt: autoRebuilt } };
+  }
 
-  const totalDocs = Object.keys(docStats).length;
-  if (totalDocs === 0) return [];
-  const avgDocLength = Object.values(docStats).reduce((s, d) => s + d.total_tokens, 0) / totalDocs;
+  // Load only the buckets required by normalized query terms
+  const bucketSet = new Set(queryTerms.map(termBucket));
+  const buckets   = loadBuckets([...bucketSet]);
 
+  const stats     = loadCorpusStats();
+  const totalDocs = stats.total_roots;
+  if (totalDocs === 0) {
+    return { results: [], index: { version: INDEX_VERSION, state: 'READY', index_auto_rebuilt: autoRebuilt } };
+  }
+  const avgDocLength = stats.avg_doc_length;
+
+  // Accumulate segment-level BM25 scores
   const segmentScores = new Map<string, { root: string; segIdx: number; score: number; terms: string[] }>();
 
-  for (const term of expandedSet) {
-    const hits = postings[term] || [];
-    const docsWithTerm = new Set(hits.map((h: PostingEntry) => h.root)).size;
+  for (const term of queryTerms) {
+    const bf   = buckets.get(termBucket(term));
+    if (!bf) continue;
+    const hits: PostingEntry[] = bf.terms[term] || [];
+    const docsWithTerm = new Set(hits.map(h => h.root)).size;
 
     for (const hit of hits) {
-      const ds = docStats[hit.root];
-      if (!ds) continue;
-      const score = bm25Score(hit.frequency, ds.total_tokens, avgDocLength, totalDocs, docsWithTerm);
-      const key = `${hit.root}:${hit.segment_index}`;
+      const rootStats = stats.per_root[hit.root];
+      if (!rootStats) continue;
+      const score = bm25Score(
+        hit.frequency, rootStats.total_tokens, avgDocLength, totalDocs, docsWithTerm
+      );
+      const key      = `${hit.root}:${hit.segment_index}`;
       const existing = segmentScores.get(key);
       if (existing) {
         existing.score += score;
-        existing.terms.push(term);
+        if (!existing.terms.includes(term)) existing.terms.push(term);
       } else {
         segmentScores.set(key, { root: hit.root, segIdx: hit.segment_index, score, terms: [term] });
       }
     }
   }
 
-  if (segmentScores.size === 0) return [];
+  if (segmentScores.size === 0) {
+    return { results: [], index: { version: INDEX_VERSION, state: 'READY', index_auto_rebuilt: autoRebuilt } };
+  }
 
-  // Aggregate: best segment per root
+  // Best segment per root (score desc -> segIdx asc tie-break)
   const rootBest = new Map<string, { score: number; segIdx: number; terms: string[] }>();
   for (const [, seg] of segmentScores) {
     const existing = rootBest.get(seg.root);
-    if (!existing || seg.score > existing.score) {
+    if (!existing ||
+        seg.score > existing.score ||
+        (seg.score === existing.score && seg.segIdx < existing.segIdx)) {
       rootBest.set(seg.root, { score: seg.score, segIdx: seg.segIdx, terms: seg.terms });
     }
   }
 
-  const results = [];
+  // Load catalog only for matched roots
+  const allCatalog = loadCatalog();
+  const results: SearchResult[] = [];
+
   for (const [root, best] of rootBest) {
-    const entry   = catalog[root];
-    const segFile = path.join(SEGMENTS_DIR, `${root}.json`);
+    const entry   = allCatalog[root];
     let snippet   = entry?.excerpt || '';
     let startOff  = 0;
     let endOff    = snippet.length;
 
-    if (fs.existsSync(segFile)) {
-      try {
-        const segs: SegmentRecord[] = JSON.parse(fs.readFileSync(segFile, 'utf8'));
-        const seg = segs[best.segIdx];
-        if (seg) {
-          snippet  = seg.text_snippet;
-          startOff = seg.start_offset;
-          endOff   = seg.end_offset;
+    const segs = loadSegments(root);
+    const seg  = segs[best.segIdx];
+    if (seg) {
+      snippet  = seg.snippet || (seg as any).text_snippet || '';
+      startOff = seg.start_offset;
+      endOff   = seg.end_offset;
 
-          // Try to find a keyword-centered snippet using the original query
-          const objPath2 = path.join(VAULT_DIR, `${root}.txt`);
-          if (fs.existsSync(objPath2)) {
-            try {
-              const fullText = fs.readFileSync(objPath2, 'utf8');
-              const segText  = fullText.slice(seg.start_offset, seg.end_offset);
-              const lower    = segText.toLowerCase();
-              const queryToks = query.toLowerCase()
-                .replace(/[^\w\s]/g, ' ')
-                .split(/\s+/)
-                .filter((t: string) => t.length >= 3);
-              let bestPos = -1;
-              for (const tok of queryToks) {
-                const pos = lower.indexOf(tok.slice(0, Math.min(tok.length, 10)));
-                if (pos !== -1) { bestPos = pos; break; }
-              }
-              if (bestPos !== -1) {
-                const sStart = Math.max(0, bestPos - 60);
-                const sEnd   = Math.min(segText.length, sStart + 200);
-                snippet = segText.slice(sStart, sEnd);
-              }
-            } catch { /* keep stored snippet */ }
+      // Keyword-centered snippet from raw object text
+      const objPath = path.join(OBJECTS_DIR, `${root}.txt`);
+      if (fs.existsSync(objPath)) {
+        try {
+          const fullText  = fs.readFileSync(objPath, 'utf8');
+          const segText   = fullText.slice(seg.start_offset, seg.end_offset);
+          const lower     = segText.toLowerCase();
+          const queryToks = query.toLowerCase()
+            .replace(/[^\w\s]/g, ' ')
+            .split(/\s+/)
+            .filter((t: string) => t.length >= 3);
+          let bestPos = -1;
+          for (const tok of queryToks) {
+            const pos = lower.indexOf(tok.slice(0, Math.min(tok.length, 10)));
+            if (pos !== -1) { bestPos = pos; break; }
           }
-        }
-      } catch { /* use excerpt fallback */ }
+          if (bestPos !== -1) {
+            const sStart = Math.max(0, bestPos - 60);
+            const sEnd   = Math.min(segText.length, sStart + 200);
+            snippet = segText.slice(sStart, sEnd);
+          }
+        } catch { /* keep stored snippet */ }
+      }
     }
 
     results.push({
@@ -497,321 +395,291 @@ export function search_vault(
       start_offset:    startOff,
       end_offset:      endOff,
       source:          'local_vmn',
-      verification:    'LOCAL_HASH_ONLY'
+      verification:    'LOCAL_HASH_ONLY',
     });
   }
 
-  return results.sort((a, b) => b.score - a.score).slice(0, limit);
+  // Deterministic: score desc -> root asc -> segment asc
+  results.sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    if (a.root  !== b.root)  return a.root < b.root ? -1 : 1;
+    return a.matched_segment - b.matched_segment;
+  });
+
+  return {
+    results: results.slice(0, limit),
+    index: { version: INDEX_VERSION, state: 'READY', index_auto_rebuilt: autoRebuilt },
+  };
+}
+
+// ── E7: Root-bound recall (unified normalization) ─────────────────────────────
+export function retrieve_evidence(hash: string, query: string): string {
+  ensureIndexDirs();
+  const filePath = path.join(OBJECTS_DIR, `${hash}.txt`);
+  if (!fs.existsSync(filePath)) {
+    return `ERROR: Shard ${hash} not found in local vault.`;
+  }
+
+  const text       = fs.readFileSync(filePath, 'utf8');
+  const chunks     = splitIntoChunks(text);
+  const queryTerms = normalizeQuery(query);
+
+  if (queryTerms.length === 0) {
+    return `No relevant evidence found for query: ${query}`;
+  }
+
+  // Score chunks by normalized term overlap — same pipeline as search_vault
+  let bestScore = -1;
+  let bestChunk = '';
+
+  for (const chunk of chunks) {
+    const chunkTermSet = new Set(normalizeDocument(chunk));
+    const score = queryTerms.filter(t => chunkTermSet.has(t)).length;
+    if (score > bestScore) { bestScore = score; bestChunk = chunk; }
+  }
+
+  if (bestScore <= 0) return `No relevant evidence found for query: ${query}`;
+
+  return findEvidenceWindow(bestChunk, queryTerms);
+}
+
+// ── List, inspect ─────────────────────────────────────────────────────────────
+export function list_vault(namespace?: string): CatalogEntry[] {
+  ensureIndexDirs();
+  const catalog = loadCatalog();
+  const entries  = Object.values(catalog);
+  return namespace ? entries.filter(e => e.namespace === namespace) : entries;
 }
 
 export function inspect_entry(hash: string): CatalogEntry | null {
-  ensureVault();
+  ensureIndexDirs();
   const catalog = loadCatalog();
   return catalog[hash] ?? null;
 }
 
+// ── E9: Delete (sharded bucket cleanup) ───────────────────────────────────────
 export function delete_entry(hash: string): boolean {
-  ensureVault();
   ensureIndexDirs();
-
   let deleted = false;
 
-  // 1. Delete object file
-  const objPath = path.join(VAULT_DIR, `${hash}.txt`);
-  if (fs.existsSync(objPath)) {
-    fs.unlinkSync(objPath);
-    deleted = true;
+  // Determine which buckets to clean from existing segment records
+  const segs = loadSegments(hash);
+  const bucketsToClean = new Set<string>();
+  for (const seg of segs) {
+    const terms = seg.term_frequencies ?? (seg as any).normalized_terms ?? {};
+    for (const term of Object.keys(terms)) {
+      bucketsToClean.add(termBucket(term));
+    }
   }
 
-  // 2. Delete segment file
+  // Delete authoritative object
+  const objPath = path.join(OBJECTS_DIR, `${hash}.txt`);
+  if (fs.existsSync(objPath)) { fs.unlinkSync(objPath); deleted = true; }
+
+  // Delete segment file
   const segPath = path.join(SEGMENTS_DIR, `${hash}.json`);
   if (fs.existsSync(segPath)) fs.unlinkSync(segPath);
 
-  // 3. Remove from catalog
+  // Remove from catalog
   const catalog = loadCatalog();
-  if (catalog[hash]) {
-    delete catalog[hash];
-    saveCatalog(catalog);
-    deleted = true;
-  }
+  if (catalog[hash]) { deleteCatalogEntry(hash); deleted = true; }
 
-  // 4. Remove postings — prevent orphan entries
-  const postings = loadPostings();
-  let postingsChanged = false;
-  for (const term of Object.keys(postings)) {
-    const before = postings[term].length;
-    postings[term] = postings[term].filter((p: PostingEntry) => p.root !== hash);
-    if (postings[term].length === 0) {
-      delete postings[term];
-      postingsChanged = true;
-    } else if (postings[term].length !== before) {
-      postingsChanged = true;
+  // Remove postings from affected buckets only
+  if (bucketsToClean.size > 0) {
+    const buckets = loadBuckets([...bucketsToClean]);
+    for (const [bucket, bf] of buckets) {
+      let changed = false;
+      for (const term of Object.keys(bf.terms)) {
+        const before = bf.terms[term].length;
+        bf.terms[term] = bf.terms[term].filter((p: PostingEntry) => p.root !== hash);
+        if (bf.terms[term].length === 0) { delete bf.terms[term]; changed = true; }
+        else if (bf.terms[term].length !== before) changed = true;
+      }
+      if (changed) {
+        bf.generation++;
+        atomicWrite(path.join(POSTINGS_DIR, `${bucket}.json`), bf);
+      }
     }
   }
-  if (postingsChanged) atomicWrite(POSTINGS_PATH, postings);
 
-  // 5. Remove from doc stats
-  const docStats = loadDocStats();
-  if (docStats[hash]) {
-    delete docStats[hash];
-    atomicWrite(DOC_STATS_PATH, docStats);
+  // Update corpus stats
+  const stats = loadCorpusStats();
+  if (stats.per_root[hash]) {
+    delete stats.per_root[hash];
+    stats.total_roots    = Object.keys(stats.per_root).length;
+    stats.total_tokens   = Object.values(stats.per_root).reduce((s, r) => s + r.total_tokens, 0);
+    stats.avg_doc_length = stats.total_tokens / Math.max(stats.total_roots, 1);
+    atomicWrite(CORPUS_STATS_PATH, stats);
+  }
+
+  // Update manifest root count
+  const manifest = loadManifest();
+  if (manifest) {
+    manifest.root_count    = stats.total_roots;
+    manifest.segment_count = Object.values(stats.per_root).reduce((s, r) => s + r.segment_count, 0);
+    saveManifest(manifest);
   }
 
   return deleted;
 }
 
+// ── Stats ─────────────────────────────────────────────────────────────────────
 export function vault_stats(): {
   total_entries: number;
-  total_bytes: number;
-  namespaces: string[];
-  oldest_at: string | null;
-  newest_at: string | null;
+  total_bytes:   number;
+  namespaces:    string[];
+  oldest_at:     string | null;
+  newest_at:     string | null;
 } {
-  ensureVault();
+  ensureIndexDirs();
   const catalog = loadCatalog();
-  const entries = Object.values(catalog);
+  const entries  = Object.values(catalog);
   if (entries.length === 0) {
     return { total_entries: 0, total_bytes: 0, namespaces: [], oldest_at: null, newest_at: null };
   }
-  const namespaces = [...new Set(entries.map(e => e.namespace))];
+  const namespaces   = [...new Set(entries.map(e => e.namespace))];
   const sortedByDate = entries.map(e => e.ingested_at).sort();
   return {
     total_entries: entries.length,
-    total_bytes: entries.reduce((sum, e) => sum + e.byte_size, 0),
+    total_bytes:   entries.reduce((s, e) => s + (e.size_bytes ?? (e as any).byte_size ?? 0), 0),
     namespaces,
     oldest_at: sortedByDate[0],
     newest_at: sortedByDate[sortedByDate.length - 1],
   };
 }
 
+// ── Index status ──────────────────────────────────────────────────────────────
 export function get_index_status(): {
   status:             string;
-  index_version:      string | null;
+  index_version:      number | null;
+  state:              string;
   indexed_root_count: number;
   catalog_root_count: number;
   needs_rebuild:      boolean;
   built_at:           string | null;
   objects_preserved:  boolean;
 } {
-  const manifest = loadIndexManifest();
+  const manifest = loadManifest();
   const catalog  = loadCatalog();
-  const docStats = loadDocStats();
-  const rebuild  = indexNeedsRebuild();
+  const stats    = loadCorpusStats();
+  const state    = getIndexState();
 
   return {
-    status:             rebuild ? 'INDEX_REBUILD_REQUIRED' : 'OK',
-    index_version:      manifest?.index_version || null,
-    indexed_root_count: Object.keys(docStats).length,
+    status:             state === 'READY' ? 'OK' : 'INDEX_REBUILD_REQUIRED',
+    index_version:      manifest?.index_version ?? null,
+    state,
+    indexed_root_count: stats.total_roots,
     catalog_root_count: Object.keys(catalog).length,
-    needs_rebuild:      rebuild,
-    built_at:           manifest?.built_at || null,
-    objects_preserved:  true
+    needs_rebuild:      state !== 'READY',
+    built_at:           manifest?.last_rebuilt_at ?? null,
+    objects_preserved:  true,
   };
 }
 
-export function rebuild_index(): {
-  success:       boolean;
-  roots_indexed: number;
-  errors:        string[];
-} {
+// ── E9: Full index rebuild (sharded) ─────────────────────────────────────────
+export function rebuild_index(): { success: boolean; roots_indexed: number; errors: string[] } {
   ensureIndexDirs();
   const catalog = loadCatalog();
   const errors: string[] = [];
-  let indexed = 0;
+  let indexed   = 0;
 
-  const newPostings: PostingsIndex = {};
-  const newStats: Record<string, DocumentStats> = {};
+  const newBuckets = new Map<string, BucketFile>();
+  const newPerRoot: Record<string, { total_tokens: number; segment_count: number }> = {};
 
-  for (const [hash] of Object.entries(catalog)) {
-    const objPath = path.join(VAULT_DIR, `${hash}.txt`);
-    if (!fs.existsSync(objPath)) {
-      errors.push(`Missing object: ${hash}`);
-      continue;
-    }
+  for (const [root, catEntry] of Object.entries(catalog)) {
+    const objPath = path.join(OBJECTS_DIR, `${root}.txt`);
+    if (!fs.existsSync(objPath)) { errors.push(`Missing object: ${root}`); continue; }
+
     try {
       const text   = fs.readFileSync(objPath, 'utf8');
       const chunks = splitIntoChunks(text);
       const segRecs: SegmentRecord[] = [];
-      let offset = 0;
+      let offset      = 0;
       let totalTokens = 0;
 
       for (let i = 0; i < chunks.length; i++) {
         const chunk = chunks[i];
-        const terms = normalizeTerms(chunk);
-        const freq: Record<string, number> = {};
-        for (const t of terms) {
-          freq[t] = (freq[t] || 0) + 1;
-          for (const syn of expandWithSynonyms(t)) {
-            if (syn !== t) freq[syn] = (freq[syn] || 0) + 0.5;
-          }
-        }
-        totalTokens += terms.length;
+        const freq  = computeTermFrequencies(chunk);
+        totalTokens += Object.keys(freq).length;
         segRecs.push({
-          root: hash, segment_index: i,
-          start_offset: offset, end_offset: offset + chunk.length,
-          token_count: terms.length, normalized_terms: freq,
-          split_reason: 'paragraph', record_id: null,
-          text_snippet: chunk.slice(0, 200)
+          root,
+          segment_index:    i,
+          start_offset:     offset,
+          end_offset:       offset + chunk.length,
+          token_count:      Object.keys(freq).length,
+          term_frequencies: freq,
+          split_reason:     'paragraph',
+          record_id:        null,
+          snippet:          chunk.slice(0, 200),
         });
-        for (const [term, frq] of Object.entries(freq)) {
-          if (!newPostings[term]) newPostings[term] = [];
-          newPostings[term].push({ root: hash, segment_index: i, frequency: frq });
+
+        for (const [term, freq2] of Object.entries(freq)) {
+          const bucket = termBucket(term);
+          if (!newBuckets.has(bucket)) {
+            newBuckets.set(bucket, { schema_version: 2, bucket, generation: 0, terms: {} });
+          }
+          const bf = newBuckets.get(bucket)!;
+          if (!bf.terms[term]) bf.terms[term] = [];
+          bf.terms[term].push({ root, segment_index: i, frequency: freq2 });
         }
+
         offset += chunk.length;
       }
 
-      atomicWrite(path.join(SEGMENTS_DIR, `${hash}.json`), segRecs);
-      newStats[hash] = { root: hash, total_tokens: totalTokens, segment_count: chunks.length };
+      atomicWrite(path.join(SEGMENTS_DIR, `${root}.json`), segRecs);
+
+      // Migrate catalog to v2 field names (byte_size -> size_bytes)
+      const now = new Date().toISOString();
+      saveCatalogEntry({
+        root,
+        title:         catEntry?.title        ?? root.slice(0, 16),
+        namespace:     catEntry?.namespace     ?? 'default',
+        tags:          catEntry?.tags          ?? [],
+        content_type:  catEntry?.content_type  ?? 'text/plain',
+        size_bytes:    catEntry?.size_bytes     ?? (catEntry as any)?.byte_size ?? Buffer.byteLength(text, 'utf8'),
+        segment_count: chunks.length,
+        ingested_at:   catEntry?.ingested_at    ?? now,
+        updated_at:    now,
+        excerpt:       catEntry?.excerpt        ?? text.slice(0, 120).replace(/\n/g, ' ').trim(),
+      });
+
+      newPerRoot[root] = { total_tokens: totalTokens, segment_count: chunks.length };
       indexed++;
     } catch (e: any) {
-      errors.push(`Failed to index ${hash}: ${e.message}`);
+      errors.push(`Failed to index ${root}: ${e.message}`);
     }
   }
 
-  atomicWrite(POSTINGS_PATH, newPostings);
-  atomicWrite(DOC_STATS_PATH, newStats);
-  atomicWrite(INDEX_MANIFEST_PATH, {
-    index_version:         INDEX_VERSION,
-    normalization_version: NORMALIZATION_VERSION,
-    stemmer_version:       STEMMER_VERSION,
-    indexed_root_count:    indexed,
-    built_at:              new Date().toISOString(),
-    needs_rebuild:         false
-  } as IndexManifest);
+  // Write all touched bucket files
+  for (const [, bf] of newBuckets) {
+    bf.generation++;
+    atomicWrite(path.join(POSTINGS_DIR, `${bf.bucket}.json`), bf);
+  }
+
+  // Write corpus stats
+  const totalTok  = Object.values(newPerRoot).reduce((s, r) => s + r.total_tokens, 0);
+  const totalRoot = Object.keys(newPerRoot).length;
+  const corpusStats: CorpusStats = {
+    total_roots:    totalRoot,
+    total_tokens:   totalTok,
+    avg_doc_length: totalTok / Math.max(totalRoot, 1),
+    per_root:       newPerRoot,
+  };
+  atomicWrite(CORPUS_STATS_PATH, corpusStats);
+
+  // Write v2 manifest
+  saveManifest({
+    index_version:            INDEX_VERSION,
+    normalization_version:    NORMALIZATION_VERSION,
+    stemmer_version:          STEMMER_VERSION,
+    alias_dictionary_version: ALIAS_DICT_VERSION,
+    root_count:               indexed,
+    segment_count:            Object.values(newPerRoot).reduce((s, r) => s + r.segment_count, 0),
+    generation:               (loadManifest()?.generation ?? 0) + 1,
+    state:                    'READY',
+    last_rebuilt_at:          new Date().toISOString(),
+    last_transaction_id:      null,
+  });
 
   return { success: errors.length === 0, roots_indexed: indexed, errors };
-}
-
-export function ingest_text(
-  text: string,
-  options?: {
-    title?:        string;
-    namespace?:    string;
-    tags?:         string[];
-    content_type?: string;
-    source?:       string;
-  }
-): string {
-  ensureVault();
-  ensureIndexDirs();
-
-  const hash = crypto.createHash('sha256').update(text).digest('hex');
-
-  // 1. Write raw object (authoritative — never modify after write)
-  const objPath = path.join(VAULT_DIR, `${hash}.txt`);
-  fs.writeFileSync(objPath, text, 'utf8');
-
-  // 2. Segment
-  const chunks = splitIntoChunks(text);
-
-  // 3. Build segment records + collect term frequencies
-  const segmentRecords: SegmentRecord[] = [];
-  const termFreqsBySegment: Array<Record<string, number>> = [];
-  let offset = 0;
-
-  for (let i = 0; i < chunks.length; i++) {
-    const chunk = chunks[i];
-    const terms = normalizeTerms(chunk);
-    const freq: Record<string, number> = {};
-    for (const t of terms) {
-      freq[t] = (freq[t] || 0) + 1;
-      for (const syn of expandWithSynonyms(t)) {
-        if (syn !== t) freq[syn] = (freq[syn] || 0) + 0.5;
-      }
-    }
-    segmentRecords.push({
-      root:             hash,
-      segment_index:    i,
-      start_offset:     offset,
-      end_offset:       offset + chunk.length,
-      token_count:      terms.length,
-      normalized_terms: freq,
-      split_reason:     'paragraph',
-      record_id:        null,
-      text_snippet:     chunk.slice(0, 200)
-    });
-    termFreqsBySegment.push(freq);
-    offset += chunk.length;
-  }
-
-  // 4. Write segment file
-  const segPath = path.join(SEGMENTS_DIR, `${hash}.json`);
-  atomicWrite(segPath, segmentRecords);
-
-  // 5. Update inverted index (read-modify-write with atomic swap)
-  const postings = loadPostings();
-  const docStats  = loadDocStats();
-
-  // Remove old postings for this root (re-ingest idempotency)
-  for (const term of Object.keys(postings)) {
-    postings[term] = postings[term].filter(p => p.root !== hash);
-    if (postings[term].length === 0) delete postings[term];
-  }
-
-  // Add new postings
-  for (let i = 0; i < segmentRecords.length; i++) {
-    for (const [term, freq] of Object.entries(termFreqsBySegment[i])) {
-      if (!postings[term]) postings[term] = [];
-      postings[term].push({ root: hash, segment_index: i, frequency: freq });
-    }
-  }
-
-  docStats[hash] = {
-    root:          hash,
-    total_tokens:  segmentRecords.reduce((s, r) => s + r.token_count, 0),
-    segment_count: segmentRecords.length
-  };
-
-  atomicWrite(POSTINGS_PATH, postings);
-  atomicWrite(DOC_STATS_PATH, docStats);
-
-  // 6. Update catalog
-  const catalog = loadCatalog();
-  const now = new Date().toISOString();
-  const existing = catalog[hash];
-  catalog[hash] = {
-    root:          hash,
-    title:         options?.title ?? text.slice(0, 60).replace(/\n/g, ' ').trim(),
-    namespace:     options?.namespace ?? 'default',
-    tags:          options?.tags ?? [],
-    content_type:  options?.content_type ?? 'text/plain',
-    source:        options?.source ?? '',
-    segment_count: chunks.length,
-    byte_size:     Buffer.byteLength(text, 'utf8'),
-    excerpt:       text.slice(0, 120).replace(/\n/g, ' ').trim(),
-    ingested_at:   existing?.ingested_at ?? now,
-    updated_at:    now,
-  };
-  saveCatalog(catalog);
-
-  // 7. Update index manifest
-  atomicWrite(INDEX_MANIFEST_PATH, {
-    index_version:         INDEX_VERSION,
-    normalization_version: NORMALIZATION_VERSION,
-    stemmer_version:       STEMMER_VERSION,
-    indexed_root_count:    Object.keys(docStats).length,
-    built_at:              new Date().toISOString(),
-    needs_rebuild:         false
-  } as IndexManifest);
-
-  return hash;
-}
-
-export function retrieve_evidence(hash: string, query: string): string {
-  ensureVault();
-  const filePath = path.join(VAULT_DIR, `${hash}.txt`);
-  if (!fs.existsSync(filePath)) {
-    return `ERROR: Shard ${hash} not found in local vault.`;
-  }
-  const text = fs.readFileSync(filePath, 'utf8');
-  const chunks = splitIntoChunks(text);
-  const words = extractQueryWords(query);
-  if (words.length === 0) return `No relevant evidence found for query: ${query}`;
-  let best = { score: -1, chunk: '' };
-  for (const chunk of chunks) {
-    const score = scoreChunk(chunk, words);
-    if (score > best.score) best = { score, chunk };
-  }
-  if (best.score < 0) return `No relevant evidence found for query: ${query}`;
-  return extractEvidenceWindow(best.chunk, words) ?? `No keyword match found in best chunk for query: ${query}`;
 }

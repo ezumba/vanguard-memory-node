@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { ingest_text, retrieve_evidence, list_vault, search_vault, inspect_entry, delete_entry, vault_stats, get_index_status, rebuild_index } from './core.js';
 const server = new McpServer({
     name: 'vanguard-memory-node',
-    version: '1.1.0',
+    version: '1.2.0',
 });
 server.tool('vmn_ingest', 'Ingest text into the local Vanguard Memory Vault. Returns a SHA-256 shard hash.', {
     text: z.string().describe('The text content to ingest and shard locally'),
@@ -59,20 +59,29 @@ server.tool('vmn_search', 'Search across all memory objects in the vault by keyw
     query: z.string().describe('Search query to find relevant memory objects'),
     limit: z.number().optional().describe('Maximum number of results (default 10)')
 }, async ({ query, limit }) => {
-    const results = search_vault(query, limit ?? 10);
+    const { results, index } = search_vault(query, limit ?? 10);
+    if (index.state === 'REBUILDING') {
+        return {
+            content: [{
+                    type: 'text',
+                    text: `INDEX_REBUILDING — index is being rebuilt. Retry vmn_search in a moment.\n[VMN] index.state=REBUILDING | verification=LOCAL_HASH_ONLY`
+                }]
+        };
+    }
     if (results.length === 0) {
         return {
             content: [{
                     type: 'text',
-                    text: `No memory objects matched: "${query}"\n[VMN] source=local_vmn | verification=LOCAL_HASH_ONLY`
+                    text: `No memory objects matched: "${query}"\n[VMN] index.state=${index.state} | source=local_vmn | verification=LOCAL_HASH_ONLY`
                 }]
         };
     }
+    const autoNote = index.index_auto_rebuilt ? ' [index auto-rebuilt]' : '';
     const lines = results.map(r => `root: ${r.root}\ntitle: ${r.title}\nsnippet: ${r.snippet}\nscore: ${r.score.toFixed(3)} | segment: ${r.matched_segment} | terms: ${r.matched_terms.join(', ')}\n`).join('\n---\n');
     return {
         content: [{
                 type: 'text',
-                text: `Found ${results.length} matching memory object(s):\n\n${lines}\n[VMN] source=local_vmn | verification=LOCAL_HASH_ONLY`
+                text: `Found ${results.length} matching memory object(s):${autoNote}\n\n${lines}\n[VMN] source=local_vmn | verification=LOCAL_HASH_ONLY`
             }]
     };
 });
