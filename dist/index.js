@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { ingest_text, retrieve_evidence, list_vault, search_vault, inspect_entry, delete_entry, vault_stats, get_index_status, rebuild_index } from './core.js';
 const server = new McpServer({
     name: 'vanguard-memory-node',
-    version: '1.3.0',
+    version: '1.3.1',
 });
 server.tool('vmn_ingest', 'Ingest text into the local Vanguard Memory Vault. Returns a SHA-256 shard hash.', {
     text: z.string().describe('The text content to ingest and shard locally'),
@@ -28,10 +28,13 @@ server.tool('vmn_recall', 'Recall evidence from a local Vanguard Memory shard us
     query: z.string().describe('The query to search within the shard')
 }, async ({ hash, query }) => {
     const evidence = retrieve_evidence(hash, query);
+    const text = evidence === 'no_relevant_evidence_found'
+        ? `No relevant evidence found in local memory for query: "${query}".`
+        : evidence;
     return {
         content: [{
                 type: 'text',
-                text: `${evidence}\n\n[VMN] source=local_vmn | verification=LOCAL_HASH_ONLY | network_verification_available=false`
+                text: `${text}\n\n[VMN] source=local_vmn | verification=LOCAL_HASH_ONLY | network_verification_available=false`
             }]
     };
 });
