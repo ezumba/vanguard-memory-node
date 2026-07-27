@@ -4,6 +4,7 @@ import * as crypto from 'crypto';
 import {
   NORMALIZATION_VERSION, STEMMER_VERSION, ALIAS_DICT_VERSION,
   normalizeDocument, normalizeQuery, computeTermFrequencies,
+  tokenize, stemToken,
 } from './normalization.js';
 import {
   INDEX_VERSION,
@@ -419,10 +420,6 @@ export function search_vault(query: string, limit = 10): SearchResponse {
   };
 }
 
-function escapeRegExp(s: string): string {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
 // ── E7: Root-bound recall (unified normalization) ─────────────────────────────
 export function retrieve_evidence(hash: string, query: string): string {
   ensureIndexDirs();
@@ -450,14 +447,12 @@ export function retrieve_evidence(hash: string, query: string): string {
       if (chunkFreqs[qt]) score += chunkFreqs[qt] * 2;
     }
 
-    // Fallback: word-boundary match for rare normalization misses (only when primary=0)
-    // Uses \b so "generic" never matches inside "generator"
+    // Fallback: stemmed-token match (only when primary=0)
+    // Stems each chunk word and compares stems — medications→medicat matches
+    // medication→medicat, but generic→gener never matches generator→generator
     if (score === 0) {
-      for (const qt of queryTerms) {
-        if (qt.length >= 4 && new RegExp(`\\b${escapeRegExp(qt)}\\b`, 'i').test(chunk)) {
-          score += 0.5;
-        }
-      }
+      const chunkStems = new Set(tokenize(chunk).map(w => stemToken(w)));
+      if (queryTerms.some(qt => chunkStems.has(qt))) score += 0.5;
     }
 
     if (score > bestScore) { bestScore = score; bestChunk = chunk; }
