@@ -16,7 +16,7 @@ import {
 
 const server = new McpServer({
   name: 'vanguard-memory-node',
-  version: '1.3.2',
+  version: '1.3.3',
 });
 
 server.tool(

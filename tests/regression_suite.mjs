@@ -1,12 +1,22 @@
 /**
- * VMN Regression Suite — all 15 historical benchmark cases.
+ * VMN Regression Suite — 15 historical benchmark cases + stemmer parity pre-flight.
  * Run: node tests/regression_suite.mjs
- * Gate: 15/15 must pass before any release ships.
+ * Gate: all cases must pass before any release ships.
  */
+import assert from 'node:assert';
 import { performance } from 'perf_hooks';
+import { stemToken } from '../dist/normalization.js';
 import {
   ingest_text, retrieve_evidence, search_vault, delete_entry,
 } from '../dist/core.js';
+
+// ── Stemmer parity pre-flight (throws on failure, blocking further tests) ─────
+assert.strictEqual(stemToken('medications'), stemToken('medication'),
+  `stemmer parity: medications(${stemToken('medications')}) !== medication(${stemToken('medication')})`);
+assert.strictEqual(stemToken('mentions'),    stemToken('mention'),
+  `stemmer parity: mentions !== mention`);
+assert.strictEqual(stemToken('actions'),     stemToken('action'),
+  `stemmer parity: actions !== action`);
 
 let pass = 0, fail = 0;
 const hashes = [];
