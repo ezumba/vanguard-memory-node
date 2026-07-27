@@ -133,6 +133,18 @@ ok(`15 high-DF search latency ${latencyMs.toFixed(1)}ms (<50ms gate)`, latencyMs
   const r19 = await syncToVault('hello vault', 'unit-test');
   ok('19 syncToVault: unconfigured when API key missing', r19.status === 'unconfigured');
 
+  // Case 20: 404 returns distinct message
+  process.env.EXERGYNET_API_KEY = 'test-key';
+  globalThis.fetch = async () => ({ ok: false, status: 404, text: async () => 'Not Found', json: async () => ({}) });
+  const r20 = await syncToVault('x', 'test');
+  ok('20 syncToVault: 404 → distinct endpoint message', r20.message.includes('404') && r20.message.includes('EXERGYNET_VAULT_URL'));
+
+  // Case 21: 401 returns distinct auth message
+  globalThis.fetch = async () => ({ ok: false, status: 401, text: async () => 'Unauthorized', json: async () => ({}) });
+  const r21 = await syncToVault('x', 'test');
+  ok('21 syncToVault: 401 → distinct auth message', r21.message.includes('401/403') && r21.message.includes('EXERGYNET_API_KEY'));
+
+  delete process.env.EXERGYNET_API_KEY;
   globalThis.fetch = origFetch;
   delete process.env.EXERGYNET_VAULT_URL;
 }

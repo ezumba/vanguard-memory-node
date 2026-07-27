@@ -6,7 +6,7 @@ import { ingest_text, retrieve_evidence, list_vault, search_vault, inspect_entry
 import { syncToVault, readVaultObject } from './vault_bridge.js';
 const server = new McpServer({
     name: 'vanguard-memory-node',
-    version: '1.4.0',
+    version: '1.4.1',
 });
 server.tool('vmn_ingest', 'Ingest text into the local Vanguard Memory Vault. Returns a SHA-256 shard hash.', {
     text: z.string().describe('The text content to ingest and shard locally'),
