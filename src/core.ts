@@ -8,7 +8,7 @@ import {
 } from './normalization.js';
 import {
   INDEX_VERSION,
-  OBJECTS_DIR, SEGMENTS_DIR, POSTINGS_DIR, CORPUS_STATS_PATH, CATALOG_DIR,
+  OBJECTS_DIR, SEGMENTS_DIR, POSTINGS_DIR, CORPUS_STATS_PATH, CATALOG_DIR, CURSORS_DIR,
   ensureIndexDirs, termBucket, atomicWrite,
   loadManifest, saveManifest, indexState as getIndexState,
   loadBuckets, loadCorpusStats,
@@ -262,7 +262,7 @@ export function ingest_text(
 }
 
 // ── E6: Sharded BM25 search ───────────────────────────────────────────────────
-export function search_vault(query: string, limit = 10): SearchResponse {
+export function search_vault(query: string, limit = 10, namespace?: string): SearchResponse {
   ensureIndexDirs();
 
   const state = getIndexState();
@@ -357,6 +357,7 @@ export function search_vault(query: string, limit = 10): SearchResponse {
 
   for (const [root, best] of rootBest) {
     const entry   = allCatalog[root];
+    if (namespace && entry?.namespace !== namespace) continue;
     let snippet   = entry?.excerpt || '';
     let startOff  = 0;
     let endOff    = snippet.length;
@@ -703,4 +704,56 @@ export function rebuild_index(): { success: boolean; roots_indexed: number; erro
   });
 
   return { success: errors.length === 0, roots_indexed: indexed, errors };
+}
+
+// ── File delta ingestion with cursor tracking ─────────────────────────────────
+export interface FileDeltaResult {
+  hash:           string | null; // null when no new content
+  lines_ingested: number;
+  cursor_line:    number;        // absolute line position after this call
+}
+
+export function ingest_file_delta(
+  filePath:  string,
+  sessionId: string,
+  options?:  { namespace?: string; title?: string; tags?: string[] }
+): FileDeltaResult {
+  if (!fs.existsSync(filePath)) {
+    throw new Error(`File not found: ${filePath}`);
+  }
+
+  // Load cursor
+  fs.mkdirSync(CURSORS_DIR, { recursive: true });
+  const cursorPath = path.join(CURSORS_DIR, `${sessionId}.json`);
+  let lastLine = 0;
+  if (fs.existsSync(cursorPath)) {
+    try { lastLine = JSON.parse(fs.readFileSync(cursorPath, 'utf8')).last_line ?? 0; } catch {}
+  }
+
+  // Read only new lines
+  const raw      = fs.readFileSync(filePath, 'utf8').split('\n');
+  const lines    = raw[raw.length - 1] === '' ? raw.slice(0, -1) : raw;
+  const newLines = lines.slice(lastLine);
+
+  if (newLines.length === 0) {
+    return { hash: null, lines_ingested: 0, cursor_line: lastLine };
+  }
+
+  // Ingest delta
+  const hash = ingest_text(newLines.join('\n'), {
+    title:     options?.title     ?? path.basename(filePath),
+    namespace: options?.namespace ?? 'file_ingest',
+    tags:      options?.tags      ?? ['auto-ingest', 'file-delta'],
+    source:    filePath,
+  });
+
+  // Advance cursor
+  const newCursorLine = lastLine + newLines.length;
+  atomicWrite(cursorPath, {
+    file_path:  filePath,
+    last_line:  newCursorLine,
+    updated_at: new Date().toISOString(),
+  });
+
+  return { hash, lines_ingested: newLines.length, cursor_line: newCursorLine };
 }
