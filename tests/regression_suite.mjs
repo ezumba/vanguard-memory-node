@@ -5,9 +5,12 @@
  */
 import assert from 'node:assert';
 import { performance } from 'perf_hooks';
+import { writeFileSync, appendFileSync, unlinkSync } from 'node:fs';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
 import { stemToken } from '../dist/normalization.js';
 import {
-  ingest_text, retrieve_evidence, search_vault, delete_entry,
+  ingest_text, retrieve_evidence, search_vault, delete_entry, ingest_file_delta,
 } from '../dist/core.js';
 import { syncToVault } from '../dist/vault_bridge.js';
 
@@ -191,6 +194,52 @@ ok(`15 high-DF search latency ${latencyMs.toFixed(1)}ms (<50ms gate)`, latencyMs
   delete process.env.EXERGYNET_NETWORK;
   delete process.env.EXERGYNET_VAULT_URL;
   globalThis.fetch = origFetch2;
+}
+
+// ── Cases 26-27: vmn_search namespace filter ──────────────────────────────────
+{
+  const hOps     = ingest_text('Telemetry spike observed in alpha cluster.', { namespace: 'ops' });
+  const hFinance = ingest_text('Telemetry forecast reviewed in beta portfolio.', { namespace: 'finance' });
+
+  const rFiltered = search_vault('telemetry', 10, 'ops');
+  ok('26 namespace=ops excludes finance result',
+    rFiltered.results.some(r => r.root === hOps) &&
+    rFiltered.results.every(r => r.root !== hFinance));
+
+  const rAll = search_vault('telemetry', 10);
+  ok('27 unfiltered search returns all namespaces',
+    rAll.results.some(r => r.root === hOps) &&
+    rAll.results.some(r => r.root === hFinance));
+
+  delete_entry(hOps);
+  delete_entry(hFinance);
+}
+
+// ── Cases 28-30: ingest_file_delta cursor tracking ────────────────────────────
+{
+  const tmpFile  = join(tmpdir(), `vmn_test_${Date.now()}.txt`);
+  const sid      = `test-cursor-${Date.now()}`;
+
+  // Case 28: fresh file — all lines ingested
+  writeFileSync(tmpFile, 'Alpha line content.\nBeta line content.\n');
+  const r28 = ingest_file_delta(tmpFile, sid, { namespace: 'file_test' });
+  ok('28 ingest_file_delta: ingests new file content',
+    r28.lines_ingested === 2 && r28.hash !== null && r28.cursor_line === 2);
+
+  // Case 29: append — only new lines ingested (delta)
+  appendFileSync(tmpFile, 'Gamma line content.\nDelta line content.\n');
+  const r29 = ingest_file_delta(tmpFile, sid, { namespace: 'file_test' });
+  ok('29 ingest_file_delta: second call ingests only appended lines',
+    r29.lines_ingested === 2 && r29.cursor_line === 4);
+
+  // Case 30: no change — zero lines, null hash
+  const r30 = ingest_file_delta(tmpFile, sid);
+  ok('30 ingest_file_delta: no new content returns zero',
+    r30.lines_ingested === 0 && r30.hash === null && r30.cursor_line === 4);
+
+  try { unlinkSync(tmpFile); } catch {}
+  if (r28.hash) delete_entry(r28.hash);
+  if (r29.hash) delete_entry(r29.hash);
 }
 
 // ── Cleanup ───────────────────────────────────────────────────────────────────
