@@ -1,4 +1,8 @@
-# Vanguard Memory Node (VMN) v1.4.0
+# Vanguard Memory Node (VMN)
+
+[![npm version](https://img.shields.io/npm/v/vanguard-memory-node.svg)](https://www.npmjs.com/package/vanguard-memory-node)
+[![npm downloads](https://img.shields.io/npm/dm/vanguard-memory-node.svg)](https://www.npmjs.com/package/vanguard-memory-node)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 Local deterministic memory for AI agents via the Model Context Protocol (MCP).
 
@@ -44,6 +48,24 @@ npx vanguard-memory-node
 }
 ```
 
+With ExergyNet vault sync enabled:
+
+```json
+{
+  "mcpServers": {
+    "vanguard-memory": {
+      "command": "npx",
+      "args": ["-y", "vanguard-memory-node"],
+      "env": {
+        "EXERGYNET_API_KEY": "sk-exergy-your-key",
+        "EXERGYNET_NETWORK": "mainnet",
+        "AUTO_SYNC_VAULT": "true"
+      }
+    }
+  }
+}
+```
+
 WSL on Windows:
 
 ```json
@@ -59,7 +81,7 @@ WSL on Windows:
 
 ---
 
-## Tools (10 total)
+## Tools (11 total)
 
 ### `vmn_ingest`
 Stores text as a SHA-256 content-addressed shard. Segments it, indexes it, and updates the local catalog.
@@ -92,6 +114,36 @@ Full-vault keyword search across all ingested objects. Returns ranked results wi
 |---|---|---|---|
 | `query` | string | yes | Search query |
 | `limit` | number | no | Max results (default: 10) |
+| `namespace` | string | no | Restrict search to this namespace only |
+
+### `vmn_ingest_file`
+Delta-ingests a growing file into the vault, tracking progress with a cursor so only new lines are ingested on each call. Designed for Stop hooks and continuous log pipelines — safe to call repeatedly with no duplicates.
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `file_path` | string | yes | Absolute path to the file |
+| `session_id` | string | no | Cursor key (defaults to file path) |
+| `namespace` | string | no | Namespace for ingested content (default: `file_ingest`) |
+| `title` | string | no | Optional title override |
+| `tags` | string[] | no | Optional tags |
+
+Returns: `lines_ingested`, `cursor_line`, and shard `hash` (null if no new content).
+
+**Stop hook example** — ingest every Claude session automatically:
+
+```json
+{
+  "hooks": {
+    "Stop": [{
+      "matcher": "",
+      "hooks": [{
+        "type": "command",
+        "command": "npx vanguard-memory-node vmn_ingest_file --file_path \"$CLAUDE_SESSION_FILE\" --session_id \"$CLAUDE_SESSION_ID\""
+      }]
+    }]
+  }
+}
+```
 
 ### `vmn_list`
 Lists all memory objects in the vault.
@@ -124,14 +176,14 @@ Returns current BM25 index state (`READY`, `REBUILD_REQUIRED`, `REBUILDING`, `DE
 Rebuilds the full BM25 index from authoritative object files. Safe at any time — objects are never modified.
 
 ### `vmn_sync_vault`
-Syncs a local memory object to the ExergyNet LNES-17 vault. Requires `EXERGYNET_API_KEY`.
+Syncs a local memory object to the ExergyNet LNES-17 vault. Requires `EXERGYNET_API_KEY`. Use `EXERGYNET_NETWORK` to target mainnet or testnet.
 
 | Parameter | Type | Required | Description |
 |---|---|---|---|
 | `xlmp_root` | string | yes | Root hash of the object to sync |
 | `intent` | string | no | Sync intent label (default: `manual-sync`) |
 
-Returns: Canonical Manifest JSON from the LNES-17 server.
+Returns: `xlmp_root`, `bytes_committed`, `status`, and the resolved vault URL.
 
 ---
 
@@ -140,8 +192,9 @@ Returns: Canonical Manifest JSON from the LNES-17 server.
 | Variable | Default | Description |
 |---|---|---|
 | `AUTO_SYNC_VAULT` | `false` | Set to `true` to auto-sync every `vmn_ingest` to ExergyNet |
-| `EXERGYNET_API_KEY` | — | API key for ExergyNet vault access |
-| `EXERGYNET_VAULT_URL` | `https://explorer-api.exergynet.org` | Override vault endpoint |
+| `EXERGYNET_API_KEY` | — | API key for ExergyNet vault access (`sk-exergy-*`) |
+| `EXERGYNET_NETWORK` | `testnet` | Target substrate: `mainnet` → `portal.exergynet.org`, `testnet` → `dt.portal.exergynet.org` |
+| `EXERGYNET_VAULT_URL` | _(resolved from `EXERGYNET_NETWORK`)_ | Override vault base URL entirely |
 
 ---
 
@@ -155,6 +208,8 @@ Returns: Canonical Manifest JSON from the LNES-17 server.
 │   └── <sha256>.json             # per-object metadata (O(1) reads)
 ├── segments/
 │   └── <sha256>.json             # segment records with term frequencies
+├── cursors/
+│   └── <session_id>.json         # cursor state for vmn_ingest_file
 └── index/
     └── v2/
         ├── index_manifest.json   # version + state header
