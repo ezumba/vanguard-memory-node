@@ -33,7 +33,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ezumba/vanguard-memory-node.git"
+    "url": "git+https://github.com/ezumba/vanguard-memory-node.git"
   },
   "homepage": "https://github.com/ezumba/vanguard-memory-node#readme",
   "engines": {
