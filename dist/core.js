@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as crypto from 'crypto';
 import { NORMALIZATION_VERSION, STEMMER_VERSION, ALIAS_DICT_VERSION, normalizeQuery, computeTermFrequencies, tokenize, stemToken, } from './normalization.js';
-import { INDEX_VERSION, OBJECTS_DIR, SEGMENTS_DIR, POSTINGS_DIR, CORPUS_STATS_PATH, CATALOG_DIR, ensureIndexDirs, termBucket, atomicWrite, loadManifest, saveManifest, indexState as getIndexState, loadBuckets, loadCorpusStats, loadSegments, loadCatalog, loadCatalogEntry, loadCatalogEntries, saveCatalogEntry, deleteCatalogEntry, } from './index_store.js';
+import { INDEX_VERSION, OBJECTS_DIR, SEGMENTS_DIR, POSTINGS_DIR, CORPUS_STATS_PATH, CATALOG_DIR, CURSORS_DIR, ensureIndexDirs, termBucket, atomicWrite, loadManifest, saveManifest, indexState as getIndexState, loadBuckets, loadCorpusStats, loadSegments, loadCatalog, loadCatalogEntry, loadCatalogEntries, saveCatalogEntry, deleteCatalogEntry, } from './index_store.js';
 import { recoverTransactions } from './index_transaction.js';
 // Startup: recover any incomplete transactions from prior crashes
 recoverTransactions();
@@ -208,7 +208,7 @@ export function ingest_text(text, options) {
     return root;
 }
 // ── E6: Sharded BM25 search ───────────────────────────────────────────────────
-export function search_vault(query, limit = 10) {
+export function search_vault(query, limit = 10, namespace) {
     ensureIndexDirs();
     const state = getIndexState();
     let autoRebuilt = false;
@@ -292,6 +292,8 @@ export function search_vault(query, limit = 10) {
     const results = [];
     for (const [root, best] of rootBest) {
         const entry = allCatalog[root];
+        if (namespace && entry?.namespace !== namespace)
+            continue;
         let snippet = entry?.excerpt || '';
         let startOff = 0;
         let endOff = snippet.length;
@@ -609,4 +611,41 @@ export function rebuild_index() {
         last_transaction_id: null,
     });
     return { success: errors.length === 0, roots_indexed: indexed, errors };
+}
+export function ingest_file_delta(filePath, sessionId, options) {
+    if (!fs.existsSync(filePath)) {
+        throw new Error(`File not found: ${filePath}`);
+    }
+    // Load cursor
+    fs.mkdirSync(CURSORS_DIR, { recursive: true });
+    const cursorPath = path.join(CURSORS_DIR, `${sessionId}.json`);
+    let lastLine = 0;
+    if (fs.existsSync(cursorPath)) {
+        try {
+            lastLine = JSON.parse(fs.readFileSync(cursorPath, 'utf8')).last_line ?? 0;
+        }
+        catch { }
+    }
+    // Read only new lines
+    const raw = fs.readFileSync(filePath, 'utf8').split('\n');
+    const lines = raw[raw.length - 1] === '' ? raw.slice(0, -1) : raw;
+    const newLines = lines.slice(lastLine);
+    if (newLines.length === 0) {
+        return { hash: null, lines_ingested: 0, cursor_line: lastLine };
+    }
+    // Ingest delta
+    const hash = ingest_text(newLines.join('\n'), {
+        title: options?.title ?? path.basename(filePath),
+        namespace: options?.namespace ?? 'file_ingest',
+        tags: options?.tags ?? ['auto-ingest', 'file-delta'],
+        source: filePath,
+    });
+    // Advance cursor
+    const newCursorLine = lastLine + newLines.length;
+    atomicWrite(cursorPath, {
+        file_path: filePath,
+        last_line: newCursorLine,
+        updated_at: new Date().toISOString(),
+    });
+    return { hash, lines_ingested: newLines.length, cursor_line: newCursorLine };
 }

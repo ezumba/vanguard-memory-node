@@ -26,6 +26,7 @@ export const TRANSACTIONS_DIR = path.join(INDEX_V2_DIR, 'transactions');
 export const RECOVERY_DIR = path.join(INDEX_V2_DIR, 'recovery');
 export const MANIFEST_PATH = path.join(INDEX_V2_DIR, 'index_manifest.json');
 export const CORPUS_STATS_PATH = path.join(INDEX_V2_DIR, 'corpus_stats.json');
+export const CURSORS_DIR = path.join(VAULT_BASE, 'cursors');
 // Legacy v1.1.1 catalog path (migration source)
 export const LEGACY_CATALOG_PATH = path.join(OBJECTS_DIR, 'catalog.json');
 // ── Directory setup ───────────────────────────────────────────────────────────

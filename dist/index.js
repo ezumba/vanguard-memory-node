@@ -2,11 +2,11 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
-import { ingest_text, retrieve_evidence, list_vault, search_vault, inspect_entry, delete_entry, vault_stats, get_index_status, rebuild_index } from './core.js';
+import { ingest_text, retrieve_evidence, list_vault, search_vault, inspect_entry, delete_entry, vault_stats, get_index_status, rebuild_index, ingest_file_delta, } from './core.js';
 import { syncToVault, readVaultObject } from './vault_bridge.js';
 const server = new McpServer({
     name: 'vanguard-memory-node',
-    version: '1.4.1',
+    version: '1.5.0',
 });
 server.tool('vmn_ingest', 'Ingest text into the local Vanguard Memory Vault. Returns a SHA-256 shard hash.', {
     text: z.string().describe('The text content to ingest and shard locally'),
@@ -66,9 +66,10 @@ server.tool('vmn_list', 'List all memory objects in the local vault. Optionally 
 });
 server.tool('vmn_search', 'Search across all memory objects in the vault by keyword query. Returns candidate roots. Use vmn_recall with a specific root to retrieve full evidence.', {
     query: z.string().describe('Search query to find relevant memory objects'),
-    limit: z.number().optional().describe('Maximum number of results (default 10)')
-}, async ({ query, limit }) => {
-    const { results, index } = search_vault(query, limit ?? 10);
+    limit: z.number().optional().describe('Maximum number of results (default 10)'),
+    namespace: z.string().optional().describe('Restrict search to this namespace only'),
+}, async ({ query, limit, namespace }) => {
+    const { results, index } = search_vault(query, limit ?? 10, namespace);
     if (index.state === 'REBUILDING') {
         return {
             content: [{
@@ -186,9 +187,41 @@ server.tool('vmn_sync_vault', 'Sync a local memory object to the ExergyNet LNES-
     return {
         content: [{
                 type: 'text',
-                text: `SYNCED.\n${JSON.stringify(result.response, null, 2)}\n[VMN] source=exergynet_vault | verification=LNES17_HASH`
+                text: `SYNCED. [${result.url}]\n${JSON.stringify(result.response, null, 2)}\n[VMN] source=exergynet_vault | verification=LNES17_HASH`
             }]
     };
+});
+server.tool('vmn_ingest_file', 'Ingest new content from a file into the vault, tracking progress with a cursor so only new lines are ingested on each call. Safe to call repeatedly — only the delta since the last call is stored.', {
+    file_path: z.string().describe('Absolute path to the file to ingest'),
+    session_id: z.string().optional().describe('Cursor key — defaults to the file path. Use a stable ID (e.g. session ID) to track the same file across calls'),
+    namespace: z.string().optional().describe('Namespace for the ingested content (default: "file_ingest")'),
+    title: z.string().optional().describe('Optional title override'),
+    tags: z.array(z.string()).optional().describe('Optional tags'),
+}, async ({ file_path, session_id, namespace, title, tags }) => {
+    const sid = session_id ?? file_path;
+    try {
+        const result = ingest_file_delta(file_path, sid, { namespace, title, tags });
+        if (result.lines_ingested === 0) {
+            return {
+                content: [{
+                        type: 'text',
+                        text: `NO_NEW_CONTENT. Cursor already at line ${result.cursor_line} — file has not grown since last call.\n[VMN] source=local_vmn | session_id=${sid}`,
+                    }]
+            };
+        }
+        return {
+            content: [{
+                    type: 'text',
+                    text: `INGESTED. Lines ingested: ${result.lines_ingested} (cursor now at line ${result.cursor_line})\nLocal shard hash: ${result.hash}\n[VMN] source=local_vmn | session_id=${sid} | verification=LOCAL_HASH_ONLY`,
+                }]
+        };
+    }
+    catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        return {
+            content: [{ type: 'text', text: `ERROR: ${msg}\n[VMN] source=local_vmn` }]
+        };
+    }
 });
 const transport = new StdioServerTransport();
 server.connect(transport).catch(console.error);
