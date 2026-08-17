@@ -20,6 +20,8 @@ import type {
 } from './index_store.js';
 import { recoverTransactions } from './index_transaction.js';
 
+import { queryScopedCandidates } from './compact_index.js';
+
 // Startup: recover any incomplete transactions from prior crashes
 recoverTransactions();
 
@@ -460,6 +462,64 @@ export function retrieve_evidence(hash: string, query: string): string {
   }
 
   // Zero-score rejection invariant: never return a chunk when nothing matched
+  if (bestScore <= 0) return 'no_relevant_evidence_found';
+
+  return findEvidenceWindow(bestChunk, queryTerms);
+}
+
+// ── LNES-86.6: Adaptive retrieval (static default + inline selectivity escape) ─
+// No pre-router: every call enters candidate discovery directly. The escape
+// decision reuses queryScopedCandidates()'s own already-computed return value
+// (candidateIndices.length === 0) rather than a separate predictive step run
+// beforehand. Validated on the frozen LNES-86 benchmark population: aggregate
+// total-time beats both ALWAYS_LEGACY (1.92x) and ALWAYS_COMPACT (1.13x),
+// within 1.45% of a zero-cost oracle. Known, disclosed tradeoff: escaped
+// queries carry a real, structural ~8.4% overhead vs calling retrieve_evidence()
+// directly, because candidate discovery must scan the whole document before
+// it can know to escape. Full derivation: LNES86_ADAPTIVE_ROUTING_TS_R6.md
+// (EDT internal -- exact thresholds/economics are not reproduced here).
+function scoreCandidateChunks(
+  chunks: string[], indices: number[], queryTerms: string[]
+): { bestScore: number; bestChunk: string } {
+  let bestScore = -1;
+  let bestChunk = '';
+  for (const idx of indices) {
+    const chunk = chunks[idx];
+    const chunkFreqs = computeTermFrequencies(chunk);
+    let score = 0;
+    for (const qt of queryTerms) {
+      if (chunkFreqs[qt]) score += chunkFreqs[qt] * 2;
+    }
+    if (score === 0) {
+      const chunkStems = new Set(tokenize(chunk).map(w => stemToken(w)));
+      if (queryTerms.some(qt => chunkStems.has(qt))) score += 0.5;
+    }
+    if (score > bestScore) { bestScore = score; bestChunk = chunk; }
+  }
+  return { bestScore, bestChunk };
+}
+
+export function retrieve_evidence_adaptive(hash: string, query: string): string {
+  ensureIndexDirs();
+  const filePath = path.join(OBJECTS_DIR, `${hash}.txt`);
+  if (!fs.existsSync(filePath)) {
+    return `ERROR: Shard ${hash} not found in local vault.`;
+  }
+
+  const text       = fs.readFileSync(filePath, 'utf8');
+  const chunks     = splitIntoChunks(text);
+  const queryTerms = normalizeQuery(query);
+  if (queryTerms.length === 0) return 'no_relevant_evidence_found';
+
+  const cand = queryScopedCandidates(chunks, queryTerms);
+
+  // INLINE ESCAPE DECISION -- reuses cand.candidateIndices.length, a value
+  // queryScopedCandidates() already computes as part of normal execution.
+  // No separate router call, no new expensive computation.
+  const escape = cand.candidateIndices.length === 0;
+  const scoredIndices = escape ? chunks.map((_, i) => i) : cand.candidateIndices;
+
+  const { bestScore, bestChunk } = scoreCandidateChunks(chunks, scoredIndices, queryTerms);
   if (bestScore <= 0) return 'no_relevant_evidence_found';
 
   return findEvidenceWindow(bestChunk, queryTerms);

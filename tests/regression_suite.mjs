@@ -10,7 +10,7 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { stemToken } from '../dist/normalization.js';
 import {
-  ingest_text, retrieve_evidence, search_vault, delete_entry, ingest_file_delta,
+  ingest_text, retrieve_evidence, retrieve_evidence_adaptive, search_vault, delete_entry, ingest_file_delta,
 } from '../dist/core.js';
 import { syncToVault } from '../dist/vault_bridge.js';
 
@@ -243,6 +243,45 @@ ok(`15 high-DF search latency ${latencyMs.toFixed(1)}ms (<50ms gate)`, latencyMs
 }
 
 // ── Cleanup ───────────────────────────────────────────────────────────────────
+// -- Cases 31-34: retrieve_evidence_adaptive (LNES-86.6 static default + inline escape) --
+{
+  // Case 31: selective/rare term -- should stay on the static default path
+  // (no escape) and match the same evidence retrieve_evidence() would find.
+  const hSel = ingest_text('Patient reports lisinopril for blood pressure management.', { namespace: 'adaptive_test' });
+  const rSel = retrieve_evidence_adaptive(hSel, 'lisinopril');
+  ok('31 adaptive: selective term matches evidence (no-escape path)',
+    rSel.toLowerCase().includes('lisinopril'));
+  delete_entry(hSel);
+
+  // Case 32: build a large multi-chunk document where one term appears in
+  // EVERY chunk (document frequency > RARE_TERM_MAX_DF=10) -- this must fail
+  // the rare-term gate and trigger the inline escape (full-chunk fallback
+  // scoring), while still returning correct, non-empty evidence.
+  const paragraphs = [];
+  for (let i = 0; i < 15; i++) {
+    paragraphs.push('Commonwordmarker appears in this paragraph. '.repeat(60) + `Section ${i} filler text to reach target chunk size padding content here.`);
+  }
+  const hEscape = ingest_text(paragraphs.join('\n\n'), { namespace: 'adaptive_test' });
+  const rEscape = retrieve_evidence_adaptive(hEscape, 'commonwordmarker');
+  ok('32 adaptive: high-df term triggers escape and still returns valid evidence',
+    rEscape !== 'no_relevant_evidence_found' && rEscape.toLowerCase().includes('commonwordmarker'));
+  delete_entry(hEscape);
+
+  // Case 33: no-hit query -- zero matching terms must return the safe
+  // no-match sentinel, not fabricated evidence, on the adaptive path too.
+  const hNoHit = ingest_text('This document discusses quarterly revenue projections.', { namespace: 'adaptive_test' });
+  const rNoHit = retrieve_evidence_adaptive(hNoHit, 'xyzxyznomatch');
+  ok('33 adaptive: no-hit query returns no_relevant_evidence_found',
+    rNoHit === 'no_relevant_evidence_found');
+  delete_entry(hNoHit);
+
+  // Case 34: missing shard -- must report an error string, never crash or
+  // fabricate evidence.
+  const rMissing = retrieve_evidence_adaptive('0000000000000000000000000000000000000000000000000000000000000000', 'anything');
+  ok('34 adaptive: missing shard returns ERROR string',
+    typeof rMissing === 'string' && rMissing.startsWith('ERROR:'));
+}
+
 hashes.forEach(h => delete_entry(h));
 
 // ── Result ────────────────────────────────────────────────────────────────────

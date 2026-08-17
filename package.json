@@ -1,6 +1,6 @@
 {
-  "name": "vanguard-memory-node",
-  "version": "1.5.0",
+  "name": "@lnes/vanguard-memory-node",
+  "version": "2.0.0",
   "description": "Local deterministic memory for AI agents via MCP. Deterministic xLMP lexical retrieval, stdio transport, Claude Desktop compatible.",
   "type": "module",
   "main": "dist/index.js",
@@ -47,5 +47,8 @@
   "devDependencies": {
     "@types/node": "^26.1.1",
     "typescript": "^7.0.2"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
