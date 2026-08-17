@@ -4,7 +4,7 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { z } from 'zod';
 import {
   ingest_text,
-  retrieve_evidence,
+  retrieve_evidence_adaptive,
   list_vault,
   search_vault,
   inspect_entry,
@@ -18,7 +18,7 @@ import { syncToVault, readVaultObject } from './vault_bridge.js';
 
 const server = new McpServer({
   name: 'vanguard-memory-node',
-  version: '1.5.0',
+  version: '2.0.0',
 });
 
 server.tool(
@@ -56,7 +56,7 @@ server.tool(
     query: z.string().describe('The query to search within the shard')
   },
   async ({ hash, query }) => {
-    const evidence = retrieve_evidence(hash, query);
+    const evidence = retrieve_evidence_adaptive(hash, query);
     const text = evidence === 'no_relevant_evidence_found'
       ? `No relevant evidence found in local memory for query: "${query}".`
       : evidence;
