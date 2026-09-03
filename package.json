@@ -1,6 +1,6 @@
 {
   "name": "@lnes/vanguard-memory-node",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Local deterministic memory for AI agents via MCP. Deterministic xLMP lexical retrieval, stdio transport, Claude Desktop compatible.",
   "type": "module",
   "main": "dist/index.js",
@@ -50,5 +50,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "mcpName": "io.github.ezumba/vanguard-memory-node"
 }
