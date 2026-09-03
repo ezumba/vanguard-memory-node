@@ -1,0 +1,35 @@
+# Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
+
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      vaultPath:
+        type: string
+        description: >-
+          Directory where memory shards are stored on disk.
+          Defaults to ~/.vmn/ if not set.
+      lnes17ApiKey:
+        type: string
+        description: >-
+          Optional API key for ExergyNet LNES-17 on-chain vault sync
+          (vmn_sync_vault tool). Leave empty for local-only operation.
+      lnes17Network:
+        type: string
+        enum: [mainnet, testnet]
+        description: >-
+          Network for LNES-17 vault sync. Only used when lnes17ApiKey is set.
+    additionalProperties: false
+  commandFunction: |-
+    (config) => ({
+      command: "npx",
+      args: ["-y", "@lnes/vanguard-memory-node"],
+      env: {
+        ...(config.vaultPath ? { VMN_VAULT_PATH: config.vaultPath } : {}),
+        ...(config.lnes17ApiKey ? { LNES17_API_KEY: config.lnes17ApiKey } : {}),
+        ...(config.lnes17Network ? { LNES17_NETWORK: config.lnes17Network } : {}),
+      }
+    })
+  exampleConfig:
+    vaultPath: ~/.vmn/
