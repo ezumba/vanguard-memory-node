@@ -223,5 +223,58 @@ server.tool('vmn_ingest_file', 'Ingest new content from a file into the vault, t
         };
     }
 });
+// ── MCP Resources ─────────────────────────────────────────────────────────────
+// Read-only context surfaces backed by existing vault functions.
+server.resource('vault-stats', 'memory://stats', async (uri) => ({
+    contents: [{
+            uri: uri.href,
+            mimeType: 'application/json',
+            text: JSON.stringify(vault_stats(), null, 2),
+        }],
+}));
+server.resource('vault-all', 'memory://all', async (uri) => {
+    const entries = list_vault();
+    const summary = entries.map(e => ({
+        hash: e.root,
+        title: e.title,
+        namespace: e.namespace,
+        segment_count: e.segment_count,
+        updated_at: e.updated_at,
+    }));
+    return {
+        contents: [{
+                uri: uri.href,
+                mimeType: 'application/json',
+                text: JSON.stringify({ total: entries.length, entries: summary }, null, 2),
+            }],
+    };
+});
+// ── MCP Prompts ───────────────────────────────────────────────────────────────
+// Reusable prompt templates for common VMN workflows.
+server.prompt('vmn-store', 'Store text or a note into the local Vanguard Memory Vault', {
+    text: z.string().describe('The text content to store'),
+    title: z.string().optional().describe('Optional title for this memory'),
+    namespace: z.string().optional().describe('Optional namespace (default: "default")'),
+}, ({ text, title, namespace }) => ({
+    messages: [{
+            role: 'user',
+            content: {
+                type: 'text',
+                text: `Use vmn_ingest to store the following into local memory.${title ? `\nTitle: ${title}` : ''}${namespace ? `\nNamespace: ${namespace}` : ''}\n\nContent:\n${text}`,
+            },
+        }],
+}));
+server.prompt('vmn-find', 'Search the local Vanguard Memory Vault for relevant context', {
+    query: z.string().describe('What to search for in memory'),
+    namespace: z.string().optional().describe('Optional namespace to restrict search'),
+}, ({ query, namespace }) => ({
+    messages: [{
+            role: 'user',
+            content: {
+                type: 'text',
+                text: `Use vmn_search to find memory objects relevant to: "${query}"${namespace ? ` in namespace "${namespace}"` : ''}.\nFor each result, use vmn_recall with the returned root hash to retrieve the full evidence window.`,
+            },
+        }],
+}));
 const transport = new StdioServerTransport();
 server.connect(transport).catch(console.error);
