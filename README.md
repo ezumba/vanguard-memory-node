@@ -3,6 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/vanguard-memory-node.svg)](https://www.npmjs.com/package/vanguard-memory-node)
 [![npm downloads](https://img.shields.io/npm/dm/vanguard-memory-node.svg)](https://www.npmjs.com/package/vanguard-memory-node)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![MCP Badge](https://lobehub.com/badge/mcp/ezumba-vanguard-memory-node)](https://lobehub.com/mcp/ezumba-vanguard-memory-node)
 
 Local deterministic memory for AI agents via the Model Context Protocol (MCP).
 
