@@ -1,7 +1,7 @@
 # Vanguard Memory Node (VMN)
 
-[![npm version](https://img.shields.io/npm/v/vanguard-memory-node.svg)](https://www.npmjs.com/package/vanguard-memory-node)
-[![npm downloads](https://img.shields.io/npm/dm/vanguard-memory-node.svg)](https://www.npmjs.com/package/vanguard-memory-node)
+[![npm version](https://img.shields.io/npm/v/%40lnes%2Fvanguard-memory-node.svg)](https://www.npmjs.com/package/@lnes/vanguard-memory-node)
+[![npm downloads](https://img.shields.io/npm/dm/%40lnes%2Fvanguard-memory-node.svg)](https://www.npmjs.com/package/@lnes/vanguard-memory-node)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![MCP Badge](https://lobehub.com/badge/mcp/ezumba-vanguard-memory-node)](https://lobehub.com/mcp/ezumba-vanguard-memory-node)
 
@@ -22,13 +22,13 @@ Optionally, vaults can be synced to the [ExergyNet LNES-17 ledger](https://exerg
 ## Install
 
 ```bash
-npm install -g vanguard-memory-node
+npm install -g @lnes/vanguard-memory-node
 ```
 
 Or run without installing:
 
 ```bash
-npx vanguard-memory-node
+npx @lnes/vanguard-memory-node
 ```
 
 ---
@@ -43,7 +43,7 @@ npx vanguard-memory-node
   "mcpServers": {
     "vanguard-memory": {
       "command": "npx",
-      "args": ["-y", "vanguard-memory-node"]
+      "args": ["-y", "@lnes/vanguard-memory-node"]
     }
   }
 }
@@ -56,7 +56,7 @@ With ExergyNet vault sync enabled:
   "mcpServers": {
     "vanguard-memory": {
       "command": "npx",
-      "args": ["-y", "vanguard-memory-node"],
+      "args": ["-y", "@lnes/vanguard-memory-node"],
       "env": {
         "EXERGYNET_API_KEY": "sk-exergy-your-key",
         "EXERGYNET_NETWORK": "mainnet",
@@ -74,7 +74,7 @@ WSL on Windows:
   "mcpServers": {
     "vanguard-memory": {
       "command": "wsl",
-      "args": ["-d", "Ubuntu", "npx", "-y", "vanguard-memory-node"]
+      "args": ["-d", "Ubuntu", "npx", "-y", "@lnes/vanguard-memory-node"]
     }
   }
 }
@@ -139,7 +139,7 @@ Returns: `lines_ingested`, `cursor_line`, and shard `hash` (null if no new conte
       "matcher": "",
       "hooks": [{
         "type": "command",
-        "command": "npx vanguard-memory-node vmn_ingest_file --file_path \"$CLAUDE_SESSION_FILE\" --session_id \"$CLAUDE_SESSION_ID\""
+        "command": "npx -y @lnes/vanguard-memory-node vmn_ingest_file --file_path \"$CLAUDE_SESSION_FILE\" --session_id \"$CLAUDE_SESSION_ID\""
       }]
     }]
   }
