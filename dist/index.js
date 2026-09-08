@@ -308,7 +308,8 @@ server.registerResource('xlmp-memory-scaling', 'exergynet://benchmarks/xlmp-memo
 server.registerResource('h200-throughput', 'exergynet://benchmarks/h200-throughput', {
     description: 'H200 throughput record (derivation_type=REFERENCE_ONLY). ' +
         '~11.3× correct-task throughput vs full-context at a tested SLA-compliant operating point on H200. ' +
-        'Restated from an internal engineering report (evidence_sha256 pinned); publicly_verifiable=false. ' +
+        'Restated from the canonical internal evidence package EVD-001 (ExergyNet_H200_Performance_Benchmarks_v2.zip, ' +
+        'sha256 7005fa07…2204, the same identifier/digest the white paper V4 source map pins); publicly_verifiable=false. ' +
         'Carries tested_envelope, claim_boundary, and universal_claim=false.',
     mimeType: 'application/json',
 }, async (uri) => ({

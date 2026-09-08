@@ -121,32 +121,35 @@ export const BENCHMARK_RECORDS = [
     },
     {
         benchmark_id: 'H200-XLMP-CORRECT-TASK-THROUGHPUT',
-        experiment: 'H200 — xLMP vs Full-Context Correct-Task Throughput (internal report)',
+        experiment: 'H200 — xLMP vs Full-Context Correct-Task Throughput (evidence package EVD-001)',
         measured_value: 11.3,
         unit: 'x_correct_task_throughput_vs_full_context',
         tested_envelope: 'Single dedicated H200; 100 ten-step memory tasks; concurrency ramp to 50; ' +
-            'xLMP prompt tokens flat ≈660–820 across the corpus range tested. ' +
+            'xLMP prompt tokens flat ≈660–820 across the 8K–285K synthetic corpus range tested. ' +
             'Throughput compared at EACH method\'s highest tested SLA-compliant operating point: ' +
             'xLMP ~1,081 correct tasks/min vs ~96 for full-context ≈ 11.3×. ' +
             'Reported by the source as a TESTED FLOOR (xLMP never breached SLA at concurrency 50), not a measured ceiling.',
         derivation_type: 'REFERENCE_ONLY',
         evidence_class: 'INTERNAL_ENGINEERING_REPORT',
-        evidence_document: 'ExergyNet_H200_Performance_Benchmarks_v2/02_XLMP_MEMORY_RETRIEVAL/' +
-            '01_MEMORY_EFFICIENCY_BENCHMARK/xLMP_Memory_Efficiency_Benchmark_Report.md',
-        evidence_sha256: '2f03ee367802694fdc7f921303d639275a4c522e82f424e25fb4a11608581561',
+        evidence_document: 'EVD-001 — ExergyNet_H200_Performance_Benchmarks_v2.zip (H200 memory-efficiency benchmark package)',
+        evidence_sha256: '7005fa0766ee66a40fa6bce3268efeac069a8fb75c21ad9b1bb535db8a1e2204',
         publicly_verifiable: false,
         universal_claim: false,
-        claim_boundary: 'REFERENCE_ONLY: this value is restated from an internal H200 engineering report ' +
+        claim_boundary: 'REFERENCE_ONLY: this value is restated from the internal H200 evidence package EVD-001 ' +
             '(evidence_sha256 above); it is NOT sealed-holdout evidence and is NOT reproducible from this package. ' +
             'It is a throughput ratio at a specific SLA-compliant operating point (a tested floor), ' +
             'NOT a universal speedup, and NOT an HBM/VRAM, energy, or thermodynamic saving — the source report ' +
             'explicitly states HBM never saturated and prompt-token reduction is not equated with HBM-byte reduction. ' +
             'Different hardware (H200), corpus, and task design than the A100 LNES82C10M holdout; ' +
             'direct cross-configuration comparison is not valid.',
-        derivation_notes: 'Source: "~11.3× the useful throughput of full context and ~1.7× that of the tested RAG" and ' +
-            '"xLMP flat 659–822 tok" in the internal H200 memory-efficiency report. ' +
-            'Prior record cited a nonexistent "EVD-001 / LNES59_Procurement_Bench" artifact; corrected 2026-09-08 ' +
-            'to the real report with its recomputed SHA-256.',
+        derivation_notes: 'EVD-001 is the canonical H200 memory-efficiency evidence package ' +
+            '(ExergyNet_H200_Performance_Benchmarks_v2.zip, sha256 7005fa07…2204) — the same evidence identifier ' +
+            'and digest pinned by the ExergyNet white paper V4 source map (claim WP-C003a, MEASURED/VERIFIED). ' +
+            'The ~11.3× figure ("~11.3× the useful throughput of full context, ~1.7× vs the tested RAG") and the flat ' +
+            '659–822 prompt-token range appear in the package member xLMP_Memory_Efficiency_Benchmark_Report.md ' +
+            '(sha256 2f03ee367802694fdc7f921303d639275a4c522e82f424e25fb4a11608581561). ' +
+            'The prior 2.1.0 draft used a placeholder digest and mis-located the artifact to ' +
+            'LNES59_Procurement_Bench (a different, unrelated benchmark); corrected 2026-09-08 to the canonical EVD-001 package.',
     },
 ];
 const MEASURED_K = 895.96;
