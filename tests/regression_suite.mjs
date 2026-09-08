@@ -1,5 +1,5 @@
 /**
- * VMN Regression Suite — 15 historical benchmark cases + stemmer parity pre-flight.
+ * VMN Regression Suite — 34 historical cases + 16 evidence-native / publication-gate cases.
  * Run: node tests/regression_suite.mjs
  * Gate: all cases must pass before any release ships.
  */
@@ -13,6 +13,7 @@ import {
   ingest_text, retrieve_evidence, retrieve_evidence_adaptive, search_vault, delete_entry, ingest_file_delta,
 } from '../dist/core.js';
 import { syncToVault } from '../dist/vault_bridge.js';
+import { BENCHMARK_RECORDS, compute_context_comparison } from '../dist/benchmarks.js';
 
 // ── Stemmer parity pre-flight (throws on failure, blocking further tests) ─────
 assert.strictEqual(stemToken('medications'), stemToken('medication'),
@@ -283,6 +284,139 @@ ok(`15 high-DF search latency ${latencyMs.toFixed(1)}ms (<50ms gate)`, latencyMs
 }
 
 hashes.forEach(h => delete_entry(h));
+
+// ── Cases 35–42: evidence-native benchmark module ─────────────────────────────
+
+// Case 35: all benchmark records carry the required evidence-native fields
+ok('35 benchmark_records: all records have required evidence-native fields',
+  BENCHMARK_RECORDS.every(r =>
+    typeof r.benchmark_id === 'string' &&
+    typeof r.measured_value === 'number' &&
+    typeof r.unit === 'string' &&
+    typeof r.tested_envelope === 'string' &&
+    typeof r.derivation_type === 'string' &&
+    typeof r.evidence_class === 'string' &&
+    typeof r.evidence_sha256 === 'string' &&
+    typeof r.publicly_verifiable === 'boolean' &&
+    r.universal_claim === false
+  )
+);
+
+// Case 36: sealed holdout mean-K record has correct measured value and type
+const meanKRecord = BENCHMARK_RECORDS.find(r => r.benchmark_id === 'LNES82C10M-HOLDOUT-MEAN-K');
+ok('36 benchmark: LNES82C10M-HOLDOUT-MEAN-K measured_value=895.96, derivation_type=MEASURED',
+  meanKRecord !== undefined &&
+  meanKRecord.measured_value === 895.96 &&
+  meanKRecord.derivation_type === 'MEASURED'
+);
+
+// Case 37: state-ratio record is DERIVED from the sealed holdout, value ≈ 11291
+const ratioRecord = BENCHMARK_RECORDS.find(r => r.benchmark_id === 'LNES82C10M-STATE-RATIO');
+ok('37 benchmark: LNES82C10M-STATE-RATIO derivation_type=DERIVED, evidence_class=SEALED_HOLDOUT, value≈11291',
+  ratioRecord !== undefined &&
+  ratioRecord.derivation_type === 'DERIVED' &&
+  ratioRecord.evidence_class === 'SEALED_HOLDOUT' &&
+  Math.abs(ratioRecord.measured_value - 11291) < 2
+);
+
+// Case 38: OLS slope claim_boundary explicitly notes CI spans zero
+const olsRecord = BENCHMARK_RECORDS.find(r => r.benchmark_id === 'LNES82C4M-OLS-9PT-SLOPE');
+ok('38 benchmark: OLS slope claim_boundary mentions CI spans zero',
+  olsRecord !== undefined &&
+  olsRecord.claim_boundary.toLowerCase().includes('zero')
+);
+
+// Case 39: compute_context_comparison returns WITHIN_TESTED_ENVELOPE for corpus ≤ 10M
+const withinResult = compute_context_comparison(1_000_000);
+ok('39 context_compare: 1M corpus → WITHIN_TESTED_ENVELOPE',
+  withinResult.envelope_status === 'WITHIN_TESTED_ENVELOPE' &&
+  withinResult.measured_K_tokens === 895.96 &&
+  withinResult.universal_claim === false
+);
+
+// Case 40: compute_context_comparison returns OUTSIDE_TESTED_ENVELOPE and WARNING for > 10M
+const outsideResult = compute_context_comparison(20_000_000);
+ok('40 context_compare: 20M corpus → OUTSIDE_TESTED_ENVELOPE with WARNING in claim_boundary',
+  outsideResult.envelope_status === 'OUTSIDE_TESTED_ENVELOPE' &&
+  outsideResult.claim_boundary.includes('WARNING')
+);
+
+// Case 41: with cost_per_million provided, savings_per_query_usd > 0 when full_ctx > measured_K
+const costResult = compute_context_comparison(50_000, 100, 50_000, 15.0);
+ok('41 context_compare: cost_comparison computes positive savings when full_ctx(50K) > K(895.96)',
+  costResult.cost_comparison !== undefined &&
+  (costResult.cost_comparison.savings_per_query_usd > 0) &&
+  (costResult.cost_comparison.queries_per_day === 100)
+);
+
+// Case 42: universal_claim === false (strict boolean literal) for all benchmark records
+ok('42 benchmark_records: universal_claim is strict false for all records',
+  BENCHMARK_RECORDS.every(r => r.universal_claim === false && typeof r.universal_claim === 'boolean')
+);
+
+// ── Cases 43–50: provenance integrity + input validation (publication gate) ───
+
+// Case 43: every evidence_sha256 is a real 64-char hex digest (no placeholder strings)
+ok('43 benchmark_records: every evidence_sha256 is a 64-hex digest (no placeholders)',
+  BENCHMARK_RECORDS.every(r => /^[0-9a-f]{64}$/.test(r.evidence_sha256))
+);
+
+// Case 44: derivation_type is restricted to the three declared categories
+const ALLOWED_DERIV = new Set(['MEASURED', 'DERIVED', 'REFERENCE_ONLY']);
+ok('44 benchmark_records: derivation_type ∈ {MEASURED, DERIVED, REFERENCE_ONLY}',
+  BENCHMARK_RECORDS.every(r => ALLOWED_DERIV.has(r.derivation_type))
+);
+
+// Case 45: the H200 throughput record is REFERENCE_ONLY, not sealed evidence
+const h200 = BENCHMARK_RECORDS.find(r => r.benchmark_id === 'H200-XLMP-CORRECT-TASK-THROUGHPUT');
+ok('45 benchmark: H200 throughput is REFERENCE_ONLY / INTERNAL_ENGINEERING_REPORT, publicly_verifiable=false',
+  h200 !== undefined &&
+  h200.derivation_type === 'REFERENCE_ONLY' &&
+  h200.evidence_class === 'INTERNAL_ENGINEERING_REPORT' &&
+  h200.publicly_verifiable === false &&
+  Math.abs(h200.measured_value - 11.3) < 1e-9
+);
+
+// Case 46: exact tested ceiling stays WITHIN the envelope; one token above flips OUTSIDE
+const ceil = compute_context_comparison(10_116_589);
+const overCeil = compute_context_comparison(10_116_590);
+ok('46 context_compare: exact ceiling = WITHIN, ceiling+1 = OUTSIDE',
+  ceil.envelope_status === 'WITHIN_TESTED_ENVELOPE' &&
+  overCeil.envelope_status === 'OUTSIDE_TESTED_ENVELOPE'
+);
+
+// Case 47: negative and zero corpus_tokens throw RangeError (no NaN result leaks)
+function throwsRange(fn) {
+  try { fn(); return false; } catch (e) { return e instanceof RangeError; }
+}
+ok('47 context_compare: negative and zero corpus_tokens throw RangeError',
+  throwsRange(() => compute_context_comparison(-5)) &&
+  throwsRange(() => compute_context_comparison(0)) &&
+  throwsRange(() => compute_context_comparison(Infinity)) &&
+  throwsRange(() => compute_context_comparison(NaN))
+);
+
+// Case 48: very large corpus produces finite numbers (no NaN / Infinity) and OUTSIDE status
+const huge = compute_context_comparison(1e15, 1, 1e15, 10);
+ok('48 context_compare: 1e15 corpus → finite outputs, OUTSIDE, no NaN/Infinity',
+  huge.envelope_status === 'OUTSIDE_TESTED_ENVELOPE' &&
+  Number.isFinite(huge.active_context_ratio) &&
+  huge.cost_comparison !== undefined &&
+  Number.isFinite(huge.cost_comparison.savings_per_query_usd) &&
+  Number.isFinite(huge.cost_comparison.savings_per_day_usd)
+);
+
+// Case 49: cost_per_million=0 is accepted (free tier) and yields zero savings, not an error
+const freeTier = compute_context_comparison(50_000, 1, 50_000, 0);
+ok('49 context_compare: cost_per_million=0 accepted, savings=0 (not rejected)',
+  freeTier.cost_comparison !== undefined &&
+  freeTier.cost_comparison.savings_per_query_usd === 0
+);
+
+// Case 50: compute_context_comparison result advertises publicly_verifiable=false
+ok('50 context_compare: result carries publicly_verifiable=false and universal_claim=false',
+  freeTier.publicly_verifiable === false && freeTier.universal_claim === false
+);
 
 // ── Result ────────────────────────────────────────────────────────────────────
 console.log(`\nRegression suite: ${pass}/${pass + fail} pass`);

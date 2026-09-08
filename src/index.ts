@@ -15,10 +15,11 @@ import {
   ingest_file_delta,
 } from './core.js';
 import { syncToVault, readVaultObject } from './vault_bridge.js';
+import { BENCHMARK_RECORDS, compute_context_comparison } from './benchmarks.js';
 
 const server = new McpServer({
   name: 'vanguard-memory-node',
-  version: '2.0.0',
+  version: '2.1.0',
 });
 
 server.tool(
@@ -304,6 +305,178 @@ server.tool(
       };
     }
   }
+);
+
+server.tool(
+  'vmn_benchmark_evidence',
+  'Return evidence-native benchmark records for ExergyNet xLMP experiments. Every record carries ' +
+  'benchmark_id, measured_value, unit, tested_envelope, derivation_type (MEASURED | DERIVED | REFERENCE_ONLY), ' +
+  'evidence_class, evidence_sha256, publicly_verifiable, and universal_claim=false. ' +
+  'publicly_verifiable=true would mean a public consumer can independently obtain and verify the referenced ' +
+  'evidence artifact from the record alone, without internal access; it is false here because no public ' +
+  'artifact URL exists yet (the evidence documents are internal/sealed), so verification currently requires ' +
+  'possession of the named artifact and recomputation of its SHA-256. ' +
+  'Use vmn_context_cost_compare to derive economic implications from this data.',
+  {
+    benchmark_id: z.string().optional().describe(
+      'Filter to a specific benchmark_id. Omit to return all records. ' +
+      'Known IDs: LNES82C10M-HOLDOUT-MEAN-K, LNES82C10M-STATE-RATIO, LNES82C10M-ACCURACY, ' +
+      'LNES82C4M-OLS-9PT-SLOPE, H200-XLMP-CORRECT-TASK-THROUGHPUT'
+    ),
+    include_derivations: z.boolean().optional().describe(
+      'If true, include derivation_notes fields. Default: false.'
+    ),
+  },
+  async ({ benchmark_id, include_derivations }) => {
+    const filtered = benchmark_id
+      ? BENCHMARK_RECORDS.filter(r => r.benchmark_id === benchmark_id)
+      : BENCHMARK_RECORDS;
+    if (filtered.length === 0) {
+      const ids = BENCHMARK_RECORDS.map(r => r.benchmark_id).join(', ');
+      return {
+        content: [{
+          type: 'text',
+          text: `No benchmark record found for benchmark_id: "${benchmark_id}"\nAvailable IDs: ${ids}\n[VMN] source=evidence_store | verification=LOCAL_HASH_ONLY`,
+        }]
+      };
+    }
+    const records = include_derivations
+      ? filtered
+      : filtered.map(({ derivation_notes: _dn, ...rest }) => rest);
+    return {
+      content: [{
+        type: 'text',
+        text: JSON.stringify(records, null, 2) + '\n\n[VMN] source=evidence_store | verification=LOCAL_HASH_ONLY',
+      }]
+    };
+  }
+);
+
+server.tool(
+  'vmn_context_cost_compare',
+  'Compute context cost comparison using evidence-grade measured xLMP K data. ' +
+  'The agent derives the economic implication; this tool performs the arithmetic from measured inputs. ' +
+  'All claims carry tested_envelope, claim_boundary, and universal_claim=false.',
+  {
+    corpus_tokens: z.number().describe(
+      'Size of the persistent corpus in tokens (est. tokens, not characters)'
+    ),
+    queries_per_day: z.number().optional().describe(
+      'Queries per day for throughput calculations (default: 1)'
+    ),
+    assumed_full_context_tokens: z.number().optional().describe(
+      'Tokens per query if full context were sent. Defaults to min(corpus_tokens, 128000). ' +
+      'Override to model a different context window size.'
+    ),
+    cost_per_million_input_tokens: z.number().optional().describe(
+      'USD per million input tokens. If provided, computes cost savings per query and per day.'
+    ),
+  },
+  async ({ corpus_tokens, queries_per_day, assumed_full_context_tokens, cost_per_million_input_tokens }) => {
+    try {
+      const result = compute_context_comparison(
+        corpus_tokens,
+        queries_per_day,
+        assumed_full_context_tokens,
+        cost_per_million_input_tokens,
+      );
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify(result, null, 2) + '\n\n[VMN] source=evidence_store | verification=LOCAL_HASH_ONLY',
+        }]
+      };
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      return {
+        content: [{
+          type: 'text',
+          text: `ERROR: invalid input — ${msg}\n[VMN] source=evidence_store | verification=LOCAL_HASH_ONLY`,
+        }]
+      };
+    }
+  }
+);
+
+// ── MCP Resources ─────────────────────────────────────────────────────────────
+
+const SCALING_BENCHMARK_IDS = [
+  'LNES82C10M-HOLDOUT-MEAN-K',
+  'LNES82C10M-STATE-RATIO',
+  'LNES82C4M-OLS-9PT-SLOPE',
+];
+
+server.registerResource(
+  'xlmp-memory-scaling',
+  'exergynet://benchmarks/xlmp-memory-scaling',
+  {
+    description: 'xLMP N→K memory scaling benchmark records (LNES-82C campaign). ' +
+      'Evidence-native JSON: mean_K, state-to-active-context ratio, 9-pt OLS slope. ' +
+      'All records carry universal_claim=false and tested_envelope.',
+    mimeType: 'application/json',
+  },
+  async (uri) => ({
+    contents: [{
+      uri: uri.toString(),
+      mimeType: 'application/json',
+      text: JSON.stringify(
+        BENCHMARK_RECORDS.filter(r => SCALING_BENCHMARK_IDS.includes(r.benchmark_id)),
+        null,
+        2
+      ),
+    }]
+  })
+);
+
+server.registerResource(
+  'h200-throughput',
+  'exergynet://benchmarks/h200-throughput',
+  {
+    description: 'H200 throughput record (derivation_type=REFERENCE_ONLY). ' +
+      '~11.3× correct-task throughput vs full-context at a tested SLA-compliant operating point on H200. ' +
+      'Restated from an internal engineering report (evidence_sha256 pinned); publicly_verifiable=false. ' +
+      'Carries tested_envelope, claim_boundary, and universal_claim=false.',
+    mimeType: 'application/json',
+  },
+  async (uri) => ({
+    contents: [{
+      uri: uri.toString(),
+      mimeType: 'application/json',
+      text: JSON.stringify(
+        BENCHMARK_RECORDS.filter(r => r.benchmark_id === 'H200-XLMP-CORRECT-TASK-THROUGHPUT'),
+        null,
+        2
+      ),
+    }]
+  })
+);
+
+server.registerResource(
+  'claim-boundaries',
+  'exergynet://benchmarks/claim-boundaries',
+  {
+    description: 'Claim boundary documentation for all ExergyNet xLMP benchmark records. ' +
+      'Use this resource to understand what each quantitative claim does and does not assert.',
+    mimeType: 'application/json',
+  },
+  async (uri) => ({
+    contents: [{
+      uri: uri.toString(),
+      mimeType: 'application/json',
+      text: JSON.stringify(
+        BENCHMARK_RECORDS.map(r => ({
+          benchmark_id: r.benchmark_id,
+          measured_value: r.measured_value,
+          unit: r.unit,
+          universal_claim: r.universal_claim,
+          claim_boundary: r.claim_boundary,
+          tested_envelope: r.tested_envelope,
+        })),
+        null,
+        2
+      ),
+    }]
+  })
 );
 
 const transport = new StdioServerTransport();

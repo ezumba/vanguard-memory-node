@@ -205,7 +205,7 @@ Returns: `xlmp_root`, `bytes_committed`, `status`, and the resolved vault URL.
 ├── local_vault/
 │   └── <sha256>.txt              # authoritative object files (never modified after write)
 ├── catalog/
-│   └── <sha256>.json             # per-object metadata (O(1) reads)
+│   └── <sha256>.json             # per-object metadata (direct hash-keyed reads)
 ├── segments/
 │   └── <sha256>.json             # segment records with term frequencies
 ├── cursors/
