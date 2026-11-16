@@ -19,7 +19,7 @@ import { BENCHMARK_RECORDS, compute_context_comparison } from './benchmarks.js';
 
 const server = new McpServer({
   name: 'vanguard-memory-node',
-  version: '2.1.0',
+  version: '2.1.1',
 });
 
 server.tool(

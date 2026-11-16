@@ -1,0 +1,50 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.ezumba/vanguard-memory-node",
+  "description": "Local deterministic BM25 memory for AI agents via MCP. Offline-first, SHA-256 shards, stdio.",
+  "repository": {
+    "url": "https://github.com/ezumba/vanguard-memory-node",
+    "source": "github"
+  },
+  "version": "2.1.1",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@lnes/vanguard-memory-node",
+      "version": "2.1.1",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "EXERGYNET_API_KEY",
+          "description": "Optional ExergyNet Portal API key (sk-exergy-...) for vmn_sync_vault and AUTO_SYNC_VAULT.",
+          "isRequired": false,
+          "isSecret": true,
+          "format": "string"
+        },
+        {
+          "name": "EXERGYNET_NETWORK",
+          "description": "Optional vault sync target: mainnet or testnet (default testnet).",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string"
+        },
+        {
+          "name": "EXERGYNET_VAULT_URL",
+          "description": "Optional custom vault base URL overriding EXERGYNET_NETWORK.",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string"
+        },
+        {
+          "name": "AUTO_SYNC_VAULT",
+          "description": "Set to true to auto-sync vmn_ingest shards to ExergyNet vault.",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string"
+        }
+      ]
+    }
+  ]
+}
